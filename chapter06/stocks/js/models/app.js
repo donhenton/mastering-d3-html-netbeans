@@ -6,7 +6,7 @@ var app = app || {};
 app.StockAppModel = Backbone.Model.extend({
 
     // Compiled template for the stock data url
-    urlTemplate: _.template('/chapter06/stocks/data/<%= url %>'),
+    urlTemplate: _.template('data/<%= url %>'),
 
     // Default values
     defaults: {
