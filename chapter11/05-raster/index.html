@@ -38,7 +38,7 @@
                         <li><a href="../chapter08/">8 Deploying the Visualization</a></li>
                         <li><a href="../chapter09/">9 Creating a Dashboard</a></li>
                         <li><a href="../chapter10/">10 Creating Maps</a></li>
-                        <li><a href="../chapter11/">11 Advanced Maps</a></li>
+                        <li><a href="..">11 Advanced Maps</a></li>
                     </ul>
                 </li>
             </ul>
@@ -53,7 +53,7 @@
 <script src="../assets/js/lib/topojson.js"></script>
 
 
-<p><link rel="stylesheet" type="text/css" href="chapter11/maps.css"></p>
+<p><link rel="stylesheet" type="text/css" href="maps.css"></p>
 
 <h1 class="section-title">11.5 Raster Reprojection</h1>
 
@@ -71,7 +71,7 @@
 
 
 <script>
-    d3.json('/chapter11/data/land.json', function(error, data) {
+    d3.json('data/land.json', function(error, data) {
 
         if (error) { console.error(error); }
 
@@ -120,7 +120,7 @@
 
 
 <script>
-    d3.json('/chapter11/data/land.json', function(error, data) {
+    d3.json('data/land.json', function(error, data) {
 
         if (error) { console.error(error); }
 
@@ -238,7 +238,7 @@
         // Create the image element
         var image = new Image;
         image.onload = onLoad;
-        image.src = '/chapter11/data/world.jpg';
+        image.src = 'data/world.jpg';
 
         // Copy the image to the canvas context
         function onLoad() {
@@ -275,7 +275,7 @@
         // Create the image element
         var image = new Image;
         image.onload = onLoad;
-        image.src = '/chapter11/data/world.jpg';
+        image.src = 'data/world.jpg';
 
         // Projection
         var equirectangular = d3.geo.equirectangular()
@@ -342,7 +342,7 @@
         // Create and load the image
         var image = new Image(width, height);
         image.onload = onLoad;
-        image.src = '/chapter11/data/world.jpg';
+        image.src = 'data/world.jpg';
 
         // Invoked when the image is fully loades
         function onLoad() {
@@ -435,7 +435,7 @@
         // Create the image element
         var image = new Image(width, height);
         image.onload = onLoad;
-        image.src = '/chapter11/data/world.jpg';
+        image.src = 'data/world.jpg';
 
         // Copy the image to the canvas context
         function onLoad() {

@@ -47,7 +47,7 @@
     </div>
 </nav>
 
-        <script src="chapter06/stocks/js/lib/stockcharts.js"></script>
+        <script src="stocks/js/lib/stockcharts.js"></script>
 
 
 
@@ -122,7 +122,7 @@
         .value(function(d) { return d.price; })
         .brush(false);
 
-    d3.json('/chapter06/stocks/data/aapl.json', function(error, json) {
+    d3.json('stocks/data/aapl.json', function(error, json) {
 
         if (error) { return error; }
 
@@ -160,7 +160,7 @@
             console.log(extent);
         });
 
-    d3.json('/chapter06/stocks/data/aapl.json', function(error, json) {
+    d3.json('stocks/data/aapl.json', function(error, json) {
 
         if (error) {
             throw error;
