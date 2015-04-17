@@ -35,21 +35,29 @@
 
 </style>
 <body>
+    <div>
+        <button id="add" onclick="addData()">Add</button>
+        <button id="remove" onclick="removeData()">Remove</button>
+    </div>
 
+    <div id="graph"></div>
     <!-- load the d3.js library -->	
     <script src="../bower_components/jquery/dist/jquery.js" type="text/javascript"></script>
     <script src="../bower_components/d3/d3.js" type="text/javascript"></script>
 
-    <script>
 
+
+
+    <script>
+        //http://pothibo.com/2013/09/d3-js-how-to-handle-dynamic-json-data/
         // Set the dimensions of the canvas / graph
         var margin = {top: 30, right: 20, bottom: 30, left: 50},
-        width = 600 - margin.left - margin.right,
-                height = 270 - margin.top - margin.bottom;
+        width = 1000 - margin.left - margin.right,
+                height = 470 - margin.top - margin.bottom;
 
         // Parse the date / time 2015-02-13
         var parseDate = d3.time.format("%Y-%m-%d").parse;
-        var formatTime = d3.time.format("%m/%d");			// Format the date / time for tooltips
+        var formatTime = d3.time.format("%_m/%_d");			// Format the date / time for tooltips
 
 
         // Set the ranges
@@ -57,11 +65,29 @@
         var y = d3.scale.linear().range([height, 0]);
 
         // Define the axes
-        var xAxis = d3.svg.axis().scale(x)
-                .orient("bottom").ticks(5);
+        //var xAxis = d3.svg.axis().scale(x)
+        //       .orient("bottom").ticks(5);
+        //
+        var xAxis =
+                d3.svg.axis()
+                .scale(x).tickPadding(15)
+                .ticks(8)
+                .tickFormat(function (d) {
+                    //return d3.time.format("%Y-%m-%d")
+                    return formatTime(d)
+                })
+                .innerTickSize([4])
+                .outerTickSize([20])
+                .orient("bottom");
+
+
+
+
+
+
 
         var yAxis = d3.svg.axis().scale(y)
-                .orient("left").ticks(5);
+                .orient("left").ticks(5)
 
         // Define the line
         var valueline = d3.svg.line()
@@ -78,7 +104,7 @@
                 .style("opacity", 0);					// set the opacity to nil
 
         // Adds the svg canvas
-        var svg = d3.select("body")
+        var svg = d3.select("#graph")
                 .append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
@@ -88,27 +114,23 @@
         // Get the data
         d3.json("data.json", function (error, jsonData) {
             var data = jsonData.data;
-            
-            
-            
-            
-            
-            
-            
-            
+
+
+
+
             if (error)
             {
-                console.log(error+" "+error.message)
+                console.log(error + " " + error.message)
             }
             else
             {
-                
-                 data.forEach(function (d) {
-                    
+
+                data.forEach(function (d) {
+
                     d.date = parseDate(d.date);
                     d.close = +d.count;
-                    
-                   // console.log(d.date+" "+d.close)
+
+                    // console.log(d.date+" "+d.close)
                 });
             }
 
@@ -116,7 +138,7 @@
 
             // Scale the range of the data
             x.domain(d3.extent(data, function (d) {
-                 
+
                 return d.date;
             }));
             y.domain([0, d3.max(data, function (d) {
@@ -124,11 +146,31 @@
                 })]);
 
             // Add the valueline path.
+
+
+            // draw the scatterplot
+            drawDots(data);
+
+            // Add the X Axis
+            svg.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis);
+
+            // Add the Y Axis
+            svg.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis);
+
+        }); // end process initial data
+
+        function drawDots(data)
+        {
             svg.append("path")
                     .attr("class", "line")
                     .attr("d", valueline(data));
 
-            // draw the scatterplot
+
             svg.selectAll("dot")
                     .data(data)
                     .enter().append("circle")
@@ -153,22 +195,18 @@
                                 .duration(500)									// it shall take 500ms
                                 .style("opacity", 0);                                                   // and go all the way to an opacity of nil
 
-                       // console.log(d + " " + x + " " + y)
+                        // console.log(d + " " + x + " " + y)
 
-                    });														// finis
+                    });
+        }
 
-            // Add the X Axis
-            svg.append("g")
-                    .attr("class", "x axis")
-                    .attr("transform", "translate(0," + height + ")")
-                    .call(xAxis);
 
-            // Add the Y Axis
-            svg.append("g")
-                    .attr("class", "y axis")
-                    .call(yAxis);
-
-        });
 
     </script>
+
+
+
+
+
+
 </body>
