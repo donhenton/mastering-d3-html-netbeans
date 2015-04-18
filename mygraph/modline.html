@@ -53,8 +53,13 @@ and open the template in the editor.
 
 
         <div id="graph"></div>
-
-
+    <div style="font-size: 20px">
+        <ul>
+            <li><span style="color:blue">Updated Points</span></li>
+            <li><span style="color:green">Added Points</span></li>
+            <li><span style="color:red">Deleted Points</span></li>
+        </ul>
+    </div>
         <script>
 
             var graph;
@@ -164,7 +169,9 @@ and open the template in the editor.
             {
                 
                  var dots = svg.selectAll(".dot").data(data, key);
+                 dots.attr("fill", "blue");
                  dots.enter().append("circle")
+                         .attr("fill","green")
                         .attr("r", 5)	
                         .attr("class", "dot")
                         .attr("cx", function (d) {
@@ -189,7 +196,7 @@ and open the template in the editor.
                             // console.log(d + " " + x + " " + y)
 
                         });
-                 dots.exit().remove();
+                 dots.exit().transition().duration(500).attr("fill", "red").remove();
                  dots.transition().duration(500)
                  .attr("r", 5)											 	
                  .attr("cx", function (d) {
@@ -269,54 +276,6 @@ and open the template in the editor.
                 return Math.floor(Math.random() * (max + 1))
             }
 
-//            setInterval(function () {
-//                data.shift();
-//                data.push(rand(100));
-//                console.log("interval")
-//                redraw();
-//            }, 1500);
-
-
-            /*
-             var m = [80, 80, 80, 80]; // margins
-             var w = 1000 - m[1] - m[3]; // width
-             var h = 400 - m[0] - m[2]; // height
-             
-             var x = d3.scale.linear().domain([0, data.length]).range([0, w]);
-             var y = d3.scale.linear().domain([0, d3.max(data)]).range([h, 0]);
-             
-             line = d3.svg.line()
-             .x(function (d, i) {
-             return x(i);
-             })
-             .y(function (d) {
-             return y(d);
-             })
-             
-             graph = d3.select("body").append("svg")
-             .attr("width", w + m[1] + m[3])
-             .attr("height", h + m[0] + m[2])
-             .append("g")
-             .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
-             
-             var xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true);
-             graph.append("g")
-             .attr("class", "x axis")
-             .attr("transform", "translate(0," + h + ")")
-             .call(xAxis);
-             
-             
-             var yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
-             graph.append("svg:g")
-             .attr("class", "y axis")
-             .attr("transform", "translate(-25,0)")
-             .call(yAxisLeft);
-             
-             //            graph.append("svg:path")
-             //                    .data([data])
-             //                    .attr("d", line);
-             //redraw();
-             */
 
             setUp();
 
