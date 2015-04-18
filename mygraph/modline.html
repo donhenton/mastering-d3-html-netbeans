@@ -73,6 +73,11 @@ and open the template in the editor.
             var MAX_POINTS = 20;
             var xAxis = null;
             var yAxis = null;
+            
+             var div = d3.select("body").append("div")	// declare the properties for the div used for the tooltips
+                    .attr("class", "tooltip")				// apply the 'tooltip' class
+                    .style("opacity", 0);
+            
 
             // Parse the date / time 2015-02-13
 
@@ -114,7 +119,7 @@ and open the template in the editor.
 
                 //data.push(rand(100));
                  reDraw();
-            }, 1500);
+            }, 3500);
 
             function reDraw() {
 
@@ -265,8 +270,7 @@ and open the template in the editor.
                     var d = d3.time.format("%Y-%m-%d")(myDate);
                     //   console.log(formatTime)
                     var t = rand(20000)
-                    var item = {"date": parseDate(d), "data": t}
-                    //  console.log(item.date+" "+item.data)
+                    var item = {"date": parseDate(d), "data": t} 
                     arr.push(item);
                 }
                 return arr;
