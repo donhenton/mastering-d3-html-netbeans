@@ -49,156 +49,157 @@
 
 
     <script>
-        //http://pothibo.com/2013/09/d3-js-how-to-handle-dynamic-json-data/
-        // Set the dimensions of the canvas / graph
-        var margin = {top: 30, right: 20, bottom: 30, left: 50},
-        width = 1000 - margin.left - margin.right,
-                height = 470 - margin.top - margin.bottom;
+            //http://pothibo.com/2013/09/d3-js-how-to-handle-dynamic-json-data/
+            // Set the dimensions of the canvas / graph
+            var margin = {top: 30, right: 20, bottom: 30, left: 50},
+            width = 1000 - margin.left - margin.right,
+                    height = 470 - margin.top - margin.bottom;
 
-        // Parse the date / time 2015-02-13
-        var parseDate = d3.time.format("%Y-%m-%d").parse;
-        var formatTime = d3.time.format("%_m/%_d");			// Format the date / time for tooltips
-
-
-        // Set the ranges
-        var x = d3.time.scale().range([0, width]);
-        var y = d3.scale.linear().range([height, 0]);
-
-        // Define the axes
-        //var xAxis = d3.svg.axis().scale(x)
-        //       .orient("bottom").ticks(5);
-        //
-        var xAxis =
-                d3.svg.axis()
-                .scale(x).tickPadding(15)
-                .ticks(8)
-                .tickFormat(function (d) {
-                    //return d3.time.format("%Y-%m-%d")
-                    return formatTime(d)
-                })
-                .innerTickSize([4])
-                .outerTickSize([20])
-                .orient("bottom");
+            // Parse the date / time 2015-02-13
+            var parseDate = d3.time.format("%Y-%m-%d").parse;
+            var formatTime = d3.time.format("%_m/%_d");			// Format the date / time for tooltips
 
 
+            // Set the ranges
+            var x = d3.time.scale().range([0, width]);
+            var y = d3.scale.linear().range([height, 0]);
+
+            // Define the axes
+            //var xAxis = d3.svg.axis().scale(x)
+            //       .orient("bottom").ticks(5);
+            //
+            var xAxis =
+                    d3.svg.axis()
+                    .scale(x).tickPadding(15)
+                    .ticks(8)
+                    .tickFormat(function (d) {
+                        //return d3.time.format("%Y-%m-%d")
+                        return formatTime(d)
+                    })
+                    .innerTickSize([4])
+                    .outerTickSize([20])
+                    .orient("bottom");
 
 
 
 
 
-        var yAxis = d3.svg.axis().scale(y)
-                .orient("left").ticks(5)
-
-        // Define the line
-        var valueline = d3.svg.line()
-                .x(function (d) {
-                    return x(d.date);
-                })
-                .y(function (d) {
-                    return y(d.close);
-                });
-
-        // Define 'div' for tooltips
-        var div = d3.select("body").append("div")	// declare the properties for the div used for the tooltips
-                .attr("class", "tooltip")				// apply the 'tooltip' class
-                .style("opacity", 0);					// set the opacity to nil
-
-        // Adds the svg canvas
-        var svg = d3.select("#graph")
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        // Get the data
-        d3.json("data.json", function (error, jsonData) {
-            var data = jsonData.data;
 
 
+            var yAxis = d3.svg.axis().scale(y)
+                    .orient("left").ticks(5)
 
-
-            if (error)
-            {
-                console.log(error + " " + error.message)
-            }
-            else
-            {
-
-                data.forEach(function (d) {
-
-                    d.date = parseDate(d.date);
-                    d.close = +d.count;
-
-                    // console.log(d.date+" "+d.close)
-                });
-            }
-
-
-
-            // Scale the range of the data
-            x.domain(d3.extent(data, function (d) {
-
-                return d.date;
-            }));
-            y.domain([0, d3.max(data, function (d) {
-                    return d.close;
-                })]);
-
-            // Add the valueline path.
-
-
-            // draw the scatterplot
-            drawDots(data);
-
-            // Add the X Axis
-            svg.append("g")
-                    .attr("class", "x axis")
-                    .attr("transform", "translate(0," + height + ")")
-                    .call(xAxis);
-
-            // Add the Y Axis
-            svg.append("g")
-                    .attr("class", "y axis")
-                    .call(yAxis);
-
-        }); // end process initial data
-
-        function drawDots(data)
-        {
-            svg.append("path")
-                    .attr("class", "line")
-                    .attr("d", valueline(data));
-
-
-            svg.selectAll("dot")
-                    .data(data)
-                    .enter().append("circle")
-                    .attr("r", 5)											// Made slightly larger to make recognition easier	
-                    .attr("cx", function (d) {
+            // Define the line
+            var valueline = d3.svg.line()
+                    .x(function (d) {
                         return x(d.date);
                     })
-                    .attr("cy", function (d) {
-                        return y(d.close);
-                    })			// remove semicolon	
-                    // Tooltip stuff after this
-                    .on("mouseover", function (d) {							// when the mouse goes over a circle, do the following
-                        div.transition()									// declare the transition properties to bring fade-in div
-                                .duration(200)									// it shall take 200ms
-                                .style("opacity", .9);							// and go all the way to an opacity of .9
-                        div.html(formatTime(d.date) + "<br/>" + d.close)	// add the text of the tooltip as html 
-                                .style("left", (d3.event.pageX) + "px")			// move it in the x direction 
-                                .style("top", (d3.event.pageY - 28) + "px");	// move it in the y direction
-                    })													// 
-                    .on("mouseout", function (d, x, y) {							// when the mouse leaves a circle, do the following
-                        div.transition()									// declare the transition properties to fade-out the div
-                                .duration(500)									// it shall take 500ms
-                                .style("opacity", 0);                                                   // and go all the way to an opacity of nil
-
-                        // console.log(d + " " + x + " " + y)
-
+                    .y(function (d) {
+                        return y(d.data);
                     });
-        }
+
+            // Define 'div' for tooltips
+            var div = d3.select("body").append("div")	// declare the properties for the div used for the tooltips
+                    .attr("class", "tooltip")				// apply the 'tooltip' class
+                    .style("opacity", 0);					// set the opacity to nil
+
+            // Adds the svg canvas
+            var svg = d3.select("#graph")
+                    .append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            console.log(svg)
+            // Get the data
+            //data structure [{date,data},.....]
+            d3.json("data.json", function (error, jsonData) {
+                var data = jsonData.data;
+                if (error)
+                {
+                    console.log(error + " " + error.message)
+                }
+                else
+                {
+
+                    data.forEach(function (d) {
+
+                        d.date = parseDate(d.date);
+                        //d.data = +d.count;
+
+                        // console.log(d.date+" "+d.data)
+                    });
+                }
+                processGraph(data);
+                drawDots(data);
+                assembleGraph();
+              
+
+
+            }); // end process initial data
+
+            function assembleGraph()
+            {
+                svg.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(xAxis);
+
+                // Add the Y Axis
+                svg.append("g")
+                        .attr("class", "y axis")
+                        .call(yAxis);
+            }
+
+            function processGraph(data)
+            {
+                // Scale the range of the data
+                x.domain(d3.extent(data, function (d) {
+
+                    return d.date;
+                }));
+                y.domain([0, d3.max(data, function (d) {
+                        return d.data;
+                    })]);
+            }
+
+
+
+
+            function drawDots(data)
+            {
+                svg.append("path")
+                        .attr("class", "line")
+                        .attr("d", valueline(data));
+
+
+                svg.selectAll("dot")
+                        .data(data)
+                        .enter().append("circle")
+                        .attr("r", 5)											// Made slightly larger to make recognition easier	
+                        .attr("cx", function (d) {
+                            return x(d.date);
+                        })
+                        .attr("cy", function (d) {
+                            return y(d.data);
+                        })			// remove semicolon	
+                        // Tooltip stuff after this
+                        .on("mouseover", function (d) {							 
+                            div.transition()									 
+                                    .duration(200)									 
+                                    .style("opacity", .9);							 
+                            div.html(formatTime(d.date) + "<br/>" + d.data)	 
+                                    .style("left", (d3.event.pageX) + "px")			 
+                                    .style("top", (d3.event.pageY - 28) + "px");	 
+                        })													 
+                        .on("mouseout", function (d, x, y) {							 
+                            div.transition()									 
+                                    .duration(500)									 
+                                    .style("opacity", 0);                                                   // and go all the way to an opacity of nil
+                             // console.log(d + " " + x + " " + y)
+
+                        });
+            }
 
 
 

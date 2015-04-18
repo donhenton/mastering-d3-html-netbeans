@@ -1,0 +1,328 @@
+/* global d3 */
+
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Updating Line</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="../bower_components/jquery/dist/jquery.js" type="text/javascript"></script>
+        <script src="../bower_components/d3/d3.js" type="text/javascript"></script>
+
+        <style> /* set the CSS */
+
+            body { font: 12px Arial;}
+
+            path { 
+                stroke: steelblue;
+                stroke-width: 2;
+                fill: none;
+            }
+
+            .axis path,
+            .axis line {
+                fill: none;
+                stroke: grey;
+                stroke-width: 1;
+                shape-rendering: crispEdges;
+            }
+
+            div.tooltip {					/* set the CSS for tooltip divs */
+                position: absolute;			/* reference for measurement */
+                text-align: center;			/* align the text to the center */
+                width: 60px;					/* set the width of the rectangle */
+                height: 28px;					/* set the height of the rectangle */
+                padding: 2px;					/* set a border around the rectangle */
+                font: 12px sans-serif;		/* set the font type for the tooltips */
+                background: lightsteelblue;	/* set the colour of the rectangle */
+                border: 0px;					/* turn off the border (0px) */
+                border-radius: 8px;			/* set how rounded the edges of the rectangle is */
+                pointer-events: none;			/* 'none' tells the mouse to ignore the rectangle */
+            }
+
+        </style>
+
+    </head>
+    <body>
+
+
+
+        <div id="graph"></div>
+
+
+        <script>
+
+            var graph;
+            var line;
+            var margin = {top: 30, right: 20, bottom: 30, left: 50};
+            var width = 1000 - margin.left - margin.right;
+            var height = 470 - margin.top - margin.bottom;
+            var x = d3.time.scale().range([0, width]);
+            var y = d3.scale.linear().range([height, 0]);
+            var svg = null;
+            var MAX_POINTS = 20;
+            var xAxis = null;
+            var yAxis = null;
+
+            // Parse the date / time 2015-02-13
+
+            var formatTime = d3.time.format("%_m/%_d");
+            var dateFormatter = d3.time.format("%Y-%m-%d")
+            var parseDate = dateFormatter.parse;
+            var key = function (d) {
+                //if (d != null && typeof d != undefined)
+                    return  d.date ;
+                //else
+                   // return null;
+            };
+
+            var valueline = d3.svg.line()
+                    .x(function (d) {
+                        return x(d.date);
+                    })
+                    .y(function (d) {
+                        return y(d.data);
+                    });
+
+
+
+            var data = getData();
+
+            function setUp()
+            {
+                if (svg == null)
+                {
+                    svg = initializeSVG();
+                }
+                assembleAxes();
+                drawAllDraw();
+                console.log("1svg " + svg)
+            }
+
+
+           setInterval(function () {
+
+                //data.push(rand(100));
+                 reDraw();
+            }, 1500);
+
+            function reDraw() {
+
+
+
+                data = getData();
+                x.domain(d3.extent(data, function (d) {
+                    return d.date;
+                }));
+                y.domain([0, d3.max(data, function (d) {
+                        return d.data;
+                    })]);
+
+                var svg2 = svg.transition();
+                //console.log( svg2.select(".line").duration(750))
+
+                svg2.select(".line")   // change the line
+                        .duration(750)
+                        .attr("d", valueline(data));
+                svg2.select(".x.axis") // change the x axis
+                        .duration(750)
+                        .call(xAxis);
+                svg2.select(".y.axis") // change the y axis
+                        .duration(750)
+                        .call(yAxis);
+                
+                
+                doDots();
+            }
+            ;
+
+
+
+
+
+
+
+            function drawAllDraw()
+            {
+
+
+                svg.append("path")
+                        .attr("class", "line")
+                        .attr("d", valueline(data));
+
+                        doDots();
+               
+            }
+            
+            
+            function doDots()
+            {
+                
+                 var dots = svg.selectAll(".dot").data(data, key);
+                 dots.enter().append("circle")
+                        .attr("r", 5)	
+                        .attr("class", "dot")
+                        .attr("cx", function (d) {
+                            return x(d.date);
+                        })
+                        .attr("cy", function (d) {
+                            return y(d.data);
+                        })			// remove semicolon	
+                        // Tooltip stuff after this
+                        .on("mouseover", function (d) {
+                            div.transition()
+                                    .duration(200)
+                                    .style("opacity", .9);
+                            div.html(formatTime(d.date) + "<br/>" + d.data)
+                                    .style("left", (d3.event.pageX) + "px")
+                                    .style("top", (d3.event.pageY - 28) + "px");
+                        })
+                        .on("mouseout", function (d, x, y) {
+                            div.transition()
+                                    .duration(500)
+                                    .style("opacity", 0);                                                   // and go all the way to an opacity of nil
+                            // console.log(d + " " + x + " " + y)
+
+                        });
+                 dots.exit().remove();
+                 dots.transition().duration(500)
+                 .attr("r", 5)											 	
+                 .attr("cx", function (d) {
+                 return x(d.date);
+                 })
+                 .attr("cy", function (d) {
+                 return y(d.data);
+                 })
+                
+            }
+
+            function initializeSVG()
+            {
+                return  d3.select("#graph")
+                        .append("svg")
+                        .attr("height", height + margin.top + margin.bottom).attr("width", width + margin.left + margin.right)
+
+                        .append("g")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            }
+
+
+            function assembleAxes()
+            {
+                x.domain(d3.extent(data, function (d) {
+
+                    return d.date;
+                }));
+                y.domain([0, d3.max(data, function (d) {
+                        return d.data;
+                    })]);
+
+                xAxis =
+                        d3.svg.axis()
+                        .scale(x).tickPadding(15)
+                        .ticks(8)
+                        .tickFormat(function (d) {
+                            //return d3.time.format("%Y-%m-%d")
+                            return formatTime(d)
+                        })
+                        .innerTickSize([4])
+                        .outerTickSize([20])
+                        .orient("bottom");
+
+                yAxis = d3.svg.axis().scale(y)
+                        .orient("left").ticks(5)
+
+                svg.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(xAxis);
+
+                // Add the Y Axis
+                svg.append("g")
+                        .attr("class", "y axis")
+                        .call(yAxis);
+            }
+
+            //{"date": "2015-01-19","data": 4400} 
+            function getData() {
+                var arr = [];
+                var myDate = new Date("06/15/2011");
+                myDate.setDate(myDate.getDate() + rand(20));
+                for (var x = 0; x < MAX_POINTS; x++) {
+                    myDate.setDate(myDate.getDate() + 1);
+                    var d = d3.time.format("%Y-%m-%d")(myDate);
+                    //   console.log(formatTime)
+                    var t = rand(20000)
+                    var item = {"date": parseDate(d), "data": t}
+                    //  console.log(item.date+" "+item.data)
+                    arr.push(item);
+                }
+                return arr;
+            }
+
+            function rand(max) {
+                return Math.floor(Math.random() * (max + 1))
+            }
+
+//            setInterval(function () {
+//                data.shift();
+//                data.push(rand(100));
+//                console.log("interval")
+//                redraw();
+//            }, 1500);
+
+
+            /*
+             var m = [80, 80, 80, 80]; // margins
+             var w = 1000 - m[1] - m[3]; // width
+             var h = 400 - m[0] - m[2]; // height
+             
+             var x = d3.scale.linear().domain([0, data.length]).range([0, w]);
+             var y = d3.scale.linear().domain([0, d3.max(data)]).range([h, 0]);
+             
+             line = d3.svg.line()
+             .x(function (d, i) {
+             return x(i);
+             })
+             .y(function (d) {
+             return y(d);
+             })
+             
+             graph = d3.select("body").append("svg")
+             .attr("width", w + m[1] + m[3])
+             .attr("height", h + m[0] + m[2])
+             .append("g")
+             .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+             
+             var xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true);
+             graph.append("g")
+             .attr("class", "x axis")
+             .attr("transform", "translate(0," + h + ")")
+             .call(xAxis);
+             
+             
+             var yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
+             graph.append("svg:g")
+             .attr("class", "y axis")
+             .attr("transform", "translate(-25,0)")
+             .call(yAxisLeft);
+             
+             //            graph.append("svg:path")
+             //                    .data([data])
+             //                    .attr("d", line);
+             //redraw();
+             */
+
+            setUp();
+
+        </script>  
+
+
+
+    </body>
+</html>
