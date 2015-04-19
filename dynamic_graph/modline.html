@@ -1,4 +1,4 @@
-/* global d3 */
+ 
 
 <!DOCTYPE html>
 <!--
@@ -8,14 +8,16 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>Updating Line</title>
+        <title>Dynamic Graph</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="../bower_components/jquery/dist/jquery.js" type="text/javascript"></script>
         <script src="../bower_components/d3/d3.js" type="text/javascript"></script>
-
+        <link href="../bower_components/bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+        <link href="../bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <script src="../bower_components/bootstrap/dist/js/bootstrap.js" type="text/javascript"></script>
         <style> /* set the CSS */
-
+           .top-buffer {    margin-top:20px }
             body { font: 12px Arial;}
 
             path { 
@@ -36,8 +38,9 @@ and open the template in the editor.
                 position: absolute;			/* reference for measurement */
                 text-align: center;			/* align the text to the center */
                 width: 60px;					/* set the width of the rectangle */
-                height: 28px;					/* set the height of the rectangle */
-                padding: 2px;					/* set a border around the rectangle */
+                height: 50px;					/* set the height of the rectangle */
+                padding: 2px;	
+                 vertical-align: central;
                 font: 12px sans-serif;		/* set the font type for the tooltips */
                 background: lightsteelblue;	/* set the colour of the rectangle */
                 border: 0px;					/* turn off the border (0px) */
@@ -50,16 +53,27 @@ and open the template in the editor.
     </head>
     <body>
 
+        <div class="container">
 
+            <div id="graph"></div>
+            <div class="row  top-buffer" style="font-size: 20px">
+                <ul>
+                    <li><span style="color:blue">Updated Points</span></li>
+                    <li><span style="color:green">Added Points</span></li>
+                    <li><span style="color:red">Deleted Points</span></li>
+                </ul>
+            </div>
+            <div class="row  top-buffer">
+                This page demonstrates a D3's method for updating a full
+                graph based on changing data
 
-        <div id="graph"></div>
-    <div style="font-size: 20px">
-        <ul>
-            <li><span style="color:blue">Updated Points</span></li>
-            <li><span style="color:green">Added Points</span></li>
-            <li><span style="color:red">Deleted Points</span></li>
-        </ul>
-    </div>
+            </div>
+
+            <div class="row  top-buffer">
+                <button class="btn btn-primary" onclick="reDraw()">Update Data</button>
+            </div>
+        </div>
+
         <script>
 
             var graph;
@@ -73,11 +87,12 @@ and open the template in the editor.
             var MAX_POINTS = 20;
             var xAxis = null;
             var yAxis = null;
-            
-             var div = d3.select("body").append("div")	// declare the properties for the div used for the tooltips
+             var delay = 500;
+
+            var div = d3.select("body").append("div")	// declare the properties for the div used for the tooltips
                     .attr("class", "tooltip")				// apply the 'tooltip' class
                     .style("opacity", 0);
-            
+
 
             // Parse the date / time 2015-02-13
 
@@ -86,9 +101,9 @@ and open the template in the editor.
             var parseDate = dateFormatter.parse;
             var key = function (d) {
                 //if (d != null && typeof d != undefined)
-                    return  d.date ;
+                return  d.date;
                 //else
-                   // return null;
+                // return null;
             };
 
             var valueline = d3.svg.line()
@@ -111,15 +126,11 @@ and open the template in the editor.
                 }
                 assembleAxes();
                 drawAllDraw();
-                console.log("1svg " + svg)
+
             }
 
 
-           setInterval(function () {
 
-                //data.push(rand(100));
-                 reDraw();
-            }, 3500);
 
             function reDraw() {
 
@@ -137,16 +148,16 @@ and open the template in the editor.
                 //console.log( svg2.select(".line").duration(750))
 
                 svg2.select(".line")   // change the line
-                        .duration(750)
+                        .duration(delay)
                         .attr("d", valueline(data));
                 svg2.select(".x.axis") // change the x axis
-                        .duration(750)
+                        .duration(delay)
                         .call(xAxis);
                 svg2.select(".y.axis") // change the y axis
-                        .duration(750)
+                        .duration(delay)
                         .call(yAxis);
-                
-                
+
+
                 doDots();
             }
             ;
@@ -165,19 +176,19 @@ and open the template in the editor.
                         .attr("class", "line")
                         .attr("d", valueline(data));
 
-                        doDots();
-               
+                doDots();
+
             }
-            
-            
+
+
             function doDots()
             {
-                
-                 var dots = svg.selectAll(".dot").data(data, key);
-                 dots.attr("fill", "blue");
-                 dots.enter().append("circle")
-                         .attr("fill","green")
-                        .attr("r", 5)	
+               
+                var dots = svg.selectAll(".dot").data(data, key);
+                dots.attr("fill", "blue");
+                dots.enter().append("circle")
+                        .attr("fill", "green")
+                        .attr("r", 5)
                         .attr("class", "dot")
                         .attr("cx", function (d) {
                             return x(d.date);
@@ -188,7 +199,7 @@ and open the template in the editor.
                         // Tooltip stuff after this
                         .on("mouseover", function (d) {
                             div.transition()
-                                    .duration(200)
+                                    .duration(delay)
                                     .style("opacity", .9);
                             div.html(formatTime(d.date) + "<br/>" + d.data)
                                     .style("left", (d3.event.pageX) + "px")
@@ -196,21 +207,23 @@ and open the template in the editor.
                         })
                         .on("mouseout", function (d, x, y) {
                             div.transition()
-                                    .duration(500)
+                                    .duration(delay)
                                     .style("opacity", 0);                                                   // and go all the way to an opacity of nil
                             // console.log(d + " " + x + " " + y)
 
                         });
-                 dots.exit().transition().duration(500).attr("fill", "red").remove();
-                 dots.transition().duration(500)
-                 .attr("r", 5)											 	
-                 .attr("cx", function (d) {
-                 return x(d.date);
-                 })
-                 .attr("cy", function (d) {
-                 return y(d.data);
-                 })
-                
+                delete
+                dots.exit().transition().duration(delay).attr("fill", "red").remove();
+                //update
+                dots.transition().duration(delay)
+                        .attr("r", 5)
+                        .attr("cx", function (d) {
+                            return x(d.date);
+                        })
+                        .attr("cy", function (d) {
+                            return y(d.data);
+                        })
+
             }
 
             function initializeSVG()
@@ -270,7 +283,7 @@ and open the template in the editor.
                     var d = d3.time.format("%Y-%m-%d")(myDate);
                     //   console.log(formatTime)
                     var t = rand(20000)
-                    var item = {"date": parseDate(d), "data": t} 
+                    var item = {"date": parseDate(d), "data": t}
                     arr.push(item);
                 }
                 return arr;
