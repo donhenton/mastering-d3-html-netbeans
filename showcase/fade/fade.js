@@ -1,5 +1,5 @@
 /* global d3 */
-
+var MAX_POINTS = 20;
 function rand(max) {
     return Math.floor(Math.random() * (max + 1));
 }
@@ -20,12 +20,17 @@ function getSampleData(num) {
     return arr;
 }
 
+function reDrawGraph()
+{
+    Graph.data = getSampleData(MAX_POINTS);
+    Graph.reDraw();
 
+}
 
 function rundemo()
 {
     var margin = {top: 5, right: 40, bottom: 50, left: 60};
-    var MAX_POINTS = 20;
+
 //    var _data =
 //            $.ajax("data.json", {
 //                "async": false,
@@ -74,8 +79,7 @@ Graph.svg = null;
 Graph.selectedPoint = null;
 Graph.performUpdate = function (d)
 {
-    var height = Graph.yScale(d.data);
-    var max = Graph.yScale(Graph.height);
+
     $("#info").html(this.dateFormatter(d.date) + " data: " + d.data);
 }
 
@@ -93,7 +97,14 @@ Graph.init = function (initConditions)
     this.yAxis = null;
     this.data = initConditions.data;
     this.attachmentID = initConditions.attachmentID;
+
     this.initializeSVG();
+
+
+
+
+
+
     this.assembleAxes();
     this.initialDraw();
     this.focus = this.svg.append("g").style("display", "none");
@@ -104,8 +115,19 @@ Graph.init = function (initConditions)
             .attr("r", 14);
     this.verticalBar = this.svg.append("g").style("display", "none");
     this.verticalBar.append("rect").attr('class', 'verticalBar');
-
-    // the mouse detection rectangle    
+    /*
+     this.fadeRectangle =
+     this.svg.append("rect")
+     .attr("width", this.width + this.margin.left + this.margin.right)
+     .attr("height", this.height + this.margin.top + this.margin.bottom)
+     .attr("x", -this.margin.left)
+     
+     .attr("y", -(this.margin.top + 15))
+     .style("fill", "white")
+     .style("opacity", "0")
+     .style("pointer-events", "none")
+     */
+    // the mouse detection rectangle  
     this.svg.append("rect")
             .attr("width", this.width)
             .attr("height", this.height)
@@ -141,9 +163,9 @@ Graph.mouseMove = function ()
         Graph.performUpdate(newTarget);
 
     }
-    var yStart =  Graph.yScale(newTarget.data);
-    var yLength = (Graph.yScale(Graph.height)-yStart)+Graph.margin.bottom/2 ;
-     
+    var yStart = Graph.yScale(newTarget.data);
+    var yLength = (Graph.yScale(Graph.height) - yStart) + Graph.margin.bottom / 4;
+
     var xBar = Graph.xScale(newTarget.date);
 
     Graph.focus.select("circle.focusCircle")
@@ -155,7 +177,7 @@ Graph.mouseMove = function ()
     Graph.verticalBar.select("rect.verticalBar")
             .attr('width', 2)
             .style('fill', '#c0c0c0')
-            .attr('height',  yLength)
+            .attr('height', yLength)
             .attr('x', xBar)
             .attr('y', yStart)
             .style("display", "block")
@@ -210,7 +232,7 @@ Graph.valueline = d3.svg.line()
 
 Graph.initializeSVG = function ()
 {
-    //var attachPoint = d3.select("#" + this.attachmentID);
+
     this.svg = d3.select("#" + this.attachmentID)
             .append("svg")
             .attr("height", this.height + this.margin.top + this.margin.bottom).attr("width", this.width + this.margin.left + this.margin.right)
@@ -218,9 +240,6 @@ Graph.initializeSVG = function ()
             .append("g")
             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
-//    attachPoint.on("mousemove", function (d, i) {
-//        Graph.doMouseMoveForSVG(d, i, this);
-//    });
 
 };
 
@@ -272,48 +291,54 @@ Graph.initialDraw = function ()
 
     this.doDots();
 
+
 };
 
-
+//.style( {"opacity": (bool == true ? 1 :0),"visibility":"visible"} );
 /**
  * main  redraw routine
  * @returns {undefined}
  */
 Graph.reDraw = function () {
 
-    //axes
-    this.xScale.domain(d3.extent(this.data, function (d) {
-        return d.date;
-    }));
-    this.yScale.domain([0, d3.max(this.data, function (d) {
-            return d.data;
-        })]);
 
-    //lines
-    var svg2 = this.svg.transition();
-    //console.log( svg2.select(".line").duration(750))
+//http://stackoverflow.com/questions/15319501/chained-animations-transitions-over-each-graph-node-d3-js
+    this.svg.transition().delay(200).each("end", function (d, i)
+    {
+        //opacity is zero at this point
+         //axes
+        Graph.xScale.domain(d3.extent(Graph.data, function (d) {
+            return d.date;
+        }));
+        Graph.yScale.domain([0, d3.max(Graph.data, function (d) {
+                return d.data;
+            })]);
 
-    svg2.select(".line")   // change the line
-            .duration(this.delay)
-            .attr("d", this.valueline(this.data));
-    svg2.select(".x.axis") // change the x axis
-            .duration(this.delay)
-            .call(this.xAxis);
-    svg2.select(".y.axis") // change the y axis
-            .duration(this.delay)
-            .call(this.yAxis);
 
-    //dots        
-    this.doDots();
+        //lines
+        Graph.svg.select(".line")   // change the line
+                .attr("d", Graph.valueline(Graph.data));
+        Graph.svg.select(".x.axis") // change the x axis
+                .call(Graph.xAxis);
+        Graph.svg.select(".y.axis") // change the y axis
+                .call(Graph.yAxis);
+
+        //dots        
+        Graph.doDots();
+        Graph.svg.transition().delay(200).style("opacity", "1");
+        
+    }).style("opacity", "0");
+      
+
 };
 
 Graph.doDots = function ()
 {
 
     var dots = this.svg.selectAll(".dot").data(this.data, this.keyFunction);
-    dots.attr("fill", "blue");
+
     dots.enter().append("circle")
-            .attr("fill", "green")
+            .attr("fill", "blue")
             .attr("r", 5)
             .attr("class", "dot")
             .attr("cx", function (d) {
@@ -325,16 +350,9 @@ Graph.doDots = function ()
 
 
     // delete
-    dots.exit().transition().duration(Graph.delay).attr("fill", "red").remove();
+    dots.exit().remove();
     //update
-    dots.transition().duration(Graph.delay)
-            .attr("r", 5)
-            .attr("cx", function (d) {
-                return Graph.xScale(d.date);
-            })
-            .attr("cy", function (d) {
-                return Graph.yScale(d.data);
-            });
+
 
 };
 

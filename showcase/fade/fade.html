@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Full Graph Fade</title>
+        <script src="../../bower_components/json3/lib/json3.js" type="text/javascript"></script>
+        <script src="../../bower_components/jquery/dist/jquery.js" type="text/javascript"></script>
+        <script src="../../bower_components/d3/d3.js" type="text/javascript"></script>
+        <link href="../../bower_components/bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+        <link href="../../bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link href="styles.css" rel="stylesheet" type="text/css"/>
+        <script src="../../bower_components/bootstrap/dist/js/bootstrap.js" type="text/javascript"></script>
+         
+        <script src="fade.js" type="text/javascript"></script>
+        <script>
+            $(document).ready(function () {
+                rundemo();
+
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container top-buffer">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div id="graph"> </div>
+                </div>
+                <div class="col-lg-6 ">
+                <div id="info" class="well well-sm">
+                    Move the mouse across the graph to see data
+                </div>
+                   <button onclick="reDrawGraph()" class="btn btn-lg btn-primary">Redraw</button>  
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    </body>
+</html>
