@@ -72,9 +72,11 @@ var Graph = {};
 Graph.data = null;
 Graph.svg = null;
 Graph.selectedPoint = null;
-Graph.performUpdate= function(d)
+Graph.performUpdate = function (d)
 {
-    $("#info").html(this.dateFormatter(d.date)+" data: "+d.data);
+    var height = Graph.yScale(d.data);
+    var max = Graph.yScale(Graph.height);
+    $("#info").html(this.dateFormatter(d.date) + " data: " + d.data);
 }
 
 Graph.init = function (initConditions)
@@ -95,12 +97,13 @@ Graph.init = function (initConditions)
     this.assembleAxes();
     this.initialDraw();
     this.focus = this.svg.append("g").style("display", "none");
-
     this.focus.append("circle")
             .attr("class", "focusCircle")
             .style("fill", "none")
             .style("stroke", "blue")
             .attr("r", 14);
+    this.verticalBar = this.svg.append("g").style("display", "none");
+    this.verticalBar.append("rect").attr('class', 'verticalBar');
 
     // the mouse detection rectangle    
     this.svg.append("rect")
@@ -110,10 +113,11 @@ Graph.init = function (initConditions)
             .style("pointer-events", "all")
             .on("mouseover", function () {
                 Graph.focus.style("display", null);
+                Graph.verticalBar.style("display", null);
             })
             .on("mouseout", function () {
                 Graph.focus.style("display", "none");
-                //Graph.verticalBar.style("display", "none")   ;
+                Graph.verticalBar.style("display", "none");
             })
             .on("mousemove", this.mouseMove);
 
@@ -124,24 +128,38 @@ Graph.init = function (initConditions)
 
 Graph.mouseMove = function ()
 {
-    
+
     var x0 = Graph.xScale.invert(d3.mouse(this)[0]);
     var i = Graph.bisectDate(Graph.data, x0, 1);
     var d0 = Graph.data[i - 1];
     var d1 = Graph.data[i];
+
     var newTarget = x0 - d0.date > d1.date - x0 ? d1 : d0;
     if (Graph.selectedPoint === null || (Graph.selectedPoint.date !== newTarget.date))
     {
         Graph.selectedPoint = newTarget;
         Graph.performUpdate(newTarget);
-        
+
     }
+    var yStart =  Graph.yScale(newTarget.data);
+    var yLength = (Graph.yScale(Graph.height)-yStart)+Graph.margin.bottom/2 ;
      
+    var xBar = Graph.xScale(newTarget.date);
 
     Graph.focus.select("circle.focusCircle")
             .attr("transform",
                     "translate(" + Graph.xScale(newTarget.date) + "," +
                     Graph.yScale(newTarget.data) + ")");
+
+
+    Graph.verticalBar.select("rect.verticalBar")
+            .attr('width', 2)
+            .style('fill', '#c0c0c0')
+            .attr('height',  yLength)
+            .attr('x', xBar)
+            .attr('y', yStart)
+            .style("display", "block")
+            .style('pointer-events', 'none');
 
 }
 
