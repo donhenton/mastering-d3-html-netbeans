@@ -14,7 +14,7 @@ function getSampleData(num) {
         var d = d3.time.format("%Y-%m-%d")(myDate);
         var parseDate = d3.time.format("%Y-%m-%d").parse;
         var t = rand(20000);
-        var item = {"date": parseDate(d), "data": t};
+        var item = {"date": parseDate(d), "data": t, "index": x};
         arr.push(item);
     }
     return arr;
@@ -115,18 +115,7 @@ Graph.init = function (initConditions)
             .attr("r", 14);
     this.verticalBar = this.svg.append("g").style("display", "none");
     this.verticalBar.append("rect").attr('class', 'verticalBar');
-    /*
-     this.fadeRectangle =
-     this.svg.append("rect")
-     .attr("width", this.width + this.margin.left + this.margin.right)
-     .attr("height", this.height + this.margin.top + this.margin.bottom)
-     .attr("x", -this.margin.left)
-     
-     .attr("y", -(this.margin.top + 15))
-     .style("fill", "white")
-     .style("opacity", "0")
-     .style("pointer-events", "none")
-     */
+
     // the mouse detection rectangle  
     this.svg.append("rect")
             .attr("width", this.width)
@@ -191,7 +180,7 @@ Graph.mouseMove = function ()
  * @returns {unresolved}
  */
 Graph.keyFunction = function (d) {
-    return d.data;
+    return d.index;
 };
 
 
@@ -306,7 +295,7 @@ Graph.reDraw = function () {
     this.svg.transition().delay(200).each("end", function (d, i)
     {
         //opacity is zero at this point
-         //axes
+        //axes
         Graph.xScale.domain(d3.extent(Graph.data, function (d) {
             return d.date;
         }));
@@ -326,9 +315,9 @@ Graph.reDraw = function () {
         //dots        
         Graph.doDots();
         Graph.svg.transition().delay(200).style("opacity", "1");
-        
+
     }).style("opacity", "0");
-      
+
 
 };
 
@@ -348,6 +337,13 @@ Graph.doDots = function ()
                 return Graph.yScale(d.data);
             });
 
+    dots.attr("r", 5)
+            .attr("cx", function (d) {
+                return Graph.xScale(d.date);
+            })
+            .attr("cy", function (d) {
+                return Graph.yScale(d.data);
+            });
 
     // delete
     dots.exit().remove();
