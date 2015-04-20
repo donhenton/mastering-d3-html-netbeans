@@ -21,6 +21,7 @@ function getSampleData(num) {
 }
 
 
+
 function rundemo()
 {
     var margin = {top: 5, right: 40, bottom: 50, left: 60};
@@ -71,6 +72,10 @@ var Graph = {};
 Graph.data = null;
 Graph.svg = null;
 Graph.selectedPoint = null;
+Graph.performUpdate= function(d)
+{
+    $("#info").html(this.dateFormatter(d.date)+" data: "+d.data);
+}
 
 Graph.init = function (initConditions)
 {
@@ -108,6 +113,7 @@ Graph.init = function (initConditions)
             })
             .on("mouseout", function () {
                 Graph.focus.style("display", "none");
+                //Graph.verticalBar.style("display", "none")   ;
             })
             .on("mousemove", this.mouseMove);
 
@@ -118,12 +124,19 @@ Graph.init = function (initConditions)
 
 Graph.mouseMove = function ()
 {
-
+    
     var x0 = Graph.xScale.invert(d3.mouse(this)[0]);
     var i = Graph.bisectDate(Graph.data, x0, 1);
     var d0 = Graph.data[i - 1];
     var d1 = Graph.data[i];
     var newTarget = x0 - d0.date > d1.date - x0 ? d1 : d0;
+    if (Graph.selectedPoint === null || (Graph.selectedPoint.date !== newTarget.date))
+    {
+        Graph.selectedPoint = newTarget;
+        Graph.performUpdate(newTarget);
+        
+    }
+     
 
     Graph.focus.select("circle.focusCircle")
             .attr("transform",
