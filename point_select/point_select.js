@@ -3,7 +3,7 @@
 function rand(max) {
     return Math.floor(Math.random() * (max + 1));
 }
-
+//http://www.d3noob.org/2014/07/my-favourite-tooltip-method-for-line.html
 
 function getSampleData(num) {
     var arr = [];
@@ -23,7 +23,7 @@ function getSampleData(num) {
 
 function rundemo()
 {
-    var margin = {top: 25, right: 40, bottom: 50, left: 60};
+    var margin = {top: 5, right: 40, bottom: 50, left: 60};
     var MAX_POINTS = 20;
 //    var _data =
 //            $.ajax("data.json", {
@@ -70,6 +70,7 @@ var Graph = {};
  */
 Graph.data = null;
 Graph.svg = null;
+Graph.selectedPoint = null;
 
 Graph.init = function (initConditions)
 {
@@ -88,9 +89,48 @@ Graph.init = function (initConditions)
     this.initializeSVG();
     this.assembleAxes();
     this.initialDraw();
+    this.focus = this.svg.append("g").style("display", "none");
+
+    this.focus.append("circle")
+            .attr("class", "focusCircle")
+            .style("fill", "none")
+            .style("stroke", "blue")
+            .attr("r", 14);
+
+    // the mouse detection rectangle    
+    this.svg.append("rect")
+            .attr("width", this.width)
+            .attr("height", this.height)
+            .style("fill", "none")
+            .style("pointer-events", "all")
+            .on("mouseover", function () {
+                Graph.focus.style("display", null);
+            })
+            .on("mouseout", function () {
+                Graph.focus.style("display", "none");
+            })
+            .on("mousemove", this.mouseMove);
+
+
 
 
 };
+
+Graph.mouseMove = function ()
+{
+
+    var x0 = Graph.xScale.invert(d3.mouse(this)[0]);
+    var i = Graph.bisectDate(Graph.data, x0, 1);
+    var d0 = Graph.data[i - 1];
+    var d1 = Graph.data[i];
+    var newTarget = x0 - d0.date > d1.date - x0 ? d1 : d0;
+
+    Graph.focus.select("circle.focusCircle")
+            .attr("transform",
+                    "translate(" + Graph.xScale(newTarget.date) + "," +
+                    Graph.yScale(newTarget.data) + ")");
+
+}
 
 /**
  * determines what part of the data structure is the key for add, edits, deletes
@@ -100,6 +140,8 @@ Graph.init = function (initConditions)
 Graph.keyFunction = function (d) {
     return d.data;
 };
+
+
 
 Graph.getXScale = function ()
 {
@@ -116,6 +158,13 @@ Graph.formatTimeFunction = d3.time.format("%_m/%_d");
 Graph.dateFormatter = d3.time.format("%Y-%m-%d");
 Graph.parseDate = Graph.dateFormatter.parse;
 
+Graph.bisectDate = d3.bisector(function (d) {
+    return d.date;
+}).left;
+Graph.lineSvg = null;
+
+
+
 /**
  * used to draw the line graph from the data
  * @type @exp;d3@pro;svg@call;line@call;x@call;y
@@ -130,24 +179,21 @@ Graph.valueline = d3.svg.line()
 
 Graph.initializeSVG = function ()
 {
+    //var attachPoint = d3.select("#" + this.attachmentID);
     this.svg = d3.select("#" + this.attachmentID)
             .append("svg")
             .attr("height", this.height + this.margin.top + this.margin.bottom).attr("width", this.width + this.margin.left + this.margin.right)
 
             .append("g")
             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
-    
-    this.svg.on("mousemove", function(d, i) {
-                            Graph.doMouseMoveForSVG(d, i, this);
-                        });
-    
+
+//    attachPoint.on("mousemove", function (d, i) {
+//        Graph.doMouseMoveForSVG(d, i, this);
+//    });
+
 };
 
-Graph.doMouseMoveForSVG= function(d, i, svgNode)
-{
-    var mouseInfo = d3.mouse(svgNode);
-    console.log(mouseInfo[0]+" "+mouseInfo[1]);
-};
+
 
 Graph.assembleAxes = function ()
 {
@@ -244,9 +290,9 @@ Graph.doDots = function ()
             })
             .attr("cy", function (d) {
                 return Graph.yScale(d.data);
-            });	
-             
-            
+            });
+
+
     // delete
     dots.exit().transition().duration(Graph.delay).attr("fill", "red").remove();
     //update
