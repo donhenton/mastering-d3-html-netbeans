@@ -23,7 +23,30 @@ function getSampleData(num) {
 function reDrawGraph()
 {
     Graph.data = getSampleData(MAX_POINTS);
-    Graph.reDraw();
+    //this fades the graph in and out after the data changes
+    Graph.svg.transition().delay(200).each("end", function (d, i)
+    {
+        Graph.reBuild();
+        Graph.svg.transition().delay(200).style("opacity", "1");
+    }).style("opacity", "0");
+
+
+
+
+}
+
+function reDrawWithLoad()
+{
+    Graph.fadeToAndStartIndicator("0");
+
+    window.setTimeout(function ()
+    {
+        Graph.data = getSampleData(MAX_POINTS);
+        Graph.reBuild();
+          Graph.fadeToAndStartIndicator("1");
+    }, 1500);
+
+ 
 
 }
 
@@ -97,6 +120,7 @@ Graph.init = function (initConditions)
     this.yAxis = null;
     this.data = initConditions.data;
     this.attachmentID = initConditions.attachmentID;
+    this.isLoading = false;
 
     this.initializeSVG();
 
@@ -108,6 +132,12 @@ Graph.init = function (initConditions)
     this.assembleAxes();
     this.initialDraw();
     this.focus = this.svg.append("g").style("display", "none");
+
+
+
+
+
+
     this.focus.append("circle")
             .attr("class", "focusCircle")
             .style("fill", "none")
@@ -139,7 +169,15 @@ Graph.init = function (initConditions)
 
 Graph.mouseMove = function ()
 {
-
+//    if (typeof Graph.isLoading === 'undefined')
+//    {
+//        Graph.isLoading = false;
+//    }
+    if (Graph.isLoading === true)
+    {
+        return;
+    }
+    // console.log(Graph.isLoading)
     var x0 = Graph.xScale.invert(d3.mouse(this)[0]);
     var i = Graph.bisectDate(Graph.data, x0, 1);
     var d0 = Graph.data[i - 1];
@@ -229,6 +267,13 @@ Graph.initializeSVG = function ()
             .append("g")
             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
+    this.loaderIndicator = d3.select("#" + this.attachmentID).append("img")
+            .attr("src", "../../assets/img/ajax-loader.gif")
+            .attr("class", "indicatorClass")
+            .attr("style", "display: none")
+
+    //  .style("opacity", 0);
+
 
 };
 
@@ -283,40 +328,71 @@ Graph.initialDraw = function ()
 
 };
 
-//.style( {"opacity": (bool == true ? 1 :0),"visibility":"visible"} );
+/**
+ * fade the graph to a opacity value and start or stop the indicator
+ * 
+ * @param {type} opacityStr eg "0", or "1", no other values
+ * @returns {undefined}
+ */
+Graph.fadeToAndStartIndicator = function (opacityStr)
+{
+    Graph.svg.transition().delay(200).each("end", function (d, i)
+    {
+
+
+        if (opacityStr === "1")
+        {
+            $(".indicatorClass").css("display", "");
+            $(".indicatorClass").css("display", "none")
+            this.isLoading = false;
+        }
+        else
+        {
+            this.isLoading = true;
+
+            $(".indicatorClass").css("display", "");
+            $(".indicatorClass").css("display", "block");
+            var dy = (Graph.height + Graph.margin.top + Graph.margin.bottom) / 2;
+            var dx = (Graph.width + Graph.margin.left + Graph.margin.right) / 2;
+
+            $(".indicatorClass").css({top: dx, left: dy, position: 'absolute'});
+        }
+
+
+
+    }).style("opacity", opacityStr);
+
+};
+
+
 /**
  * main  redraw routine
  * @returns {undefined}
  */
-Graph.reDraw = function () {
+Graph.reBuild = function () {
 
 
-//http://stackoverflow.com/questions/15319501/chained-animations-transitions-over-each-graph-node-d3-js
-    this.svg.transition().delay(200).each("end", function (d, i)
-    {
-        //opacity is zero at this point
-        //axes
-        Graph.xScale.domain(d3.extent(Graph.data, function (d) {
-            return d.date;
-        }));
-        Graph.yScale.domain([0, d3.max(Graph.data, function (d) {
-                return d.data;
-            })]);
+
+    this.xScale.domain(d3.extent(this.data, function (d) {
+        return d.date;
+    }));
+    this.yScale.domain([0, d3.max(this.data, function (d) {
+            return d.data;
+        })]);
 
 
-        //lines
-        Graph.svg.select(".line")   // change the line
-                .attr("d", Graph.valueline(Graph.data));
-        Graph.svg.select(".x.axis") // change the x axis
-                .call(Graph.xAxis);
-        Graph.svg.select(".y.axis") // change the y axis
-                .call(Graph.yAxis);
+    //lines
+    this.svg.select(".line")   // change the line
+            .attr("d", this.valueline(this.data));
+    this.svg.select(".x.axis") // change the x axis
+            .call(this.xAxis);
+    this.svg.select(".y.axis") // change the y axis
+            .call(this.yAxis);
 
-        //dots        
-        Graph.doDots();
-        Graph.svg.transition().delay(200).style("opacity", "1");
+    //dots        
+    this.doDots();
 
-    }).style("opacity", "0");
+
 
 
 };

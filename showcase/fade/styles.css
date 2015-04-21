@@ -29,3 +29,8 @@ div.tooltip {					/* set the CSS for tooltip divs */
     border-radius: 8px;			/* set how rounded the edges of the rectangle is */
     pointer-events: none;			/* 'none' tells the mouse to ignore the rectangle */
 }
+
+img.indicatorClass
+{
+    position: absolute;
+}
