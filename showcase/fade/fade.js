@@ -43,10 +43,10 @@ function reDrawWithLoad()
     {
         Graph.data = getSampleData(MAX_POINTS);
         Graph.reBuild();
-          Graph.fadeToAndStartIndicator("1");
+        Graph.fadeToAndStartIndicator("1");
     }, 1500);
 
- 
+
 
 }
 
@@ -336,6 +336,17 @@ Graph.initialDraw = function ()
  */
 Graph.fadeToAndStartIndicator = function (opacityStr)
 {
+
+    if (opacityStr === "1")
+    {
+
+        this.isLoading = false;
+    }
+    else
+    {
+        this.isLoading = true;
+    }
+
     Graph.svg.transition().delay(200).each("end", function (d, i)
     {
 
@@ -344,11 +355,11 @@ Graph.fadeToAndStartIndicator = function (opacityStr)
         {
             $(".indicatorClass").css("display", "");
             $(".indicatorClass").css("display", "none")
-            this.isLoading = false;
+
         }
         else
         {
-            this.isLoading = true;
+
 
             $(".indicatorClass").css("display", "");
             $(".indicatorClass").css("display", "block");
