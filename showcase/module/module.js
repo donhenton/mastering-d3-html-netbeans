@@ -4,10 +4,10 @@
  */
 Plugin = {};
 
-Plugin.init = function ()
+Plugin.init = function (v)
 {
     //private variables
-    var height = 100;
+    var height = v;
     var width = 0;
 
     //private function
@@ -40,11 +40,7 @@ Plugin.init = function ()
     }
     ;
 
-    //public
-    exports.setHeight = function (h)
-    {
-        height = h;
-    };
+     
 
     //public
     exports.getWidth = function ( )
@@ -71,8 +67,8 @@ Plugin.init = function ()
 
 function demo()
 {
-    var functions = Plugin.init();
-    functions.setHeight(100);
+    var functions = Plugin.init(100);
+    //functions.setHeight(100);
     var t = "Area 1 current ratio: " + functions.getRatio();
     t = t + " --- from external getters [" + functions.getHeight() + ","
             + functions.getWidth() + "]";
@@ -83,14 +79,14 @@ function demo()
     //rand() is private so an error
     try
     {
-        kk = functions.rand();
+         functions.rand();
     }
     catch (e)
     {
         console.log(e);
     }
-    var functions2 = Plugin.init();
-    functions2.setHeight(50);
+    var functions2 = Plugin.init(50);
+    
     var j = "Area 2 current ratio: " + functions2.getRatio();
     j = j + " --- from external getters [" + functions2.getHeight() + ","
             + functions2.getWidth() + "]";
