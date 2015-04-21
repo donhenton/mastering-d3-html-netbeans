@@ -336,7 +336,7 @@ Graph.initialDraw = function ()
  */
 Graph.fadeToAndStartIndicator = function (opacityStr)
 {
-
+    $("#info").html("---");
     if (opacityStr === "1")
     {
 
