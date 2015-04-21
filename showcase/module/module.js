@@ -40,7 +40,7 @@ Plugin.init = function (v)
     }
     ;
 
-     
+
 
     //public
     exports.getWidth = function ( )
@@ -65,6 +65,64 @@ Plugin.init = function (v)
 };
 
 
+var D3Obj = {};
+D3Obj.init = function (d)
+{
+    var dataset = d;
+    var svg = null;
+    var margin = {top: 5, right: 40, bottom: 50, left: 60};
+    var width = 200;
+    var height = 200;
+    var done = false;
+    var Graph = function () {
+    };
+
+    Graph.initializeSVG = function ()
+    {
+        //only run once
+        done = true; 
+        svg = d3.select("#textArea3")
+                .append("svg")
+                .attr("height", height + margin.top + margin.bottom).attr("width", width + margin.left + margin.right)
+                
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        svg.append("rect")
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("rx", 10)
+                .attr("ry", 10)
+                .attr("stroke","blue").attr("fill","goldenrod")
+                .attr("width", width)
+                .attr("height", height);
+
+
+        var dots = svg.selectAll("circle").data(dataset);
+
+        dots.enter().append("circle")
+                .attr("fill", "blue")
+                .attr("r", 5)
+                .attr("class", "dot")
+                .attr("cx", function (d, i) {
+                //  variable this is the svg circle object at this point
+                   console.log(i + " [" + this.cx.baseVal.value + "," + this.cy.baseVal.value + "] "+this);
+                    return d * 7;
+                })
+                .attr("cy", function (d) {
+                    return d * 7;
+                });
+
+    };
+
+    Graph.isDone = function(){ return done;};
+    return Graph;
+};
+
+var dataset = [5, 10, 15, 20, 25];
+var d3Thing = D3Obj.init(dataset);
+
+
 function demo()
 {
     var functions = Plugin.init(100);
@@ -79,17 +137,20 @@ function demo()
     //rand() is private so an error
     try
     {
-         functions.rand();
+        functions.rand();
     }
     catch (e)
     {
         console.log(e);
     }
     var functions2 = Plugin.init(50);
-    
+
     var j = "Area 2 current ratio: " + functions2.getRatio();
     j = j + " --- from external getters [" + functions2.getHeight() + ","
             + functions2.getWidth() + "]";
     $("#textArea2").html(j);
+
+    if (d3Thing.isDone()=== false)
+        d3Thing.initializeSVG();
 
 }
