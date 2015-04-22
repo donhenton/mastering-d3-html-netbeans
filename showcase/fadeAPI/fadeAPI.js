@@ -1,3 +1,5 @@
+/* global d3 */
+
 /**
  * Demonstration D3 graph with an encapsulated API. Also demonstrates
  * the use of dispatching events for loose coupling
@@ -62,7 +64,7 @@ d3.fadeAPI.init = function (initConditions)
     var yScale = getYScale();
     var xAxis = null;
     var yAxis = null;
-    var data = initConditions.data;
+    var data = [];
     var attachmentID = initConditions.attachmentID;
     var isLoading = false;
     //define an onLoad event, multiple events are comma delimited list
@@ -85,7 +87,7 @@ d3.fadeAPI.init = function (initConditions)
         loaderIndicator = d3.select("#" + attachmentID).append("img")
                 .attr("src", "../../assets/img/ajax-loader.gif")
                 .attr("class", "indicatorClass")
-                .attr("style", "display: none")
+                .attr("style", "display: none");
 
         //  .style("opacity", 0);
 
@@ -146,7 +148,7 @@ d3.fadeAPI.init = function (initConditions)
                 .style("display", "block")
                 .style('pointer-events', 'none');
 
-    }
+    };
 
     var assembleAxes = function ()
     {
@@ -184,7 +186,7 @@ d3.fadeAPI.init = function (initConditions)
     };
 
 
-    assembleAxes();
+
 
 
 
@@ -226,7 +228,7 @@ d3.fadeAPI.init = function (initConditions)
     var initialDraw = function ()
     {
 
-
+        
         svg.append("path")
                 .attr("class", "line")
                 .attr("d", valueline(data));
@@ -237,11 +239,6 @@ d3.fadeAPI.init = function (initConditions)
     };
 
 
-
-
-
-
-    initialDraw();
     var focus = svg.append("g").style("display", "none");
 
 
@@ -279,9 +276,15 @@ d3.fadeAPI.init = function (initConditions)
 
     function exports()
     {
-        return 'hello';
-    }
-    ;
+        
+    };
+
+    exports.draw = function (graphData)
+    {
+        data = graphData;
+        assembleAxes();
+        initialDraw();
+    };
 
     return exports;
 
@@ -327,14 +330,15 @@ function rundemo()
                 "height": 470 - margin.top - margin.bottom,
                 "MAX_POINTS": MAX_POINTS,
                 "delay": 500,
-                "attachmentID": "graph",
-                "data": getSampleData(MAX_POINTS)
+                "attachmentID": "graph" 
+                 
 
             };
     fadeAPI = d3.fadeAPI.init(initConditions);
+    fadeAPI.draw(getSampleData(MAX_POINTS));
 }
 
 function reDraw()
 {
-    fadeAPI();
+    
 }
