@@ -7,22 +7,6 @@
  */
 
 d3.fadeAPI = {};
-var margin = null;
-var width = null;
-var height = null;
-var MAX_POINTS = null;
-var delay = null;
-var svg = null;
-var xScale = null;
-var yScale = null;
-var xAxis = null;
-var yAxis = null;
-var data = null;
-var attachmentID = null;
-var isLoading = false;
-//define an onLoad event, multiple events are comma delimited list
-var dispatch = d3.dispatch("onLoad");
-
 
 
 
@@ -33,7 +17,11 @@ d3.fadeAPI.init = function (initConditions)
         return d.index;
     };
 
+    var performUpdate = function (d)
+    {
 
+        $("#info").html(dateFormatter(d.date) + " data: " + d.data);
+    }
 
     var getXScale = function ()
     {
@@ -49,22 +37,20 @@ d3.fadeAPI.init = function (initConditions)
     var formatTimeFunction = d3.time.format("%_m/%_d");
     var dateFormatter = d3.time.format("%Y-%m-%d");
     var parseDate = dateFormatter.parse;
-
+    var notLoaded = true;
     var bisectDate = d3.bisector(function (d) {
         return d.date;
     }).left;
-    var lineSvg = null;
+
     var margin = initConditions.margin;
     var width = initConditions.width;
     var height = initConditions.height;
-    var MAX_POINTS = initConditions.MAX_POINTS;
     var delay = initConditions.delay;
     var svg = null;
     var xScale = getXScale();
     var yScale = getYScale();
     var xAxis = null;
     var yAxis = null;
-    var data = [];
     var attachmentID = initConditions.attachmentID;
     var isLoading = false;
     //define an onLoad event, multiple events are comma delimited list
@@ -72,6 +58,7 @@ d3.fadeAPI.init = function (initConditions)
     var loaderIndicator = null;
     var selectedPoint = null;
     var verticalBar = null;
+    data = initConditions.data;
 
 
     var initializeSVG = function ()
@@ -107,10 +94,7 @@ d3.fadeAPI.init = function (initConditions)
 
     var mouseMove = function ()
     {
-//    if (typeof Graph.isLoading === 'undefined')
-//    {
-//        Graph.isLoading = false;
-//    }
+
         if (isLoading === true)
         {
             return;
@@ -224,11 +208,10 @@ d3.fadeAPI.init = function (initConditions)
 
 
 
-
     var initialDraw = function ()
     {
 
-        
+
         svg.append("path")
                 .attr("class", "line")
                 .attr("d", valueline(data));
@@ -273,17 +256,56 @@ d3.fadeAPI.init = function (initConditions)
                 verticalBar.style("display", "none");
             })
             .on("mousemove", mouseMove);
-
+/////////// public api //////////////////////////////////////////////
     function exports()
     {
-        
+
+    }
+    ;
+
+
+
+    exports.fadeToAndStartIndicator = function (opacityStr)
+    {
+        $("#info").html("---");
+        if (opacityStr === "1")
+        {
+
+            isLoading = false;
+        }
+        else
+        {
+            isLoading = true;
+        }
+
+        svg.transition().delay(200).each("end", function (d, i)
+        {
+
+
+
+
+
+
+        }).style("opacity", opacityStr);
+
     };
 
-    exports.draw = function (graphData)
+
+
+
+    exports.draw = function ()
     {
-        data = graphData;
-        assembleAxes();
-        initialDraw();
+
+        if (notLoaded) {
+            //data = graphData;
+            assembleAxes();
+            initialDraw();
+            notLoaded = false;
+        }
+        else
+        {
+            console.log("redraw ");
+        }
     };
 
     return exports;
@@ -295,6 +317,32 @@ d3.fadeAPI.init = function (initConditions)
 
 
 //////////////////////////////////////////////////////////////
+var margin = {top: 5, right: 40, bottom: 50, left: 60};
+var width = 550 - margin.left - margin.right;
+var height = 470 - margin.top - margin.bottom;
+function handleTransition(opacityStr)
+{
+    if (opacityStr === "1")
+    {
+        $(".indicatorClass").css("display", "");
+        $(".indicatorClass").css("display", "none")
+
+    }
+    else
+    {
+
+
+        $(".indicatorClass").css("display", "");
+        $(".indicatorClass").css("display", "block");
+        var dy = (height + margin.top + margin.bottom) / 2;
+        var dx = (width + margin.left + margin.right) / 2;
+
+        $(".indicatorClass").css({top: dx, left: dy, position: 'absolute'});
+    }
+}
+
+
+
 
 var MAX_POINTS = 20;
 function rand(max) {
@@ -322,23 +370,24 @@ var fadeAPI = null;
 rundemo();
 function rundemo()
 {
-    var margin = {top: 5, right: 40, bottom: 50, left: 60};
+
     var initConditions =
             {
                 "margin": margin,
-                "width": 550 - margin.left - margin.right,
-                "height": 470 - margin.top - margin.bottom,
-                "MAX_POINTS": MAX_POINTS,
+                "width": width,
+                "height": height,
                 "delay": 500,
-                "attachmentID": "graph" 
-                 
+                "data": getSampleData(MAX_POINTS),
+                "attachmentID": "graph"
+
 
             };
+
     fadeAPI = d3.fadeAPI.init(initConditions);
-    fadeAPI.draw(getSampleData(MAX_POINTS));
+    fadeAPI.draw();
 }
 
 function reDraw()
 {
-    
+    fadeAPI.draw();
 }
