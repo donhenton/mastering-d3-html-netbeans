@@ -17,11 +17,6 @@ d3.fadeAPI.init = function (initConditions)
         return d.index;
     };
 
-    var performUpdate = function (d)
-    {
-
-        $("#info").html(dateFormatter(d.date) + " data: " + d.data);
-    }
 
     var getXScale = function ()
     {
@@ -53,7 +48,7 @@ d3.fadeAPI.init = function (initConditions)
     var attachmentID = initConditions.attachmentID;
     var isLoading = false;
     //define an onLoad event, multiple events are comma delimited list
-    var dispatch = d3.dispatch("onLoad");
+    var dispatch = d3.dispatch("onLoad", "newSelection");
     var loaderIndicator = null;
     var selectedPoint = null;
     var verticalBar = null;
@@ -108,7 +103,8 @@ d3.fadeAPI.init = function (initConditions)
         if (selectedPoint === null || (selectedPoint.date !== newTarget.date))
         {
             selectedPoint = newTarget;
-            performUpdate(newTarget);
+            dispatch.newSelection.apply(this, [newTarget, newTarget.index + 1]);
+
 
         }
         var yStart = yScale(newTarget.data);
@@ -204,10 +200,7 @@ d3.fadeAPI.init = function (initConditions)
 
     };
 
-    reBuild = function () {
-
-
-
+    var reBuild = function () {
         xScale.domain(d3.extent(data, function (d) {
             return d.date;
         }));
@@ -248,15 +241,6 @@ d3.fadeAPI.init = function (initConditions)
 
 
     var focus = svg.append("g").style("display", "none");
-
-
-
-    //whenever the onLoad event is raised, this process is called
-    //this context is set where the event is raised via apply/call
-    dispatch.on("onLoad", function (args) {
-        var itemCalling = this;
-        console.log("onload " + args.type + " " + itemCalling.toString());
-    });
 
     focus.append("circle")
             .attr("class", "focusCircle")
@@ -308,13 +292,14 @@ d3.fadeAPI.init = function (initConditions)
     exports.hide = function (doHide)
     {
 
-        $("#info").html("---");
+        
         isLoading = doHide;
         var opacityStr = "1";
         if (isLoading)
         {
             opacityStr = "0";
-        }
+            dispatch.onLoad.apply(svg, [{"type": "Load Start"}]);
+        } 
         svg.transition().delay(200).each("end", function (d, i)
         {
 
@@ -326,23 +311,19 @@ d3.fadeAPI.init = function (initConditions)
                 var dy = (height + margin.top + margin.bottom) / 2;
                 var dx = (width + margin.left + margin.right) / 2;
                 $(".indicatorClass").css({top: dx, left: dy, position: 'absolute'});
-                dispatch.onLoad.apply(this, [{"type": "Load Start"}]);
-                }
+               
+            }
             else
             {
                 $(".indicatorClass").css("display", "");
                 $(".indicatorClass").css("display", "none")
                 dispatch.onLoad.apply(this, [{"type": "Load End"}]);
-                
+
             }
         }).style("opacity", opacityStr);
 
     };
-
-
-
-
-
+    d3.rebind(exports, dispatch, "on");
     return exports;
 
 };
@@ -351,7 +332,7 @@ d3.fadeAPI.init = function (initConditions)
 
 
 
-//////////////////////////////////////////////////////////////
+////////////// Fade API usage //////////////////////
 var margin = {top: 5, right: 40, bottom: 50, left: 60};
 var width = 550 - margin.left - margin.right;
 var height = 470 - margin.top - margin.bottom;
@@ -395,13 +376,27 @@ function rundemo()
             };
 
     fadeAPI = d3.fadeAPI.init(initConditions);
+    fadeAPI.on("newSelection", function (d, i) {
+        var dateFormatter = d3.time.format("%Y-%m-%d");
+        var me = this;
+        $("#info").html(i + ": " + dateFormatter(d.date) + " data: " + d.data + " this (" + me.toString() + ")");
+    });
+
+
+    fadeAPI.on("onLoad", function (d ) {
+        var message = d.type; 
+        var me = this;
+        $("#info").html("Load Action: "+message+" this (" + me.toString() + ")");
+    });
+
+
 
 }
 
 function reDraw()
 {
     fadeAPI.hide(true);
-     
+
     var newData = getSampleData(MAX_POINTS);
 
     window.setTimeout(function ()
@@ -410,6 +405,8 @@ function reDraw()
         fadeAPI.hide(false);
 
     }, 1500);
- 
+
 
 }
+
+ 
