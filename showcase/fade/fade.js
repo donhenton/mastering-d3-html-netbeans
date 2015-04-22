@@ -23,6 +23,15 @@ function getSampleData(num) {
 function reDrawGraph()
 {
     Graph.data = getSampleData(MAX_POINTS);
+    
+    //these are two examples of raising the onLoad event
+    // apply takes an array of args
+    // call takes multiple arguments
+    Graph.dispatch.onLoad.apply(this,[{"type": "Redraw"}]);
+    Graph.dispatch.onLoad.call(this,{"type": "Redraw"});
+    
+    
+    
     //this fades the graph in and out after the data changes
     Graph.svg.transition().delay(200).each("end", function (d, i)
     {
@@ -38,6 +47,7 @@ function reDrawGraph()
 function reDrawWithLoad()
 {
     Graph.fadeToAndStartIndicator("0");
+    Graph.dispatch.onLoad.apply(this,[{"type": "Load"}]);
 
     window.setTimeout(function ()
     {
@@ -121,22 +131,25 @@ Graph.init = function (initConditions)
     this.data = initConditions.data;
     this.attachmentID = initConditions.attachmentID;
     this.isLoading = false;
+    //define an onLoad event, multiple events are comma delimited list
+    this.dispatch = d3.dispatch("onLoad");
 
     this.initializeSVG();
-
-
-
-
-
 
     this.assembleAxes();
     this.initialDraw();
     this.focus = this.svg.append("g").style("display", "none");
 
 
+    //d3.rebind(this, this.dispatch, "on");
 
-
-
+     
+    //whenever the onLoad event is raised, this process is called
+    //this context is set where the event is raised via apply/call
+    this.dispatch.on("onLoad", function(args) {
+       var itemCalling = this;
+       console.log("onload "+args.type+" "+itemCalling.toString());
+    });
 
     this.focus.append("circle")
             .attr("class", "focusCircle")
