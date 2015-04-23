@@ -11,8 +11,8 @@ path {
 .axis path,
 .axis line {
     fill: none;
-    stroke: grey;
-    stroke-width: 1;
+    stroke: darkred;
+    stroke-width: 2;
     shape-rendering: crispEdges;
 }
 

@@ -4,12 +4,39 @@
  * Demonstration D3 graph with an encapsulated API. Also demonstrates
  * the use of dispatching events for loose coupling
  * 
+ * PUBLIC API
+ * doHide(boolean) hide or display the graph
+ * reDraw(newData) redraw the graph
+ * 
+ * PUBLIC Constructor
+ * init(data) create the public API
+ * 
  */
 
 d3.fadeAPI = {};
 
 
-
+/**
+ * The initiation method or constructor if you will.
+ * The parameter passed in conditions initialization parameters
+ * 
+ * 
+ * var margin = {top: 5, right: 40, bottom: 50, left: 60};
+ * 
+ * var initConditions =
+    {
+        "margin": margin,
+        "width": width,
+        "height": height,
+        "delay": 500,
+        "data": getSampleData(MAX_POINTS),
+        "attachmentID": "graph"
+    };
+ * 
+ *  This returns a function object that contains the public API
+ * @param {type} initConditions
+ * @returns {d3.fadeAPI.init.exports}
+ */
 d3.fadeAPI.init = function (initConditions)
 {
 
@@ -32,6 +59,10 @@ d3.fadeAPI.init = function (initConditions)
     var formatTimeFunction = d3.time.format("%_m/%_d");
     var dateFormatter = d3.time.format("%Y-%m-%d");
     var parseDate = dateFormatter.parse;
+    /**
+     * 
+     * will give the left side of the date array of the axis
+     */
     var bisectDate = d3.bisector(function (d) {
         return d.date;
     }).left;
@@ -54,7 +85,10 @@ d3.fadeAPI.init = function (initConditions)
     var verticalBar = null;
     var data = initConditions.data;
 
-
+    /**
+     * 
+     * @returns {undefined}set up the svg element and initialize things
+     */
     var initializeSVG = function ()
     {
 
@@ -78,6 +112,10 @@ d3.fadeAPI.init = function (initConditions)
 
     initializeSVG();
 
+    /**
+     * 
+     * @type @exp;d3@pro;svg@call;line@call;x@call;yinline function used to draw the lines
+     */
     var valueline = d3.svg.line()
             .x(function (d) {
                 return  xScale(d.date);
@@ -85,15 +123,20 @@ d3.fadeAPI.init = function (initConditions)
             .y(function (d) {
                 return  yScale(d.data);
             });
-
+    /**
+     * 
+     * @returns {undefined}mouse move routine
+     */
     var mouseMove = function ()
     {
 
         if (isLoading === true)
         {
+            //ignore mouse while loading
             return;
         }
-        // console.log(isLoading)
+         
+        //given x pos of mouse use xScale to turn that into a bisector
         var x0 = xScale.invert(d3.mouse(this)[0]);
         var i = bisectDate(data, x0, 1);
         var d0 = data[i - 1];
@@ -102,16 +145,20 @@ d3.fadeAPI.init = function (initConditions)
         var newTarget = x0 - d0.date > d1.date - x0 ? d1 : d0;
         if (selectedPoint === null || (selectedPoint.date !== newTarget.date))
         {
+            //only raise event if you actually change
             selectedPoint = newTarget;
+            //raise a newSelection event, with the payload
             dispatch.newSelection.apply(this, [newTarget, newTarget.index + 1]);
 
 
         }
+        //start drawing the grey line
         var yStart = yScale(newTarget.data);
         var yLength = (yScale(height) - yStart) + margin.bottom / 4;
 
         var xBar = xScale(newTarget.date);
 
+        //focus is the encircling circle highlighting the points
         focus.select("circle.focusCircle")
                 .attr("transform",
                         "translate(" + xScale(newTarget.date) + "," +
@@ -129,6 +176,10 @@ d3.fadeAPI.init = function (initConditions)
 
     };
 
+   /**
+    * 
+    * @returns {undefined}build the axes of the graph
+    */
     var assembleAxes = function ()
     {
         xScale.domain(d3.extent(data, function (d) {
@@ -167,7 +218,11 @@ d3.fadeAPI.init = function (initConditions)
 
 
 
-
+    /**
+     * 
+     * @returns {undefined}
+     * draw the points on the graph
+     */
 
     var doDots = function ()
     {
@@ -200,6 +255,11 @@ d3.fadeAPI.init = function (initConditions)
 
     };
 
+/**
+ * 
+ * @returns {undefined}
+ * redraw after thing AFTER initialization
+ */
     var reBuild = function () {
         xScale.domain(d3.extent(data, function (d) {
             return d.date;
@@ -225,7 +285,11 @@ d3.fadeAPI.init = function (initConditions)
 
     };
 
-
+    /**
+     * 
+     * @returns {undefined}
+     * draw things for the first time
+     */
     var initialDraw = function ()
     {
 
@@ -235,11 +299,12 @@ d3.fadeAPI.init = function (initConditions)
                 .attr("d", valueline(data));
 
         doDots();
-
-
+ 
     };
 
-
+    /**
+     * define the highlighting circle
+     */
     var focus = svg.append("g").style("display", "none");
 
     focus.append("circle")
@@ -250,13 +315,13 @@ d3.fadeAPI.init = function (initConditions)
     verticalBar = svg.append("g").style("display", "none");
     verticalBar.append("rect").attr('class', 'verticalBar');
 
-    // the mouse detection rectangle  
-
+ 
 
 
     // do the inital display
     assembleAxes();
     initialDraw();
+   // the mouse detection rectangle  positioned here to be on top of the points
 
     svg.append("rect")
             .attr("width", width)
@@ -273,13 +338,19 @@ d3.fadeAPI.init = function (initConditions)
             })
             .on("mousemove", mouseMove);
 
-/////////// public api //////////////////////////////////////////////
+/////////// PUBLIC API//////////////////////////////////////////////
     function exports()
     {
 
     }
     ;
 
+    /**
+     * Routine for redrawing the graph takes new data
+     * 
+     * @param {type} newData
+     * @returns {undefined}
+     */
     exports.reDraw = function (newData)
     {
 
@@ -288,7 +359,16 @@ d3.fadeAPI.init = function (initConditions)
 
     };
 
-
+    /**
+     * if doHide is true then this will fade the graph out after a delay
+     * it also sends a onLoad event with payload of Load Start  
+     * 
+     * if false, then it brings the graph back up and the onLoad event 
+     * is Load End
+     * 
+     * @param {boolean} doHide true or false
+     * @returns {void}
+     */
     exports.hide = function (doHide)
     {
 
@@ -299,6 +379,7 @@ d3.fadeAPI.init = function (initConditions)
         if (isLoading)
         {
             opacityStr = "0";
+            //raise onLoadEvent --Start
             dispatch.onLoad.apply(svg, [{"type": "Load Start"}]);
         }
         svg.transition().delay(200).each("end", function (d, i)
@@ -316,24 +397,27 @@ d3.fadeAPI.init = function (initConditions)
                 hWide = '-' + hWide + 'px';
                 hTall = '-' + hTall + 'px';
                 $(".indicatorClass").css(
-                        {"top": "50%", 
-                         "left": "50%", 
-                         "margin-left" : hWide,
-                         "margin-top" : hTall,
-                         "position": 'absolute'});
+                        {"top": "50%",
+                            "left": "50%",
+                            "margin-left": hWide,
+                            "margin-top": hTall,
+                            "position": 'absolute'});
 
             }
             else
             {
                 $(".indicatorClass").css("display", "");
                 $(".indicatorClass").css("display", "none")
+                //raise onLoad Event End
                 dispatch.onLoad.apply(this, [{"type": "Load End"}]);
 
             }
         }).style("opacity", opacityStr);
 
     };
+    //set up routing of 'exports.on' to 'dispatch.on'
     d3.rebind(exports, dispatch, "on");
+    //expose the public api
     return exports;
 
 };
@@ -342,7 +426,7 @@ d3.fadeAPI.init = function (initConditions)
 
 
 
-////////////// Fade API usage //////////////////////
+////////////// Fade API Example usage //////////////////////
 var margin = {top: 5, right: 40, bottom: 50, left: 60};
 var width = 550 - margin.left - margin.right;
 var height = 470 - margin.top - margin.bottom;
@@ -384,15 +468,20 @@ function rundemo()
 
 
             };
-
+    //create a object that contains the public API        
     fadeAPI = d3.fadeAPI.init(initConditions);
+    
+    // bind code to handle a 'newSelection' event which is whenever
+    // the mouse moves near a new point, the binding sends the data of the
+    //point and the index
+    //it also sets the meaning of 'this'
     fadeAPI.on("newSelection", function (d, i) {
         var dateFormatter = d3.time.format("%Y-%m-%d");
         var me = this;
         $("#info").html(i + ": " + dateFormatter(d.date) + " data: " + d.data + " this (" + me.toString() + ")");
     });
 
-
+    //bind code to handle the onLoad event
     fadeAPI.on("onLoad", function (d) {
         var message = d.type;
         var me = this;
@@ -402,16 +491,23 @@ function rundemo()
 
 
 }
-
-function reDraw()
+/**
+ * 
+ * @returns {undefined}
+ * code for the redraw button
+ */
+function reLoad()
 {
+    //hide the graph
     fadeAPI.hide(true);
-
+    //get new data
     var newData = getSampleData(MAX_POINTS);
-
+    //timer for fake delay
     window.setTimeout(function ()
     {
+        //redraw the graph
         fadeAPI.reDraw(newData);
+        //unhide it
         fadeAPI.hide(false);
 
     }, 1500);
