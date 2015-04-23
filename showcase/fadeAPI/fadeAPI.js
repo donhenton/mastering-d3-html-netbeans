@@ -81,7 +81,7 @@ d3.fadeAPI.init = function (initConditions)
     //define an onLoad event, multiple events are comma delimited list
     var dispatch = d3.dispatch("onLoad", "newSelection");
     var loaderIndicator = null;
-    var selectedPoint = {"dataItem":null,"svgItem":null};
+    var selectedPoint = {"dataItem": null, "svgItem": null};
     var verticalBar = null;
     var data = initConditions.data;
     var dotColor = "blue";
@@ -116,30 +116,93 @@ d3.fadeAPI.init = function (initConditions)
     /**
      * 
      * 
-     * inline function used to draw the lines
+     * draw the lines
      */
-    var valueline = d3.svg.line()
-            .x(function (d) {
-                return  xScale(d.date);
-            })
-            .y(function (d) {
-                return  yScale(d.data);
-            });
-    
-     
-    var setDot = function(pt,on) 
+
+    var drawLine = function (isNew)
     {
-        if (on)
+
+
+
+        var valueline = d3.svg.line()
+                .interpolate("linear")
+                .x(function (d) {
+                    return  xScale(d.date);
+                })
+                .y(function (d) {
+                    return  yScale(d.data);
+                });
+
+        var mask = new SVGMask(mouseActionRect)
+                .x(xScale)
+                .y(yScale)
+                .style("fill", "#fff")
+                .reveal([data[7].date, data[11].date])
+
+        var brush = d3.svg.brush().x(xScale);
+        /*
+         var leftHandle = focus.append("image")
+         .attr("width", 15)
+         .attr("height", 100)
+         .attr("x", xScale(data[7].date) - 5)
+         .attr("xlink:href", 'img/left-handle.png');
+         
+         var rightHandle = focus.append("image")
+         .attr("width", 15)
+         .attr("height", 100)
+         .attr("x", xScale(data[11].date) - 7)
+         .attr("xlink:href", 'img/right-handle.png');
+         */
+        brush.on("brush", function () {
+            var ext = brush.extent();
+            mask.reveal(ext);
+            // leftHandle.attr("x", x(ext[0]) - 5);
+            // rightHandle.attr("x", x(ext[1]) - 7);
+        });
+
+
+        if (isNew)
         {
-            pt.attr("fill","red");
+            svg.append("path") //add the line
+                    .attr("class", "line")
+                    .attr("d", valueline(data));
+
+            svg.append("g")
+                    .attr("class", "x brush")
+                    .call(brush.extent([data[7].date, data[11].date]))
+                    .selectAll("rect")
+                    .attr("height", height)
+                     
+                    .style({
+                        "stroke": "red", "fill": "red","opacity": .25
+                    });
+
         }
         else
         {
-            pt.attr("fill",dotColor);
+            svg.select(".line")   // change the line
+                    .attr("d", valueline(data));
+
         }
-        
+
+
+
+
+
+    }
+    var setDot = function (pt, on)
+    {
+        if (on)
+        {
+            pt.attr("fill", "red");
+        }
+        else
+        {
+            pt.attr("fill", dotColor);
+        }
+
     };
-    
+
     /**
      * 
      * @returns {undefined}mouse move routine
@@ -169,27 +232,27 @@ d3.fadeAPI.init = function (initConditions)
         else
         {
             newTarget = d0;
-            circleIdx = i -1;
+            circleIdx = i - 1;
         }
-        
+
         var pointDataArray = d3.selectAll(".dot");
-         
+
         if (selectedPoint.dataItem === null || (selectedPoint.dataItem.date !== newTarget.date))
         {
             //only raise event if you actually change
             selectedPoint.dataItem = newTarget;
-            
+
             //clean up the old if it exists
             if (selectedPoint.svgItem !== null)
             {
-               
-              setDot(selectedPoint.svgItem,false);
+
+                setDot(selectedPoint.svgItem, false);
             }
-                // find the circle
+            // find the circle
             //d3.select(svgItem) is the same as $(htmlElement) in jQuery
             selectedPoint.svgItem = d3.select(pointDataArray[0][circleIdx]);
-            setDot(selectedPoint.svgItem,true);
-             //raise a newSelection event, with the payload
+            setDot(selectedPoint.svgItem, true);
+            //raise a newSelection event, with the payload
             dispatch.newSelection.apply(this, [newTarget, newTarget.index + 1]);
 
 
@@ -271,7 +334,7 @@ d3.fadeAPI.init = function (initConditions)
 
         var dots = svg.selectAll(".dot").data(data, keyFunction);
 
-        dots.enter().append("circle") 
+        dots.enter().append("circle")
                 .attr("fill", dotColor)
                 .attr("r", 5)
                 .attr("class", "dot")
@@ -281,8 +344,8 @@ d3.fadeAPI.init = function (initConditions)
                 .attr("cy", function (d) {
                     return yScale(d.data);
                 });
-                
-         
+
+
 
         dots.attr("r", 5)
                 .attr("cx", function (d) {
@@ -296,7 +359,7 @@ d3.fadeAPI.init = function (initConditions)
         dots.exit().remove();
         //update
 
-         
+
 
     };
 
@@ -306,13 +369,13 @@ d3.fadeAPI.init = function (initConditions)
      * redraw after thing AFTER initialization
      */
     var reBuild = function () {
-        
+
         if (selectedPoint.svgItem != null)
         {
-             
-            setDot(selectedPoint.svgItem,false);
+
+            setDot(selectedPoint.svgItem, false);
         }
-        selectedPoint = {"dataItem":null,"svgItem":null};
+        selectedPoint = {"dataItem": null, "svgItem": null};
         xScale.domain(d3.extent(data, function (d) {
             return d.date;
         }));
@@ -322,8 +385,10 @@ d3.fadeAPI.init = function (initConditions)
 
 
         //lines
-        svg.select(".line")   // change the line
-                .attr("d", valueline(data));
+        // svg.select(".line")   // change the line
+        //        .attr("d", valueline(data));
+
+        drawLine(false);
         svg.select(".x.axis") // change the x axis
                 .call(xAxis);
         svg.select(".y.axis") // change the y axis
@@ -345,10 +410,17 @@ d3.fadeAPI.init = function (initConditions)
     var initialDraw = function ()
     {
 
+        drawLine(true);
 
-        svg.append("path")
-                .attr("class", "line")
-                .attr("d", valueline(data));
+//        svg.select(".line")   // change the line
+//                .attr("d", valueline(data));
+//
+//        svg.append("path") //add the line
+//                .attr("class", "line")
+//                .attr("d", valueline(data));
+
+
+
 
         doDots();
 
@@ -372,10 +444,10 @@ d3.fadeAPI.init = function (initConditions)
 
     // do the inital display
     assembleAxes();
-    initialDraw();
+
     // the mouse detection rectangle  positioned here to be on top of the points
 
-    svg.append("rect")
+    var mouseActionRect = svg.append("rect")
             .attr("width", width)
             .attr("height", height)
             .style("fill", "none")
@@ -389,6 +461,14 @@ d3.fadeAPI.init = function (initConditions)
                 verticalBar.style("display", "none");
             })
             .on("mousemove", mouseMove);
+
+    initialDraw();
+/////brush /////////////////////////////////////////////////////
+//http://bl.ocks.org/jisaacks/5678983
+
+    var brushFocus = svg.append("g");
+
+
 
 /////////// PUBLIC API//////////////////////////////////////////////
     function exports()
