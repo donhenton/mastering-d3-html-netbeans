@@ -30,7 +30,9 @@ div.tooltip {					/* set the CSS for tooltip divs */
     pointer-events: none;			/* 'none' tells the mouse to ignore the rectangle */
 }
 
-img.indicatorClass
+div.graph
 {
-    position: absolute;
+     position: relative ; 
+    
 }
+

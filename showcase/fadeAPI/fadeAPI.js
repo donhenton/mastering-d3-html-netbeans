@@ -251,6 +251,13 @@ d3.fadeAPI.init = function (initConditions)
     verticalBar.append("rect").attr('class', 'verticalBar');
 
     // the mouse detection rectangle  
+
+
+
+    // do the inital display
+    assembleAxes();
+    initialDraw();
+
     svg.append("rect")
             .attr("width", width)
             .attr("height", height)
@@ -265,13 +272,6 @@ d3.fadeAPI.init = function (initConditions)
                 verticalBar.style("display", "none");
             })
             .on("mousemove", mouseMove);
-
-
-    // do the inital display
-    assembleAxes();
-    initialDraw();
-
-
 
 /////////// public api //////////////////////////////////////////////
     function exports()
@@ -292,14 +292,15 @@ d3.fadeAPI.init = function (initConditions)
     exports.hide = function (doHide)
     {
 
-        
+
+        var img = $(".indicatorClass");
         isLoading = doHide;
         var opacityStr = "1";
         if (isLoading)
         {
             opacityStr = "0";
             dispatch.onLoad.apply(svg, [{"type": "Load Start"}]);
-        } 
+        }
         svg.transition().delay(200).each("end", function (d, i)
         {
 
@@ -308,10 +309,19 @@ d3.fadeAPI.init = function (initConditions)
             {
                 $(".indicatorClass").css("display", "");
                 $(".indicatorClass").css("display", "block");
-                var dy = (height + margin.top + margin.bottom) / 2;
-                var dx = (width + margin.left + margin.right) / 2;
-                $(".indicatorClass").css({top: dx, left: dy, position: 'absolute'});
-               
+                var hWide = (img.width()) / 2; //half the image's width
+                var hTall = (img.height()) / 2; //half the image's height, etc.
+
+                // attach negative and pixel for CSS rule
+                hWide = '-' + hWide + 'px';
+                hTall = '-' + hTall + 'px';
+                $(".indicatorClass").css(
+                        {"top": "50%", 
+                         "left": "50%", 
+                         "margin-left" : hWide,
+                         "margin-top" : hTall,
+                         "position": 'absolute'});
+
             }
             else
             {
@@ -383,10 +393,10 @@ function rundemo()
     });
 
 
-    fadeAPI.on("onLoad", function (d ) {
-        var message = d.type; 
+    fadeAPI.on("onLoad", function (d) {
+        var message = d.type;
         var me = this;
-        $("#info").html("Load Action: "+message+" this (" + me.toString() + ")");
+        $("#info").html("Load Action: " + message + " this (" + me.toString() + ")");
     });
 
 
