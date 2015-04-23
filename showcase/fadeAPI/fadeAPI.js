@@ -24,14 +24,14 @@ d3.fadeAPI = {};
  * var margin = {top: 5, right: 40, bottom: 50, left: 60};
  * 
  * var initConditions =
-    {
-        "margin": margin,
-        "width": width,
-        "height": height,
-        "delay": 500,
-        "data": getSampleData(MAX_POINTS),
-        "attachmentID": "graph"
-    };
+ {
+ "margin": margin,
+ "width": width,
+ "height": height,
+ "delay": 500,
+ "data": getSampleData(MAX_POINTS),
+ "attachmentID": "graph"
+ };
  * 
  *  This returns a function object that contains the public API
  * @param {type} initConditions
@@ -81,7 +81,7 @@ d3.fadeAPI.init = function (initConditions)
     //define an onLoad event, multiple events are comma delimited list
     var dispatch = d3.dispatch("onLoad", "newSelection");
     var loaderIndicator = null;
-    var selectedPoint = null;
+    var selectedPoint = {"dataItem":null,"svgItem":null};
     var verticalBar = null;
     var data = initConditions.data;
 
@@ -136,19 +136,43 @@ d3.fadeAPI.init = function (initConditions)
             //ignore mouse while loading
             return;
         }
-         
+
         //given x pos of mouse use xScale to turn that into a bisector
         var x0 = xScale.invert(d3.mouse(this)[0]);
         var i = bisectDate(data, x0, 1);
         var d0 = data[i - 1];
         var d1 = data[i];
 
-        var newTarget = x0 - d0.date > d1.date - x0 ? d1 : d0;
-        if (selectedPoint === null || (selectedPoint.date !== newTarget.date))
+        var newTarget = null;
+        var circleIdx = -1;
+        if (x0 - d0.date > d1.date - x0)
+        {
+            newTarget = d1;
+            circleIdx = i;
+        }
+        else
+        {
+            newTarget = d0;
+            circleIdx = i -1;
+        }
+        
+        var pointDataArray = d3.selectAll(".dot");
+         
+        if (selectedPoint.dataItem === null || (selectedPoint.dataItem.date !== newTarget.date))
         {
             //only raise event if you actually change
-            selectedPoint = newTarget;
-            //raise a newSelection event, with the payload
+            selectedPoint.dataItem = newTarget;
+            
+            //clean up the old if it exists
+            if (selectedPoint.svgItem !== null)
+            {
+                selectedPoint.svgItem.attr("fill","blue");
+            }
+                // find the circle
+            //d3.select(svgItem) is the same as $(htmlElement) in jQuery
+            selectedPoint.svgItem = d3.select(pointDataArray[0][circleIdx]);
+            selectedPoint.svgItem.attr("fill","red");
+             //raise a newSelection event, with the payload
             dispatch.newSelection.apply(this, [newTarget, newTarget.index + 1]);
 
 
@@ -177,10 +201,10 @@ d3.fadeAPI.init = function (initConditions)
 
     };
 
-   /**
-    * 
-    * @returns {undefined}build the axes of the graph
-    */
+    /**
+     * 
+     * @returns {undefined}build the axes of the graph
+     */
     var assembleAxes = function ()
     {
         xScale.domain(d3.extent(data, function (d) {
@@ -230,7 +254,7 @@ d3.fadeAPI.init = function (initConditions)
 
         var dots = svg.selectAll(".dot").data(data, keyFunction);
 
-        dots.enter().append("circle")
+        dots.enter().append("circle") 
                 .attr("fill", "blue")
                 .attr("r", 5)
                 .attr("class", "dot")
@@ -240,6 +264,8 @@ d3.fadeAPI.init = function (initConditions)
                 .attr("cy", function (d) {
                     return yScale(d.data);
                 });
+                
+         
 
         dots.attr("r", 5)
                 .attr("cx", function (d) {
@@ -253,15 +279,19 @@ d3.fadeAPI.init = function (initConditions)
         dots.exit().remove();
         //update
 
+         
 
     };
 
-/**
- * 
- * @returns {undefined}
- * redraw after thing AFTER initialization
- */
+    /**
+     * 
+     * @returns {undefined}
+     * redraw after thing AFTER initialization
+     */
     var reBuild = function () {
+        
+         
+        selectedPoint = {"dataItem":null,"svgItem":null};
         xScale.domain(d3.extent(data, function (d) {
             return d.date;
         }));
@@ -300,7 +330,7 @@ d3.fadeAPI.init = function (initConditions)
                 .attr("d", valueline(data));
 
         doDots();
- 
+
     };
 
     /**
@@ -316,13 +346,13 @@ d3.fadeAPI.init = function (initConditions)
     verticalBar = svg.append("g").style("display", "none");
     verticalBar.append("rect").attr('class', 'verticalBar');
 
- 
+
 
 
     // do the inital display
     assembleAxes();
     initialDraw();
-   // the mouse detection rectangle  positioned here to be on top of the points
+    // the mouse detection rectangle  positioned here to be on top of the points
 
     svg.append("rect")
             .attr("width", width)
@@ -471,7 +501,7 @@ function rundemo()
             };
     //create a object that contains the public API        
     fadeAPI = d3.fadeAPI.init(initConditions);
-    
+
     // bind code to handle a 'newSelection' event which is whenever
     // the mouse moves near a new point, the binding sends the data of the
     //point and the index
