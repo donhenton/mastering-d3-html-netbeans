@@ -114,7 +114,8 @@ d3.fadeAPI.init = function (initConditions)
 
     /**
      * 
-     * @type @exp;d3@pro;svg@call;line@call;x@call;yinline function used to draw the lines
+     * 
+     * inline function used to draw the lines
      */
     var valueline = d3.svg.line()
             .x(function (d) {
