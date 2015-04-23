@@ -84,6 +84,7 @@ d3.fadeAPI.init = function (initConditions)
     var selectedPoint = {"dataItem":null,"svgItem":null};
     var verticalBar = null;
     var data = initConditions.data;
+    var dotColor = "blue";
 
     /**
      * 
@@ -124,6 +125,21 @@ d3.fadeAPI.init = function (initConditions)
             .y(function (d) {
                 return  yScale(d.data);
             });
+    
+     
+    var setDot = function(pt,on) 
+    {
+        if (on)
+        {
+            pt.attr("fill","red");
+        }
+        else
+        {
+            pt.attr("fill",dotColor);
+        }
+        
+    };
+    
     /**
      * 
      * @returns {undefined}mouse move routine
@@ -166,12 +182,13 @@ d3.fadeAPI.init = function (initConditions)
             //clean up the old if it exists
             if (selectedPoint.svgItem !== null)
             {
-                selectedPoint.svgItem.attr("fill","blue");
+               
+              setDot(selectedPoint.svgItem,false);
             }
                 // find the circle
             //d3.select(svgItem) is the same as $(htmlElement) in jQuery
             selectedPoint.svgItem = d3.select(pointDataArray[0][circleIdx]);
-            selectedPoint.svgItem.attr("fill","red");
+            setDot(selectedPoint.svgItem,true);
              //raise a newSelection event, with the payload
             dispatch.newSelection.apply(this, [newTarget, newTarget.index + 1]);
 
@@ -255,7 +272,7 @@ d3.fadeAPI.init = function (initConditions)
         var dots = svg.selectAll(".dot").data(data, keyFunction);
 
         dots.enter().append("circle") 
-                .attr("fill", "blue")
+                .attr("fill", dotColor)
                 .attr("r", 5)
                 .attr("class", "dot")
                 .attr("cx", function (d) {
@@ -290,7 +307,11 @@ d3.fadeAPI.init = function (initConditions)
      */
     var reBuild = function () {
         
-         
+        if (selectedPoint.svgItem != null)
+        {
+             
+            setDot(selectedPoint.svgItem,false);
+        }
         selectedPoint = {"dataItem":null,"svgItem":null};
         xScale.domain(d3.extent(data, function (d) {
             return d.date;
@@ -341,7 +362,7 @@ d3.fadeAPI.init = function (initConditions)
     focus.append("circle")
             .attr("class", "focusCircle")
             .style("fill", "none")
-            .style("stroke", "blue")
+            .style("stroke", "darkRed")
             .attr("r", 14);
     verticalBar = svg.append("g").style("display", "none");
     verticalBar.append("rect").attr('class', 'verticalBar');
