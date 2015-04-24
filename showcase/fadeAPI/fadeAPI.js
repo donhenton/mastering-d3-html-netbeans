@@ -100,11 +100,15 @@ d3.fadeAPI.init = function (initConditions)
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        loaderIndicator = d3.select("#" + attachmentID).append("img")
-                .attr("src", "../../assets/img/ajax-loader.gif")
-                .attr("class", "indicatorClass")
+        loaderIndicator = d3.select("#" + attachmentID).append("div")
+        .attr("class", "indicatorClass")
                 .attr("style", "display: none");
-
+                
+        loaderIndicator.append("img")
+                .attr("src", "../../assets/img/ajax-loader.gif")
+                
+         loaderIndicator.append("span")
+                .text(" Loading....")       
         //  .style("opacity", 0);
 
 
@@ -424,8 +428,7 @@ d3.fadeAPI.init = function (initConditions)
     exports.hide = function (doHide)
     {
 
-
-        var img = $(".indicatorClass");
+        var messageDIv  = $(".indicatorClass");
         isLoading = doHide;
         var opacityStr = "1";
         if (isLoading)
@@ -440,26 +443,15 @@ d3.fadeAPI.init = function (initConditions)
 
             if (isLoading)
             {
-                $(".indicatorClass").css("display", "");
-                $(".indicatorClass").css("display", "block");
-                var hWide = (img.width()) / 2; //half the image's width
-                var hTall = (img.height()) / 2; //half the image's height, etc.
-
-                // attach negative and pixel for CSS rule
-                hWide = '-' + hWide + 'px';
-                hTall = '-' + hTall + 'px';
-                $(".indicatorClass").css(
-                        {"top": "50%",
-                            "left": "50%",
-                            "margin-left": hWide,
-                            "margin-top": hTall,
-                            "position": 'absolute'});
+                messageDIv.css("display", "");
+                messageDIv.css("display", "block");
+                messageDIv.css({"top": "50%","left": "50%","position": 'absolute'});
 
             }
             else
             {
-                $(".indicatorClass").css("display", "");
-                $(".indicatorClass").css("display", "none")
+                messageDIv.css("display", "");
+                messageDIv.css("display", "none")
                 //raise onLoad Event End
                 dispatch.onLoad.apply(this, [{"type": "Load End"}]);
 
