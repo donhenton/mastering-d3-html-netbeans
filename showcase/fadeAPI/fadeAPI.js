@@ -95,10 +95,12 @@ d3.fadeAPI.init = function (initConditions)
 
         svg = d3.select("#" + attachmentID)
                 .append("svg")
-                .attr("height", height + margin.top + margin.bottom).attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .attr("width", width + margin.left + margin.right)
 
                 .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                .attr("transform", "translate(" + margin.left + "," 
+                + margin.top + ")");
 
         loaderIndicator = d3.select("#" + attachmentID).append("div")
                 .attr("class", "indicatorClass")
@@ -107,19 +109,30 @@ d3.fadeAPI.init = function (initConditions)
         loaderIndicator.append("img")
                 .attr("src", "../../assets/img/ajax-loader.gif")
                 .attr("class", "imageIndicator");
-  
-        var hWide = 35; //half the image's width
-        var hTall = 35; //half the image's height, etc.
-        // attach negative and pixel for CSS rule
-        hWide = '-' + hWide + 'px';
-        hTall = '-' + hTall + 'px';
-        $(".indicatorClass").css(
-                {"top": "50%",
-                    "left": "50%",
-                    "margin-left": hWide,
-                    "margin-top": hTall,
-                    "position": 'absolute'});
 
+        
+        $(".indicatorClass").css(
+                {
+                    "top": 0 +margin.top +(height/2) -35,
+                    "left": 0 +margin.left +(width/2) -35 ,
+                    "position": 'absolute'});
+                
+                
+        
+//        console.log("ctm "+ctm);
+//        var ctm = svg[0][0].getScreenCTM();
+//        var hh = $('<span>').appendTo('body');
+//        hh.css(
+//                {"border":"thin solid green",
+//                 "position":"absolute",
+//                 "width":width+margin.right,
+//                 "height":height,
+//                 "class": "bonzo",
+//                 "top": ctm.f,
+//                 "left": ctm.e  
+//        
+//                }
+//                );
     };
 
 
@@ -390,6 +403,7 @@ d3.fadeAPI.init = function (initConditions)
     svg.append("rect")
             .attr("width", width)
             .attr("height", height)
+            .attr("class", "mouseRect")
             .style("fill", "none")
             .style("pointer-events", "all")
             .on("mouseover", function () {
@@ -436,7 +450,7 @@ d3.fadeAPI.init = function (initConditions)
     exports.hide = function (doHide)
     {
 
-        var messageDIv = $(".indicatorClass");
+        var messageDiv = $(".indicatorClass");
         isLoading = doHide;
         var opacityStr = "1";
         if (isLoading)
@@ -451,15 +465,15 @@ d3.fadeAPI.init = function (initConditions)
 
             if (isLoading)
             {
-                messageDIv.css("display", "");
-                messageDIv.css("display", "block");
-                messageDIv.css({"top": "50%", "left": "50%", "position": 'absolute'});
+                messageDiv.css("display", "");
+                messageDiv.css("display", "block");
+               
 
             }
             else
             {
-                messageDIv.css("display", "");
-                messageDIv.css("display", "none")
+                messageDiv.css("display", "");
+                messageDiv.css("display", "none")
                 //raise onLoad Event End
                 dispatch.onLoad.apply(this, [{"type": "Load End"}]);
 
