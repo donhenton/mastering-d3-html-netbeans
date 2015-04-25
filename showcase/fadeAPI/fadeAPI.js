@@ -99,26 +99,27 @@ d3.fadeAPI.init = function (initConditions)
                 .attr("width", width + margin.left + margin.right)
 
                 .append("g")
-                .attr("transform", "translate(" + margin.left + "," 
-                + margin.top + ")");
+                .attr("transform", "translate(" + margin.left + ","
+                        + margin.top + ")");
 
         loaderIndicator = d3.select("#" + attachmentID).append("div")
                 .attr("class", "indicatorClass")
-                .attr("style", "display: none");
+                .attr("style", "display: none")
 
         loaderIndicator.append("img")
                 .attr("src", "../../assets/img/ajax-loader.gif")
                 .attr("class", "imageIndicator");
 
-        
+
         $(".indicatorClass").css(
                 {
-                    "top": 0 +margin.top +(height/2) -35,
-                    "left": 0 +margin.left +(width/2) -35 ,
+                    "top": 0 + margin.top + (height / 2) - 35,
+                    "left": 0 + margin.left + (width / 2) - 35,
                     "position": 'absolute'});
-                
-                
-        
+
+
+
+//        this centers  rectangle when attached to the body
 //        console.log("ctm "+ctm);
 //        var ctm = svg[0][0].getScreenCTM();
 //        var hh = $('<span>').appendTo('body');
@@ -467,7 +468,7 @@ d3.fadeAPI.init = function (initConditions)
             {
                 messageDiv.css("display", "");
                 messageDiv.css("display", "block");
-               
+
 
             }
             else
