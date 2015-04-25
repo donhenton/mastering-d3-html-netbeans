@@ -81,7 +81,7 @@ d3.fadeAPI.init = function (initConditions)
     //define an onLoad event, multiple events are comma delimited list
     var dispatch = d3.dispatch("onLoad", "newSelection");
     var loaderIndicator = null;
-    var selectedPoint = {"dataItem":null,"svgItem":null};
+    var selectedPoint = {"dataItem": null, "svgItem": null};
     var verticalBar = null;
     var data = initConditions.data;
     var dotColor = "blue";
@@ -101,16 +101,24 @@ d3.fadeAPI.init = function (initConditions)
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         loaderIndicator = d3.select("#" + attachmentID).append("div")
-        .attr("class", "indicatorClass")
+                .attr("class", "indicatorClass")
                 .attr("style", "display: none");
-                
+
         loaderIndicator.append("img")
                 .attr("src", "../../assets/img/ajax-loader.gif")
-                
-         loaderIndicator.append("span")
-                .text(" Loading....")       
-        //  .style("opacity", 0);
-
+                .attr("class", "imageIndicator");
+  
+        var hWide = 35; //half the image's width
+        var hTall = 35; //half the image's height, etc.
+        // attach negative and pixel for CSS rule
+        hWide = '-' + hWide + 'px';
+        hTall = '-' + hTall + 'px';
+        $(".indicatorClass").css(
+                {"top": "50%",
+                    "left": "50%",
+                    "margin-left": hWide,
+                    "margin-top": hTall,
+                    "position": 'absolute'});
 
     };
 
@@ -129,21 +137,21 @@ d3.fadeAPI.init = function (initConditions)
             .y(function (d) {
                 return  yScale(d.data);
             });
-    
-     
-    var setDot = function(pt,on) 
+
+
+    var setDot = function (pt, on)
     {
         if (on)
         {
-            pt.attr("fill","red");
+            pt.attr("fill", "red");
         }
         else
         {
-            pt.attr("fill",dotColor);
+            pt.attr("fill", dotColor);
         }
-        
+
     };
-    
+
     /**
      * 
      * @returns {undefined}mouse move routine
@@ -173,27 +181,27 @@ d3.fadeAPI.init = function (initConditions)
         else
         {
             newTarget = d0;
-            circleIdx = i -1;
+            circleIdx = i - 1;
         }
-        
+
         var pointDataArray = d3.selectAll(".dot");
-         
+
         if (selectedPoint.dataItem === null || (selectedPoint.dataItem.date !== newTarget.date))
         {
             //only raise event if you actually change
             selectedPoint.dataItem = newTarget;
-            
+
             //clean up the old if it exists
             if (selectedPoint.svgItem !== null)
             {
-               
-              setDot(selectedPoint.svgItem,false);
+
+                setDot(selectedPoint.svgItem, false);
             }
-                // find the circle
+            // find the circle
             //d3.select(svgItem) is the same as $(htmlElement) in jQuery
             selectedPoint.svgItem = d3.select(pointDataArray[0][circleIdx]);
-            setDot(selectedPoint.svgItem,true);
-             //raise a newSelection event, with the payload
+            setDot(selectedPoint.svgItem, true);
+            //raise a newSelection event, with the payload
             dispatch.newSelection.apply(this, [newTarget, newTarget.index + 1]);
 
 
@@ -275,7 +283,7 @@ d3.fadeAPI.init = function (initConditions)
 
         var dots = svg.selectAll(".dot").data(data, keyFunction);
 
-        dots.enter().append("circle") 
+        dots.enter().append("circle")
                 .attr("fill", dotColor)
                 .attr("r", 5)
                 .attr("class", "dot")
@@ -285,8 +293,8 @@ d3.fadeAPI.init = function (initConditions)
                 .attr("cy", function (d) {
                     return yScale(d.data);
                 });
-                
-         
+
+
 
         dots.attr("r", 5)
                 .attr("cx", function (d) {
@@ -300,7 +308,7 @@ d3.fadeAPI.init = function (initConditions)
         dots.exit().remove();
         //update
 
-         
+
 
     };
 
@@ -310,13 +318,13 @@ d3.fadeAPI.init = function (initConditions)
      * redraw after thing AFTER initialization
      */
     var reBuild = function () {
-        
+
         if (selectedPoint.svgItem != null)
         {
-             
-            setDot(selectedPoint.svgItem,false);
+
+            setDot(selectedPoint.svgItem, false);
         }
-        selectedPoint = {"dataItem":null,"svgItem":null};
+        selectedPoint = {"dataItem": null, "svgItem": null};
         xScale.domain(d3.extent(data, function (d) {
             return d.date;
         }));
@@ -428,7 +436,7 @@ d3.fadeAPI.init = function (initConditions)
     exports.hide = function (doHide)
     {
 
-        var messageDIv  = $(".indicatorClass");
+        var messageDIv = $(".indicatorClass");
         isLoading = doHide;
         var opacityStr = "1";
         if (isLoading)
@@ -445,7 +453,7 @@ d3.fadeAPI.init = function (initConditions)
             {
                 messageDIv.css("display", "");
                 messageDIv.css("display", "block");
-                messageDIv.css({"top": "50%","left": "50%","position": 'absolute'});
+                messageDIv.css({"top": "50%", "left": "50%", "position": 'absolute'});
 
             }
             else
