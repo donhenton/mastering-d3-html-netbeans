@@ -1,0 +1,43 @@
+var gini = [
+	{
+	    "key": "Canada",
+	    "value": 32.1,
+		"rank": 101
+	},
+	{
+		"key": "France",
+		"value": 32.7,
+		"rank": 99
+	},
+    {
+        "key": "Germany",
+        "value": 27,
+		"rank": 124
+    },
+    {
+        "key": "Italy",
+        "value": 32,
+		"rank": 102
+    },
+	{
+		"key": "Japan",
+		"value": 37.6,
+		"rank": 76
+	},
+    {
+        "key": "United Kingdom",
+        "value": 34,
+		"rank": 92
+    },
+    {
+        "key": "Russia",
+        "value": 42.2,
+        "rank": 52
+    },
+    {
+        "key": "United States",
+        "value": 45,
+        "rank": 39
+    }
+
+]

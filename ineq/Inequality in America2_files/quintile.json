@@ -1,0 +1,398 @@
+quintile = [
+    {
+        "Highest fifth": 169633,
+        "Third fifth": 49309,
+        "Fourth fifth": 79040,
+        "Second fifth": 28636,
+        "Top 5 percent": 287686,
+        "Year": 2010,
+        "Lowest fifth": 11034
+    },
+    {
+        "Highest fifth": 173664,
+        "Third fifth": 50352,
+        "Fourth fifth": 79993,
+        "Second fifth": 29740,
+        "Top 5 percent": 300264,
+        "Year": 2009,
+        "Lowest fifth": 11743
+    },
+    {
+        "Highest fifth": 173221,
+        "Third fifth": 50766,
+        "Fourth fifth": 80769,
+        "Second fifth": 29890,
+        "Top 5 percent": 298437,
+        "Year": 2008,
+        "Lowest fifth": 11803
+    },
+    {
+        "Highest fifth": 176632,
+        "Third fifth": 52544,
+        "Fourth fifth": 83190,
+        "Second fifth": 30960,
+        "Top 5 percent": 301999,
+        "Year": 2007,
+        "Lowest fifth": 12147
+    },
+    {
+        "Highest fifth": 181858,
+        "Third fifth": 52148,
+        "Fourth fifth": 82542,
+        "Second fifth": 31119,
+        "Top 5 percent": 321611,
+        "Year": 2006,
+        "Lowest fifth": 12276
+    },
+    {
+        "Highest fifth": 178230,
+        "Third fifth": 51711,
+        "Fourth fifth": 81334,
+        "Second fifth": 30554,
+        "Top 5 percent": 314007,
+        "Year": 2005,
+        "Lowest fifth": 11900
+    },
+    {
+        "Highest fifth": 174803,
+        "Third fifth": 51263,
+        "Fourth fifth": 80830,
+        "Second fifth": 30256,
+        "Top 5 percent": 304612,
+        "Year": "2004 (35)",
+        "Lowest fifth": 11825
+    },
+    {
+        "Highest fifth": 174359,
+        "Third fifth": 51673,
+        "Fourth fifth": 81791,
+        "Second fifth": 30441,
+        "Top 5 percent": 300212,
+        "Year": 2003,
+        "Lowest fifth": 11850
+    },
+    {
+        "Highest fifth": 174211,
+        "Third fifth": 51874,
+        "Fourth fifth": 81596,
+        "Second fifth": 30784,
+        "Top 5 percent": 304214,
+        "Year": 2002,
+        "Lowest fifth": 12107
+    },
+    {
+        "Highest fifth": 179768,
+        "Third fifth": 52499,
+        "Fourth fifth": 82315,
+        "Second fifth": 31365,
+        "Top 5 percent": 320771,
+        "Year": 2001,
+        "Lowest fifth": 12483
+    },
+    {
+        "Highest fifth": 180129,
+        "Third fifth": 53472,
+        "Fourth fifth": 83124,
+        "Second fifth": 32110,
+        "Top 5 percent": 319567,
+        "Year": 2000,
+        "Lowest fifth": 12860
+    },
+    {
+        "Highest fifth": 176980,
+        "Third fifth": 53323,
+        "Fourth fifth": 82992,
+        "Second fifth": 31856,
+        "Top 5 percent": 307608,
+        "Year": "1999 (29)",
+        "Lowest fifth": 12974
+    },
+    {
+        "Highest fifth": 170358,
+        "Third fifth": 52054,
+        "Fourth fifth": 80506,
+        "Second fifth": 31109,
+        "Top 5 percent": 296934,
+        "Year": 1998,
+        "Lowest fifth": 12320
+    },
+    {
+        "Highest fifth": 166282,
+        "Third fifth": 50356,
+        "Fourth fifth": 77994,
+        "Second fifth": 29931,
+        "Top 5 percent": 291805,
+        "Year": 1997,
+        "Lowest fifth": 11972
+    },
+    {
+        "Highest fifth": 159843,
+        "Third fifth": 49104,
+        "Fourth fifth": 75998,
+        "Second fifth": 29193,
+        "Top 5 percent": 278438,
+        "Year": 1996,
+        "Lowest fifth": 11893
+    },
+    {
+        "Highest fifth": 155428,
+        "Third fifth": 48450,
+        "Fourth fifth": 74480,
+        "Second fifth": 28976,
+        "Top 5 percent": 268246,
+        "Year": "1995 (25)",
+        "Lowest fifth": 11855
+    },
+    {
+        "Highest fifth": 154128,
+        "Third fifth": 47113,
+        "Fourth fifth": 73314,
+        "Second fifth": 27967,
+        "Top 5 percent": 266291,
+        "Year": "1994 (24)",
+        "Lowest fifth": 11222
+    },
+    {
+        "Highest fifth": 150446,
+        "Third fifth": 46465,
+        "Fourth fifth": 72211,
+        "Second fifth": 27720,
+        "Top 5 percent": 258216,
+        "Year": "1993 (23)",
+        "Lowest fifth": 10934
+    },
+    {
+        "Highest fifth": 138723,
+        "Third fifth": 46638,
+        "Fourth fifth": 71594,
+        "Second fifth": 27682,
+        "Top 5 percent": 220178,
+        "Year": "1992 (22)",
+        "Lowest fifth": 11048
+    },
+    {
+        "Highest fifth": 137583,
+        "Third fifth": 47067,
+        "Fourth fifth": 71748,
+        "Second fifth": 28336,
+        "Top 5 percent": 214710,
+        "Year": 1991,
+        "Lowest fifth": 11281
+    },
+    {
+        "Highest fifth": 140915,
+        "Third fifth": 48161,
+        "Fourth fifth": 72613,
+        "Second fifth": 29158,
+        "Top 5 percent": 224392,
+        "Year": 1990,
+        "Lowest fifth": 11589
+    },
+    {
+        "Highest fifth": 145209,
+        "Third fifth": 49108,
+        "Fourth fifth": 74283,
+        "Second fifth": 29543,
+        "Top 5 percent": 234607,
+        "Year": 1989,
+        "Lowest fifth": 11874
+    },
+    {
+        "Highest fifth": 139484,
+        "Third fifth": 48333,
+        "Fourth fifth": 73062,
+        "Second fifth": 28898,
+        "Top 5 percent": 219987,
+        "Year": 1988,
+        "Lowest fifth": 11450
+    },
+    {
+        "Highest fifth": 137512,
+        "Third fifth": 47837,
+        "Fourth fifth": 72308,
+        "Second fifth": 28612,
+        "Top 5 percent": 216649,
+        "Year": "1987 (21)",
+        "Lowest fifth": 11258
+    },
+    {
+        "Highest fifth": 134516,
+        "Third fifth": 47176,
+        "Fourth fifth": 71068,
+        "Second fifth": 28192,
+        "Top 5 percent": 210728,
+        "Year": 1986,
+        "Lowest fifth": 10959
+    },
+    {
+        "Highest fifth": 128221,
+        "Third fifth": 45634,
+        "Fourth fifth": 68643,
+        "Second fifth": 27492,
+        "Top 5 percent": 197790,
+        "Year": "1985 (20)",
+        "Lowest fifth": 10849
+    },
+    {
+        "Highest fifth": 124164,
+        "Third fifth": 44848,
+        "Fourth fifth": 67526,
+        "Second fifth": 27063,
+        "Top 5 percent": 187431,
+        "Year": 1984,
+        "Lowest fifth": 10865
+    },
+    {
+        "Highest fifth": 120297,
+        "Third fifth": 43663,
+        "Fourth fifth": 65521,
+        "Second fifth": 26409,
+        "Top 5 percent": 181757,
+        "Year": "1983 (19)",
+        "Lowest fifth": 10513
+    },
+    {
+        "Highest fifth": 118728,
+        "Third fifth": 43526,
+        "Fourth fifth": 64734,
+        "Second fifth": 26295,
+        "Top 5 percent": 179401,
+        "Year": 1982,
+        "Lowest fifth": 10391
+    },
+    {
+        "Highest fifth": 116321,
+        "Third fifth": 43685,
+        "Fourth fifth": 65119,
+        "Second fifth": 26370,
+        "Top 5 percent": 172853,
+        "Year": 1981,
+        "Lowest fifth": 10586
+    },
+    {
+        "Highest fifth": 117139,
+        "Third fifth": 44594,
+        "Fourth fifth": 65698,
+        "Second fifth": 27024,
+        "Top 5 percent": 175049,
+        "Year": 1980,
+        "Lowest fifth": 10858
+    },
+    {
+        "Highest fifth": 121097,
+        "Third fifth": 45981,
+        "Fourth fifth": 67477,
+        "Second fifth": 27889,
+        "Top 5 percent": 184686,
+        "Year": "1979 (18)",
+        "Lowest fifth": 11213
+    },
+    {
+        "Highest fifth": 119863,
+        "Third fifth": 45831,
+        "Fourth fifth": 67138,
+        "Second fifth": 27757,
+        "Top 5 percent": 182447,
+        "Year": 1978,
+        "Lowest fifth": 11302
+    },
+    {
+        "Highest fifth": 116281,
+        "Third fifth": 44504,
+        "Fourth fifth": 65207,
+        "Second fifth": 26904,
+        "Top 5 percent": 177886,
+        "Year": 1977,
+        "Lowest fifth": 10930
+    },
+    {
+        "Highest fifth": 113652,
+        "Third fifth": 44218,
+        "Fourth fifth": 64214,
+        "Second fifth": 26888,
+        "Top 5 percent": 173166,
+        "Year": 1976,
+        "Lowest fifth": 10982
+    },
+    {
+        "Highest fifth": 110828,
+        "Third fifth": 43199,
+        "Fourth fifth": 62772,
+        "Second fifth": 26331,
+        "Top 5 percent": 168184,
+        "Year": 1975,
+        "Lowest fifth": 10719
+    },
+    {
+        "Highest fifth": 113737,
+        "Third fifth": 44449,
+        "Fourth fifth": 64196,
+        "Second fifth": 27582,
+        "Top 5 percent": 172880,
+        "Year": 1974,
+        "Lowest fifth": 11097
+    },
+    {
+        "Highest fifth": 118224,
+        "Third fifth": 45929,
+        "Fourth fifth": 66075,
+        "Second fifth": 28002,
+        "Top 5 percent": 182102,
+        "Year": 1973,
+        "Lowest fifth": 11137
+    },
+    {
+        "Highest fifth": 115612,
+        "Third fifth": 44856,
+        "Fourth fifth": 64399,
+        "Second fifth": 27485,
+        "Top 5 percent": 179195,
+        "Year": 1972,
+        "Lowest fifth": 10641
+    },
+    {
+        "Highest fifth": 108412,
+        "Third fifth": 43037,
+        "Fourth fifth": 61184,
+        "Second fifth": 26543,
+        "Top 5 percent": 166283,
+        "Year": 1971,
+        "Lowest fifth": 10043
+    },
+    {
+        "Highest fifth": 108653,
+        "Third fifth": 43540,
+        "Fourth fifth": 61374,
+        "Second fifth": 27039,
+        "Top 5 percent": 166770,
+        "Year": 1970,
+        "Lowest fifth": 9982
+    },
+    {
+        "Highest fifth": 107890,
+        "Third fifth": 43824,
+        "Fourth fifth": 61385,
+        "Second fifth": 27425,
+        "Top 5 percent": 166068,
+        "Year": 1969,
+        "Lowest fifth": 10158
+    },
+    {
+        "Highest fifth": 102244,
+        "Third fifth": 42181,
+        "Fourth fifth": 58839,
+        "Second fifth": 26594,
+        "Top 5 percent": 156316,
+        "Year": 1968,
+        "Lowest fifth": 9919
+    },
+    {
+        "Highest fifth": 101711,
+        "Third fifth": 40393,
+        "Fourth fifth": 56517,
+        "Second fifth": 25302,
+        "Top 5 percent": 160442,
+        "Year": "1967 (12)",
+        "Lowest fifth": 9132
+    }
+]

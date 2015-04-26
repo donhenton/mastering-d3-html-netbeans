@@ -1,0 +1,48 @@
+body {
+	font-size: 18px;
+	font-family: 'Poly', serif;
+	padding-left: 5%;
+	padding-right: 5%;
+	}
+#sidebar {
+	display: none;
+}
+.shareicons {
+	display: none;
+}
+#ceo-ratio-bar {
+	display: none;
+}
+#tellmeaboutit{
+	display: none;
+}
+.next {
+	display: none;
+}
+#graph-1 rect {
+	fill: black;
+}
+.axislabel {
+	fill: black;
+}
+#yearlabel1, #yearlabel6, #yearlabel16, #yearlabel26, #yearlabel36 {
+	fill: black;
+}
+a:link, a:hover, a:visited {
+	text-decoration: none;
+	color: black;
+}
+a:link img {
+	display: none;
+}
+
+h3 img {
+	display: none;
+}
+#colophon-footer {
+	display: none;
+}
+a:link:after {
+	font-size: 12px;
+	content: " ("attr(href)")";
+}

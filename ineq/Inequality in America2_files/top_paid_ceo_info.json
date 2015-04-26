@@ -1,0 +1,7 @@
+var top_paid_ceo_info = [
+{"company": "Capital One Financial","name": " Richard D Fairbank","paybymillion":  249.42,"employees":  27826},
+{"company": "Yahoo","name": " Terry S Semel","paybymillion":  230.55,"employees":  13600},
+{"company": "Oracle","name": " Larry Ellison","paybymillion":  75.33,"employees":  108429},
+{"company": "Cisco","name": "John T Chambers","paybymillion":  62.99,"employees":  65500},
+{"company": "Coach","name": "Lew Frankfort","paybymillion":  55.99,"employees":  12000}
+]

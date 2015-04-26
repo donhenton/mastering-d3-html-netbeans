@@ -1,0 +1,9 @@
+var top10paidceos = [{"Name": "Stephen J Hemsley UnitedHealth Group","Company": 101.965,"ceoCompensation": 120.472,"5yearcompensation": 111.4,"sharesOwned": 58,"Age": "","Efficiency": ""},
+{"Name": "Edward A Mueller Qwest Communications","Company": 65.80,"ceoCompensation": 75.003,"5yearcompensation": 36.3,"sharesOwned": 64,"Age": "","Efficiency": ""},
+{"Name": "Robert A Iger Walt Disney","Company": 53.32,"ceoCompensation": 147.08,"5yearcompensation": 43.4,"sharesOwned": 60,"Age": "","Efficiency": ""},
+{"Name": "George Paz Express Scripts","Company": 51.52,"ceoCompensation": 100.21,"5yearcompensation": 79.5,"sharesOwned": 56,"Age": "","Efficiency": ""},
+{"Name": "Lew Frankfort Coach","Company": 49.45,"ceoCompensation": 137.87,"5yearcompensation": 133.9,"sharesOwned": 65,"Age": 86,"Efficiency": ""},
+{"Name": "Ralph Lauren Polo Ralph Lauren","Company": 43.00,"ceoCompensation": 155.25,"5yearcompensation": "3,417.8","sharesOwned": 71,"Age": 74,"Efficiency": ""},
+{"Name": "John C Martin Gilead Sciences","Company": 42.72,"ceoCompensation": 204.24,"5yearcompensation": 76.8,"sharesOwned": 59,"Age": 72,"Efficiency": ""},
+{"Name": "James T Hackett Anadarko Petroleum","Company": 38.94,"ceoCompensation": 97.38,"5yearcompensation": 24.6,"sharesOwned": 57,"Age": 93,"Efficiency": ""},
+{"Name": "John T Chambers Cisco Systems","Company": 37.90,"ceoCompensation": 170.34,"5yearcompensation": 58.0,"sharesOwned": 61,"Age": 190,"Efficiency": ""}];
