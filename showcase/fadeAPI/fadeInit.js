@@ -63,13 +63,11 @@ function rundemo()
 
 ////////////////   add the sliders ////////////////////////////////////////////
     var sliderInit = {};
+    sliderInit.handleSize = 12;
     var aPoint = d3.select(".x.axis").append("g")
             .attr("class", "sliderLine")
-            .attr("transform", "translate(0,40)");
+            .attr("transform", "translate(-"+sliderInit.handleSize/2+",40)");
     sliderInit.attachmentGPoint = aPoint;
-
-
-    sliderInit.handleSize = 12;
     sliderInit.initialPercents = [40, 60];
     sliderInit.dim = width + sliderInit.handleSize;
 

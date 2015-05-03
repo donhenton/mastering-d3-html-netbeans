@@ -466,7 +466,10 @@ d3.fadeAPI.init = function (initConditions)
 
     };
     
-    
+    exports.getData = function()
+    {
+        return data;
+    }
     
     exports.getXScale = function ()
     {
