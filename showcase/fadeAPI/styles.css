@@ -47,3 +47,12 @@ div.graph
      opacity:1.0;
      stroke-width: 2;
  }
+ 
+ 
+ rect.brushRect
+ {
+     fill: darkred;
+     opacity:.25;
+     stroke: green;
+     stroke-width: 2;
+ }

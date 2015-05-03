@@ -157,6 +157,7 @@ d3.caliperAPI.init = function (initConditions)
             .attr("width", handleSize)
             .data([{"x": getPosForPercent(initialPercents[0]),
                     "y": -handleSize / 2,
+                    "handleSize": handleSize,
                     "percent": initialPercents[0], "id": "handleLeft"}])
             .attr("height", handleSize)
             .attr("x", 0)
@@ -172,6 +173,7 @@ d3.caliperAPI.init = function (initConditions)
 
             .data([{"x": getPosForPercent(initialPercents[1]),
                     "y": -handleSize / 2,
+                    "handleSize": handleSize,
                     "percent": initialPercents[1],
                     "id": "handleRight"}])
             .attr("height", handleSize)

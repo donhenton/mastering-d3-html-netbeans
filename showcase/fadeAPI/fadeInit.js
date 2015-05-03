@@ -37,7 +37,7 @@ function rundemo()
                 "delay": 500,
                 "data": getSampleData(MAX_POINTS),
                 "attachmentID": "graph",
-                "createBrushRect":true
+                "createBrushRect": true
 
 
             };
@@ -64,29 +64,31 @@ function rundemo()
 ////////////////   add the sliders ////////////////////////////////////////////
     var sliderInit = {};
     var aPoint = d3.select(".x.axis").append("g")
-    .attr("class","sliderLine")
-    .attr("transform", "translate(0,40)");
+            .attr("class", "sliderLine")
+            .attr("transform", "translate(0,40)");
     sliderInit.attachmentGPoint = aPoint;
-   
+
 
     sliderInit.handleSize = 12;
     sliderInit.initialPercents = [40, 60];
-    sliderInit.dim =  width+sliderInit.handleSize;
-    
+    sliderInit.dim = width + sliderInit.handleSize;
+
     var caliper = d3.caliperAPI.init(sliderInit);
-    
-    var rectHandler = d3.rectHandler.init(fadeAPI.getBrushRect());
-    
-    caliper.on("slideend", function (left,right) {
-        
-         rectHandler.positionRect(left,right);
+
+    var rectHandler = d3.rectHandler.init(fadeAPI.getBrushRect(), fadeAPI.findDateForPixel);
+
+    caliper.on("slideend", function (left, right) {
+
+       var ret =  rectHandler.positionRect(left, right);
+        $("#info").html("Dates "+ret.leftDate+" "+ret.rightDate);
     });
-    
+
     var data = caliper.queryData();
     if (data !== null)
     {
-        
-        rectHandler.positionRect(data.left,data.right);
+
+       var ret =  rectHandler.positionRect(data.left, data.right);
+       $("#info").html("Dates "+ret.leftDate+" "+ret.rightDate);
     }
 
 }
