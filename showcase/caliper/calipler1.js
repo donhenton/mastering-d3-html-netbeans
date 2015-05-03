@@ -150,12 +150,12 @@ d3.caliperAPI.init = function (initConditions)
 
 
     drag.on('dragend', function () {
-         
+
         //console.log(d3.event + " " + 'dragend')
-        dispatch.slideend.apply(this,  [handleLeft.data()[0],handleRight.data()[0]]);
+        dispatch.slideend.apply(this, [handleLeft.data()[0], handleRight.data()[0]]);
     });
 
- 
+
     var handleLeft =
             attachmentGPoint.append("rect")
             .attr("width", handleSize)
@@ -169,11 +169,11 @@ d3.caliperAPI.init = function (initConditions)
             .attr("id", "handleLeft")
             .on("click", stopPropagation)
             .call(drag);
- 
+
     var handleRight =
             attachmentGPoint.append("rect")
             .attr("width", handleSize)
-   
+
             .data([{"x": getPosForPercent(initialPercents[1]),
                     "y": -handleSize / 2,
                     "percent": initialPercents[1],
@@ -186,16 +186,24 @@ d3.caliperAPI.init = function (initConditions)
             .on("click", stopPropagation)
             .call(drag);
 
-    //dispatch for the initial points       
-    dispatch.slideend.apply(this,  [handleLeft.data()[0],handleRight.data()[0]]);
+
+    console.log("init dispatch")
+    dispatch.slideend.apply(this, [handleLeft.data()[0], handleRight.data()[0]]);
 
     ///// PUBLIC API //////////////////////////////////////////////////////
     var exports = function ()
     {
 
     }
-    
-    
+    /**
+     * 
+     * @returns {undefined}return the data 
+     */
+    exports.queryData = function ()
+    {
+        return {"left": handleLeft.data()[0], "right": handleRight.data()[0]};
+    }
+
     d3.rebind(exports, dispatch, "on");
     return exports;
 }

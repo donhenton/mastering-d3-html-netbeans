@@ -33,4 +33,7 @@ function rundemo()
     caliper.on("slideend", function (left,right) {
          console.log(left.percent+" "+right.percent)
     });
+    
+    var data = caliper.queryData();
+    console.log(data.left.percent+" , "+data.right.percent);
 }
