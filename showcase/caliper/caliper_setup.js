@@ -7,26 +7,29 @@
 
 function rundemo()
 {
-    
-    var margin = {top: 25, right: 40, bottom: 50, left: 0};
-    var width = 300 ;
-    var height = 100 ;
-    var lineWidth = width - margin.left;
-    
-    var initConditions ={}
-    
-    initConditions.svg = d3.select("#caliper")
-                .append("svg")
-                .attr("height", height )
-                .attr("width", width )
-    
-    initConditions.dim= lineWidth;
 
-    initConditions.attachmentGPoint =  initConditions.svg.append("g")
-                .attr("transform", "translate(" + margin.left + ","
-                        + margin.top + ")");
-    
-     
-     var caliper = d3.caliperAPI.init(initConditions);
-   
+    var margin = {top: 25, right: 40, bottom: 50, left: 5};
+    var width = 430;
+    var height = 100;
+    var lineWidth = width;
+
+    var initConditions = {}
+
+    initConditions.svg = d3.select("#caliper")
+            .append("svg")
+            .attr("height", height)
+            .attr("width", width);
+             
+
+
+    initConditions.dim = lineWidth;
+
+    initConditions.attachmentGPoint = initConditions.svg.append("g")
+            .attr("transform", "translate(" + margin.left + ","
+                    + margin.top + ")")
+
+
+
+    var caliper = d3.caliperAPI.init(initConditions);
+
 }
