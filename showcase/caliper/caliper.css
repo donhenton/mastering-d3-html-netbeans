@@ -1,0 +1,21 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : May 2, 2015, 4:03:52 PM
+    Author     : dhenton
+*/
+
+path.caliperLine { 
+    stroke: steelblue;
+    stroke-width: 5;
+    fill: none;
+}
+
+rect.knob
+{
+    shape-rendering: crispEdges;
+    fill: darkred;
+}

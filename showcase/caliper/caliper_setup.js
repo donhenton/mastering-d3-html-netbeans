@@ -8,9 +8,10 @@
 function rundemo()
 {
     
-    var margin = {top: 25, right: 40, bottom: 50, left: 20};
-    var width = 100 ;
+    var margin = {top: 25, right: 40, bottom: 50, left: 0};
+    var width = 300 ;
     var height = 100 ;
+    var lineWidth = width - margin.left;
     
     var initConditions ={}
     
@@ -18,7 +19,8 @@ function rundemo()
                 .append("svg")
                 .attr("height", height )
                 .attr("width", width )
-                 
+    
+    initConditions.dim= lineWidth;
 
     initConditions.attachmentGPoint =  initConditions.svg.append("g")
                 .attr("transform", "translate(" + margin.left + ","
