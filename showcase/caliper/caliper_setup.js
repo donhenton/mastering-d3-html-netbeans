@@ -19,7 +19,7 @@ function rundemo()
             .append("svg")
             .attr("height", height)
             .attr("width", width);
-             
+
 
 
     initConditions.dim = lineWidth;
@@ -31,5 +31,7 @@ function rundemo()
 
 
     var caliper = d3.caliperAPI.init(initConditions);
-
+    caliper.on("slideend", function (left,right) {
+         console.log(left.percent+" "+right.percent)
+    });
 }

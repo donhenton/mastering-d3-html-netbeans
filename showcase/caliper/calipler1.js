@@ -6,6 +6,10 @@ d3.caliperAPI.init = function (initConditions)
     var svg = initConditions.svg;
     var initialPercents = [0, 100];
     var rectDim = 20.0; //size of knob slider
+
+    var currentData = {"left": {}, "right": {}};
+
+
     var attachmentGPoint = initConditions.attachmentGPoint;
     var dim = initConditions.dim;
     //this is the line for percentages
@@ -22,9 +26,9 @@ d3.caliperAPI.init = function (initConditions)
 
     //draw the slider line
     attachmentGPoint.append("path").attr("class", "caliperLine")
-            .attr("d", caliperLineDraw([{"x": rectDim / 2}, {"x": dim-rectDim}]));
+            .attr("d", caliperLineDraw([{"x": rectDim / 2}, {"x": dim - rectDim}]));
 
-    
+
 
     /** 
      * given a percent return the x position for the handle it centers
@@ -47,7 +51,7 @@ d3.caliperAPI.init = function (initConditions)
 
 
 
-       // console.log("getPosForPercent " + percent + " " + x)
+        // console.log("getPosForPercent " + percent + " " + x)
         return x;
     };
 
@@ -60,13 +64,13 @@ d3.caliperAPI.init = function (initConditions)
     var getPercentForPos = function (pos)
     {
         var t = parseFloat(
-                formatPercent(pos / (virtualLineWidth-(rectDim/2))));
+                formatPercent(pos / (virtualLineWidth - (rectDim / 2))));
         if (t > 100)
             t = 100;
-       
+
         if (t < 0)
             t = 0;
-         console.log("getpercentforpos "+pos+" "+t)
+        // console.log("getpercentforpos "+pos+" "+t)
         return t;
 
     }
@@ -95,32 +99,38 @@ d3.caliperAPI.init = function (initConditions)
             d.x = xLimit;
         }
         var handleId = null;
-        //when called when forming the handles, this
-        //errors out
+
         try
         {
             handleId = d3.select(currentItem).attr("id");
         }
         catch (e)
         {
-
+            //when first called during handle formation ignore error
         }
-        if (handleId == "handleRight")
+        if (handleId === "handleRight")
         {
+            var hL = handleLeft.data()[0];
 
-
-
+            if (d.x < hL.x + rectDim / 2)
+            {
+                d.x = hL.x + rectDim / 2;
+            }
 
 
         }
-        if (handleId == "handleLeft")
+        if (handleId === "handleLeft")
         {
-
+            var hR = handleRight.data()[0];
+            if (d.x > hR.x - rectDim / 2)
+            {
+                d.x = hR.x - rectDim / 2;
+            }
 
         }
 
 
-        //console.log("id " + handleId + " xpos " + d.x + " % " + d.percent)
+
         return "translate(" + d.x + ",0)";
     }
 
@@ -136,16 +146,17 @@ d3.caliperAPI.init = function (initConditions)
             .on("drag", function (d, i) {
                 d.x += d3.event.dx
                 d.y = -rectDim / 2
-                console.log(d3.select(this).attr("id"))
-                d.percent = getPercentForPos(d.x );
+                // console.log(d3.select(this).attr("id"))
+                d.percent = getPercentForPos(d.x);
                 d3.select(this).attr("transform", positionBoxForX(d, this))
             });
 
 
 
     drag.on('dragend', function () {
-        //dispatch.slideend(d3.event, value);
+         
         console.log(d3.event + " " + 'dragend')
+        dispatch.slideend.apply(this,  [handleLeft.data()[0],handleRight.data()[0]]);
     });
 
 
@@ -198,6 +209,8 @@ d3.caliperAPI.init = function (initConditions)
     {
 
     }
-
+    
+    
+    d3.rebind(exports, dispatch, "on");
     return exports;
 }
