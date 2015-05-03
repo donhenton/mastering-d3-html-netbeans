@@ -3,13 +3,9 @@ d3.caliperAPI = {};
 
 d3.caliperAPI.init = function (initConditions)
 {
-    var svg = initConditions.svg;
+     
     var initialPercents = initConditions.initialPercents;
     var handleSize = initConditions.handleSize;
-
-    var currentData = {"left": {}, "right": {}};
-
-
     var attachmentGPoint = initConditions.attachmentGPoint;
     var dim = initConditions.dim;
     //this is the line for percentages

@@ -15,7 +15,7 @@ function rundemo()
 
     var initConditions = {}
 
-    initConditions.svg = d3.select("#caliper")
+    var svg = d3.select("#caliper")
             .append("svg")
             .attr("height", height)
             .attr("width", width);
@@ -23,7 +23,7 @@ function rundemo()
     initConditions.handleSize = 15; 
     initConditions.initialPercents=[40,60];
     initConditions.dim = lineWidth;
-    initConditions.attachmentGPoint = initConditions.svg.append("g")
+    initConditions.attachmentGPoint =  svg.append("g")
             .attr("transform", "translate(" + margin.left + ","
                     + margin.top + ")")
 
