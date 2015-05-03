@@ -211,6 +211,7 @@ d3.caliperAPI.init = function (initConditions)
     /**
      * 
      * @param {type} data {"left": 35,"right":75}; mark one as null
+     * left or right percentages to reposition to as floats
      * if you only want one repositioned.
      * @returns {undefined}reposition the markers based on percentage
      * 
