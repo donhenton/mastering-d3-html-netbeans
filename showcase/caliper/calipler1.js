@@ -4,8 +4,8 @@ d3.caliperAPI = {};
 d3.caliperAPI.init = function (initConditions)
 {
     var svg = initConditions.svg;
-    var initialPercents = [0, 100];
-    var rectDim = 20.0; //size of knob slider
+    var initialPercents = initConditions.initialPercents;
+    var handleSize = initConditions.handleSize;
 
     var currentData = {"left": {}, "right": {}};
 
@@ -13,7 +13,7 @@ d3.caliperAPI.init = function (initConditions)
     var attachmentGPoint = initConditions.attachmentGPoint;
     var dim = initConditions.dim;
     //this is the line for percentages
-    var virtualLineWidth = initConditions.dim - rectDim;
+    var virtualLineWidth = initConditions.dim - handleSize;
     var dispatch = d3.dispatch("slideend");
     var formatPercent = d3.format(".2%");
     var caliperLineDraw = d3.svg.line()
@@ -26,7 +26,7 @@ d3.caliperAPI.init = function (initConditions)
 
     //draw the slider line
     attachmentGPoint.append("path").attr("class", "caliperLine")
-            .attr("d", caliperLineDraw([{"x": rectDim / 2}, {"x": dim - rectDim}]));
+            .attr("d", caliperLineDraw([{"x": handleSize / 2}, {"x": dim - handleSize}]));
 
 
 
@@ -46,7 +46,7 @@ d3.caliperAPI.init = function (initConditions)
         else
         {
             x = virtualLineWidth * percent / 100;
-            x = x - rectDim / 2;
+            x = x - handleSize / 2;
         }
 
 
@@ -64,7 +64,7 @@ d3.caliperAPI.init = function (initConditions)
     var getPercentForPos = function (pos)
     {
         var t = parseFloat(
-                formatPercent(pos / (virtualLineWidth - (rectDim / 2))));
+                formatPercent(pos / (virtualLineWidth - (handleSize / 2))));
         if (t > 100)
             t = 100;
 
@@ -93,7 +93,7 @@ d3.caliperAPI.init = function (initConditions)
         {
             d.x = 0
         }
-        var xLimit = virtualLineWidth - rectDim / 2;
+        var xLimit = virtualLineWidth - handleSize / 2;
         if (d.x > xLimit)
         {
             d.x = xLimit;
@@ -112,9 +112,9 @@ d3.caliperAPI.init = function (initConditions)
         {
             var hL = handleLeft.data()[0];
 
-            if (d.x < hL.x + rectDim / 2)
+            if (d.x < hL.x + handleSize / 2)
             {
-                d.x = hL.x + rectDim / 2;
+                d.x = hL.x + handleSize / 2;
             }
 
 
@@ -122,9 +122,9 @@ d3.caliperAPI.init = function (initConditions)
         if (handleId === "handleLeft")
         {
             var hR = handleRight.data()[0];
-            if (d.x > hR.x - rectDim / 2)
+            if (d.x > hR.x - handleSize / 2)
             {
-                d.x = hR.x - rectDim / 2;
+                d.x = hR.x - handleSize / 2;
             }
 
         }
@@ -138,14 +138,10 @@ d3.caliperAPI.init = function (initConditions)
     var stopPropagation = function () {
         d3.event.stopPropagation();
     };
-
-
-    var drag = d3.behavior.drag();
-
     var drag = d3.behavior.drag()
             .on("drag", function (d, i) {
                 d.x += d3.event.dx
-                d.y = -rectDim / 2
+                d.y = -handleSize / 2
                 // console.log(d3.select(this).attr("id"))
                 d.percent = getPercentForPos(d.x);
                 d3.select(this).attr("transform", positionBoxForX(d, this))
@@ -155,54 +151,43 @@ d3.caliperAPI.init = function (initConditions)
 
     drag.on('dragend', function () {
          
-        console.log(d3.event + " " + 'dragend')
+        //console.log(d3.event + " " + 'dragend')
         dispatch.slideend.apply(this,  [handleLeft.data()[0],handleRight.data()[0]]);
     });
 
-
-    var initLeftData = {"x": getPosForPercent(initialPercents[0]),
-        "percent": initialPercents[0]
-    };
-    //d3.event.sourceEvent.target.id
+ 
     var handleLeft =
             attachmentGPoint.append("rect")
-            .attr("width", rectDim)
-            .attr("fill", "red")
-            .attr("opacity", ".25")
-//            .attr("stroke","red")
-//            .attr("stroke-width","2")
+            .attr("width", handleSize)
             .data([{"x": getPosForPercent(initialPercents[0]),
-                    "y": -rectDim / 2,
+                    "y": -handleSize / 2,
                     "percent": initialPercents[0], "id": "handleLeft"}])
-            .attr("height", rectDim)
+            .attr("height", handleSize)
             .attr("x", 0)
-            .attr("y", -rectDim / 2)
+            .attr("y", -handleSize / 2)
             .attr("transform", "translate(" + getPosForPercent(initialPercents[0]) + ",0)")
             .attr("id", "handleLeft")
             .on("click", stopPropagation)
             .call(drag);
-    var initRightData = {"x": getPosForPercent(initialPercents[1]),
-        "percent": initialPercents[1]
-    };
+ 
     var handleRight =
             attachmentGPoint.append("rect")
-            .attr("width", rectDim)
-            .attr("opacity", ".25")
-            .attr("fill", "#4444cc")
+            .attr("width", handleSize)
+   
             .data([{"x": getPosForPercent(initialPercents[1]),
-                    "y": -rectDim / 2,
+                    "y": -handleSize / 2,
                     "percent": initialPercents[1],
                     "id": "handleRight"}])
-            .attr("height", rectDim)
+            .attr("height", handleSize)
             .attr("id", "handleRight")
             .attr("transform", "translate(" + getPosForPercent(initialPercents[1]) + ",0)")
             .attr("x", 0)
-            .attr("y", -rectDim / 2)
+            .attr("y", -handleSize / 2)
             .on("click", stopPropagation)
             .call(drag);
 
-
-
+    //dispatch for the initial points       
+    dispatch.slideend.apply(this,  [handleLeft.data()[0],handleRight.data()[0]]);
 
     ///// PUBLIC API //////////////////////////////////////////////////////
     var exports = function ()

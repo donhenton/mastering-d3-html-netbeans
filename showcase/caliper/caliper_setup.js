@@ -20,10 +20,9 @@ function rundemo()
             .attr("height", height)
             .attr("width", width);
 
-
-
+    initConditions.handleSize = 15; 
+    initConditions.initialPercents=[40,60];
     initConditions.dim = lineWidth;
-
     initConditions.attachmentGPoint = initConditions.svg.append("g")
             .attr("transform", "translate(" + margin.left + ","
                     + margin.top + ")")
