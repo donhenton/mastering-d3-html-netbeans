@@ -3,7 +3,7 @@ d3.caliperAPI = {};
 
 d3.caliperAPI.init = function (initConditions)
 {
-     
+
     var initialPercents = initConditions.initialPercents;
     var handleSize = initConditions.handleSize;
     var attachmentGPoint = initConditions.attachmentGPoint;
@@ -183,7 +183,7 @@ d3.caliperAPI.init = function (initConditions)
             .call(drag);
 
 
-    console.log("init dispatch")
+   // console.log("init dispatch")
     dispatch.slideend.apply(this, [handleLeft.data()[0], handleRight.data()[0]]);
 
     ///// PUBLIC API //////////////////////////////////////////////////////
@@ -197,7 +197,12 @@ d3.caliperAPI.init = function (initConditions)
      */
     exports.queryData = function ()
     {
-        return {"left": handleLeft.data()[0], "right": handleRight.data()[0]};
+        var ret = null;
+        if (typeof handleLeft.data()[0] !== 'undefined')
+           ret =
+           {"left": handleLeft.data()[0], "right": handleRight.data()[0]};
+
+        return ret;
     }
 
     d3.rebind(exports, dispatch, "on");

@@ -36,7 +36,8 @@ function rundemo()
                 "height": height,
                 "delay": 500,
                 "data": getSampleData(MAX_POINTS),
-                "attachmentID": "graph"
+                "attachmentID": "graph",
+                "createBrushRect":true
 
 
             };
@@ -60,7 +61,33 @@ function rundemo()
         $("#info").html("Load Action: " + message + " this (" + me.toString() + ")");
     });
 
+////////////////   add the sliders ////////////////////////////////////////////
+    var sliderInit = {};
+    var aPoint = d3.select(".x.axis").append("g")
+    .attr("class","sliderLine")
+    .attr("transform", "translate(0,40)");
+    sliderInit.attachmentGPoint = aPoint;
+   
 
+    sliderInit.handleSize = 12;
+    sliderInit.initialPercents = [40, 60];
+    sliderInit.dim =  width+sliderInit.handleSize;
+    
+    var caliper = d3.caliperAPI.init(sliderInit);
+    
+    var rectHandler = d3.rectHandler.init(fadeAPI.getBrushRect());
+    
+    caliper.on("slideend", function (left,right) {
+        
+         rectHandler.positionRect(left,right);
+    });
+    
+    var data = caliper.queryData();
+    if (data !== null)
+    {
+        
+        rectHandler.positionRect(data.left,data.right);
+    }
 
 }
 /**

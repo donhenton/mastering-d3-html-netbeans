@@ -71,6 +71,9 @@ d3.fadeAPI.init = function (initConditions)
     var width = initConditions.width;
     var height = initConditions.height;
     var delay = initConditions.delay;
+    // if true reserve a brushrect
+    var createBrushRect = initConditions.createBrushRect;
+    var brushRect = null;
     var svg = null;
     var xScale = getXScale();
     var yScale = getYScale();
@@ -85,6 +88,7 @@ d3.fadeAPI.init = function (initConditions)
     var verticalBar = null;
     var data = initConditions.data;
     var dotColor = "blue";
+    
 
     /**
      * 
@@ -101,6 +105,12 @@ d3.fadeAPI.init = function (initConditions)
                 .append("g")
                 .attr("transform", "translate(" + margin.left + ","
                         + margin.top + ")");
+                
+        if (createBrushRect)
+        {
+           brushRect =  svg.append("g").append("rect").attr("class","brushRect");
+        }
+                
 
         loaderIndicator = d3.select("#" + attachmentID).append("div")
                 .attr("class", "indicatorClass")
@@ -437,6 +447,23 @@ d3.fadeAPI.init = function (initConditions)
         reBuild();
 
     };
+    
+    
+    
+    exports.getXScale = function ()
+    {
+        return xScale;
+    };
+    
+    /**
+     * the brushrect, which indicates a selection of points is placed here in
+     * reserve if the user sets createBrushRect true on the initConditions
+     * object otherwise the reference is null;
+     */
+    exports.getBrushRect = function()
+    {
+        return brushRect;
+    }
 
     /**
      * if doHide is true then this will fade the graph out after a delay
