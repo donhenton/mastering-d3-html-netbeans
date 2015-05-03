@@ -10,27 +10,65 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <script src="../../bower_components/jquery/dist/jquery.js" type="text/javascript"></script>
         <script src="../../bower_components/d3/d3.js" type="text/javascript"></script>
-        
+
         <link href="../../bower_components/bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
         <link href="../../bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css"/>
         <script src="../../bower_components/bootstrap/dist/js/bootstrap.js" type="text/javascript"></script>
-       
+
         <link href="caliper.css" rel="stylesheet" type="text/css"/>
         <script src="calipler1.js" type="text/javascript"></script>
         <script src="caliper_setup.js" type="text/javascript"></script>
-        
-         
+
+
         <script>
             $(document).ready(function () {
                 rundemo();
 
             });
         </script>  
-          
+
     </head>
     <body>
-        <div class="container top-buffer">
-        <div id="caliper"> </div>
+        <div class="container top-buffer col-lg-12">
+
+
+
+            <div id="info" class="row top-buffer well col-lg-3 col-lg-offset-3">
+                hello
+            </div>
+            <div class="row top-buffer">
+
+<h4>Demo for updating positions of handles programmatically</h4>
+                <div class="col-sm-10">
+                    
+                    <div id="resetForm" class="top-buffer">
+                        <div class="top-buffer form">
+                        <select id="percentReset"  name="percentReset">
+                            <option selected="">10</option>
+                            <option>20</option>
+                            <option>30</option>
+                            <option>70</option>
+                        </select>
+
+
+                        <label class="radio-inline"><input id="handleLeft" checked="checked" value="left" type="radio" name="handleType">Left</label>
+                        <label class="radio-inline"><input id="handleRight"  type="radio" value="right" name="handleType">Right</label>
+                        <button onclick="doUpdate()" class="btn btn-primary">Change</button> 
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-sm-3">
+
+                </div>
+
+            </div>
+
+
+            <div class="row top-buffer">
+                <h4>Slide markers</h4>
+                <div id="caliper"> </div>
+            </div>
         </div>
     </body>
 </html>

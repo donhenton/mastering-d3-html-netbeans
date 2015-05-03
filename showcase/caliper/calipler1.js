@@ -79,7 +79,8 @@ d3.caliperAPI.init = function (initConditions)
      * left cant exceed right
      * right cant go below left
      * 
-     * @param {type} xpos
+     * @param {data} d
+     * @param unselected handle as svg left or right
      * @returns {String}
      */
     var positionBoxForX = function (d, currentItem)
@@ -185,7 +186,7 @@ d3.caliperAPI.init = function (initConditions)
             .call(drag);
 
 
-   // console.log("init dispatch")
+    // console.log("init dispatch")
     dispatch.slideend.apply(this, [handleLeft.data()[0], handleRight.data()[0]]);
 
     ///// PUBLIC API //////////////////////////////////////////////////////
@@ -201,10 +202,42 @@ d3.caliperAPI.init = function (initConditions)
     {
         var ret = null;
         if (typeof handleLeft.data()[0] !== 'undefined')
-           ret =
-           {"left": handleLeft.data()[0], "right": handleRight.data()[0]};
+            ret =
+                    {"left": handleLeft.data()[0], "right": handleRight.data()[0]};
 
         return ret;
+    }
+
+    /**
+     * 
+     * @param {type} data {"left": 35,"right":75}; mark one as null
+     * if you only want one repositioned.
+     * @returns {undefined}reposition the markers based on percentage
+     * 
+     */
+    exports.reposition = function (data)
+    {
+
+        if (data.left !== null)
+        {
+            var newPosLeft = getPosForPercent(data.left);
+            var dataLeft = handleLeft.data()[0];
+            dataLeft.x = newPosLeft;
+            var transformString = 
+            positionBoxForX(dataLeft, handleLeft[0][0]);
+            dataLeft.percent = getPercentForPos(dataLeft.x);;
+            handleLeft.attr("transform", transformString);
+        }
+        if (data.right !== null)
+        {
+            var newPosRight = getPosForPercent(data.right);
+            var dataRight = handleRight.data()[0];
+            dataRight.x = newPosRight;
+            var transformString = 
+            positionBoxForX(dataRight, handleRight[0][0]);
+            dataRight.percent = getPercentForPos(dataRight.x);
+            handleRight.attr("transform", transformString);
+        }
     }
 
     d3.rebind(exports, dispatch, "on");

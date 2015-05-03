@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+/* global d3 */
 
+var caliper = null;
 
 function rundemo()
 {
@@ -13,27 +15,67 @@ function rundemo()
     var height = 100;
     var lineWidth = width;
 
-    var initConditions = {}
+    var initConditions = {};
 
     var svg = d3.select("#caliper")
             .append("svg")
             .attr("height", height)
             .attr("width", width);
 
-    initConditions.handleSize = 15; 
-    initConditions.initialPercents=[40,60];
+    initConditions.handleSize = 15;
+    initConditions.initialPercents = [40, 60];
     initConditions.dim = lineWidth;
-    initConditions.attachmentGPoint =  svg.append("g")
+    initConditions.attachmentGPoint = svg.append("g")
             .attr("transform", "translate(" + margin.left + ","
-                    + margin.top + ")")
+                    + margin.top + ")");
 
+    caliper =
+            d3.caliperAPI.init(initConditions);
+    caliper.on("slideend", function (left, right) {
 
-
-    var caliper = d3.caliperAPI.init(initConditions);
-    caliper.on("slideend", function (left,right) {
-         console.log(left.percent+" "+right.percent)
+        var data = {};
+        data.left = left;
+        data.right = right;
+        
+        updateText(data);
     });
-    
+
     var data = caliper.queryData();
-    console.log(data.left.percent+" , "+data.right.percent);
+    updateText(data);
+}
+
+
+function updateText(data)
+{
+    var text = "Percentages Left: " + data.left.percent +
+            " , Right: " + data.right.percent;
+    $('#info').html(text);
+
+}
+
+/**
+ * used for the programmatic update demo.
+ * @returns {undefined}
+ */
+function doUpdate()
+{
+    // var valueLeft = $('#handleLeft').val();
+    // var valueRight = $('#handleRight').val();
+    var valuePercent = $('#percentReset').val();
+    var type_option = $('input[name="handleType"]:checked').val();
+    var left = null;
+    var right = null;
+    if (type_option === 'left')
+    {
+        left = parseFloat(valuePercent);
+    }
+    else
+    {
+        right = parseFloat(valuePercent);
+    }
+    var sub = {"left": left, "right": right};
+    caliper.reposition(sub);
+    var data = caliper.queryData();
+
+    updateText(data);
 }

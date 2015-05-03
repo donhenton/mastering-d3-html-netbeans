@@ -22,3 +22,9 @@ path.caliperLine {
      opacity:1.0;
      stroke-width: 2;
  }
+ 
+ 
+ .top-buffer
+ {
+     margin-top: 25px;
+ }
