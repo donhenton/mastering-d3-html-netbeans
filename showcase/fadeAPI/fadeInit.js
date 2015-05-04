@@ -2,8 +2,8 @@
 
 ////////////// Fade API Example usage //////////////////////
 var margin = {top: 5, right: 40, bottom: 50, left: 60};
-var width = 550 - margin.left - margin.right;
-var height = 470 - margin.top - margin.bottom;
+var width =750 - margin.left - margin.right;
+var height = 400 - margin.top - margin.bottom;
 
 var caliper = null;    
 var rectHandler =null;
