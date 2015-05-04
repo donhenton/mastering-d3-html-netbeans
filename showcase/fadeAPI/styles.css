@@ -9,6 +9,7 @@ path {
 }
 
 .axis path,
+path.caliperLine,
 .axis line {
     fill: none;
     stroke: darkred;
@@ -36,3 +37,28 @@ div.graph
     
 }
 
+ 
+
+ rect#handleLeft,
+ rect#handleRight
+ {
+     stroke: darkred;
+     fill: red;
+     opacity:1.0;
+     stroke-width: 2;
+ }
+ 
+ 
+ rect.brushRect
+ {
+     fill: darkred;
+     opacity:.25;
+     stroke: green;
+     stroke-width: 2;
+ }
+ 
+ rect.verticalBar
+ {
+     fill: rgb(185,0,0);
+     width: 2;
+ }

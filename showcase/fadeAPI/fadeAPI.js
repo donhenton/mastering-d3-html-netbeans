@@ -71,6 +71,9 @@ d3.fadeAPI.init = function (initConditions)
     var width = initConditions.width;
     var height = initConditions.height;
     var delay = initConditions.delay;
+    // if true reserve a brushrect
+    var createBrushRect = initConditions.createBrushRect;
+    var brushRect = null;
     var svg = null;
     var xScale = getXScale();
     var yScale = getYScale();
@@ -85,6 +88,7 @@ d3.fadeAPI.init = function (initConditions)
     var verticalBar = null;
     var data = initConditions.data;
     var dotColor = "blue";
+    
 
     /**
      * 
@@ -101,6 +105,13 @@ d3.fadeAPI.init = function (initConditions)
                 .append("g")
                 .attr("transform", "translate(" + margin.left + ","
                         + margin.top + ")");
+                
+        if (createBrushRect)
+        {
+           brushRect =  svg.append("g").append("rect").attr("class","brushRect");
+           brushRect.attr("height",height);
+        }
+                
 
         loaderIndicator = d3.select("#" + attachmentID).append("div")
                 .attr("class", "indicatorClass")
@@ -167,6 +178,38 @@ d3.fadeAPI.init = function (initConditions)
     };
 
     /**
+     * this function will take a pixel value and translate into a date on
+     * the axis
+     * @param {type} pixelValue
+     * @returns  {newTarget: the data item , circleIdx: the index in the
+     * data set for that item}
+     */
+    var findDateForPixel = function(pixelValue)
+    {
+        //given x pos of mouse use xScale to turn that into a bisector
+        
+        var x0 = xScale.invert(pixelValue);
+        var i = bisectDate(data, x0, 1);
+        var d0 = data[i - 1];
+        var d1 = data[i];
+        var ret = {"newTarget":null,"circleIdx": -1};
+         
+        if (x0 - d0.date > d1.date - x0)
+        {
+            ret.newTarget = d1;
+            ret.circleIdx = i;
+        }
+        else
+        {
+            ret.newTarget = d0;
+            ret.circleIdx = i - 1;
+        }
+        
+        return ret;
+    }
+
+
+    /**
      * 
      * @returns {undefined}mouse move routine
      */
@@ -178,32 +221,17 @@ d3.fadeAPI.init = function (initConditions)
             //ignore mouse while loading
             return;
         }
-
-        //given x pos of mouse use xScale to turn that into a bisector
-        var x0 = xScale.invert(d3.mouse(this)[0]);
-        var i = bisectDate(data, x0, 1);
-        var d0 = data[i - 1];
-        var d1 = data[i];
-
-        var newTarget = null;
-        var circleIdx = -1;
-        if (x0 - d0.date > d1.date - x0)
-        {
-            newTarget = d1;
-            circleIdx = i;
-        }
-        else
-        {
-            newTarget = d0;
-            circleIdx = i - 1;
-        }
+        var ret = findDateForPixel(d3.mouse(this)[0]);
+         
+        
 
         var pointDataArray = d3.selectAll(".dot");
 
-        if (selectedPoint.dataItem === null || (selectedPoint.dataItem.date !== newTarget.date))
+        if (selectedPoint.dataItem === null || 
+                (selectedPoint.dataItem.date !== ret.newTarget.date))
         {
             //only raise event if you actually change
-            selectedPoint.dataItem = newTarget;
+            selectedPoint.dataItem = ret.newTarget;
 
             //clean up the old if it exists
             if (selectedPoint.svgItem !== null)
@@ -213,29 +241,28 @@ d3.fadeAPI.init = function (initConditions)
             }
             // find the circle
             //d3.select(svgItem) is the same as $(htmlElement) in jQuery
-            selectedPoint.svgItem = d3.select(pointDataArray[0][circleIdx]);
+            selectedPoint.svgItem = d3.select(pointDataArray[0][ret.circleIdx]);
             setDot(selectedPoint.svgItem, true);
             //raise a newSelection event, with the payload
-            dispatch.newSelection.apply(this, [newTarget, newTarget.index + 1]);
+            dispatch.newSelection.apply(this, [ret.newTarget, ret.newTarget.index + 1]);
 
 
         }
         //start drawing the grey line
-        var yStart = yScale(newTarget.data);
+        var yStart = yScale(ret.newTarget.data);
         var yLength = (yScale(height) - yStart) + margin.bottom / 4;
 
-        var xBar = xScale(newTarget.date);
+        var xBar = xScale(ret.newTarget.date);
 
         //focus is the encircling circle highlighting the points
         focus.select("circle.focusCircle")
                 .attr("transform",
-                        "translate(" + xScale(newTarget.date) + "," +
-                        yScale(newTarget.data) + ")");
+                        "translate(" + xScale(ret.newTarget.date) + "," +
+                        yScale(ret.newTarget.data) + ")");
 
 
         verticalBar.select("rect.verticalBar")
-                .attr('width', 2)
-                .style('fill', '#c0c0c0')
+                .attr('width', 2)     
                 .attr('height', yLength)
                 .attr('x', xBar)
                 .attr('y', yStart)
@@ -437,6 +464,29 @@ d3.fadeAPI.init = function (initConditions)
         reBuild();
 
     };
+    
+    exports.getData = function()
+    {
+        return data;
+    }
+    
+    exports.getXScale = function ()
+    {
+        return xScale;
+    };
+    
+    /**
+     * the brushrect, which indicates a selection of points is placed here in
+     * reserve if the user sets createBrushRect true on the initConditions
+     * object otherwise the reference is null;
+     */
+    exports.getBrushRect = function()
+    {
+        return brushRect;
+    }
+    
+    
+   
 
     /**
      * if doHide is true then this will fade the graph out after a delay
