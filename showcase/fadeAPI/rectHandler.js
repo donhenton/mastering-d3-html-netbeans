@@ -1,9 +1,9 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * 
+ * This code block is a mediator between the graph and the calipers
+ * and contains the code for processing the messages from the  handler 
+ * movements
  */
-
 
 d3.rectHandler = {};
 
@@ -19,7 +19,7 @@ d3.rectHandler = {};
  * 
  * @returns {d3.rectHandler.init.exports}
  */
-d3.rectHandler.init = function (brushRectVal, dataPoints, xScaleFunction,caliper)
+d3.rectHandler.init = function (brushRectVal, dataPoints, xScaleFunction, caliper)
 {
     //brushRect contains the height this code only transforms the position
     //and the width
@@ -33,6 +33,12 @@ d3.rectHandler.init = function (brushRectVal, dataPoints, xScaleFunction,caliper
         return d.date;
     }).left;
 
+    /**
+     * 
+     * @param {type} pixelValue
+     * @returns {d3.rectHandler.init.transformFunction.ret}
+     * function which finds the nearest date for a pixel value
+     */
     var transformFunction = function (pixelValue)
     {
         //given x pos of mouse use xScale to turn that into a bisector
@@ -68,13 +74,33 @@ d3.rectHandler.init = function (brushRectVal, dataPoints, xScaleFunction,caliper
     }
     ;
 
-    //return the dates that are found for the right and left handles
+    /**
+     * 
+     * Sample for left and right parms
+     *              {"x": 234,
+     "y": 121,
+     "handleSize": 20,
+     "percent": 35, 
+     "id": "handleLeft"} 
+     * 
+     * 
+     * 
+     * @param {type} left see sample above
+     * @param {type} right
+     * @returns returns left and right formatted date strings
+     * main routine for handle the drag end messages from handles
+     * 
+     * This routine also handles snap to nearest date for this
+     * particular graph.
+     * 
+     */
     exports.positionRect = function (left, right)
     {
         //console.log(left.percent + " " + left.x);
         var valueForLeft = left.x;
         var valueForRight = valueForLeft + (right.x - left.x) + left.handleSize / 2;
-       // console.log("init left,right "+valueForLeft+","+valueForRight);
+        var handleSize = left.handleSize;
+        // console.log("init left,right "+valueForLeft+","+valueForRight);
 
         // console.log(transformFunction(250).newTarget.date);
 
@@ -88,17 +114,17 @@ d3.rectHandler.init = function (brushRectVal, dataPoints, xScaleFunction,caliper
         valueForLeft = xScale(newLeftDate);
         valueForRight = xScale(newRightDate);
         var newWidth = valueForRight - valueForLeft;
-        
-       // console.log("new left,right "+valueForLeft+","+valueForRight);
+
+        // console.log("new left,right "+valueForLeft+","+valueForRight);
 
         brushRect
                 .attr("width", newWidth)
                 .attr("transform", "translate(" + valueForLeft + ",0)");
 
-        var boxLeft = caliper.getPercentForPos(valueForLeft +caliper.getMarkerDim()/2) ;
-        var boxRight = caliper.getPercentForPos(valueForRight ) ;
+        var boxLeft = caliper.getPercentForPos(valueForLeft + handleSize / 2);
+        var boxRight = caliper.getPercentForPos(valueForRight);
         //set the markers to match as well;
-        var  data  ={"left":boxLeft ,"right":boxRight};
+        var data = {"left": boxLeft, "right": boxRight};
 
         caliperRef.reposition(data);
         return ret;

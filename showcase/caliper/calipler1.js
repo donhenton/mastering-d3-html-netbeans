@@ -1,4 +1,20 @@
 /* global d3 */
+
+/**
+ * 
+ * @type typeThe code repsonsible for handling the calipers, creating the
+ * handles and positioning them. It uses percentages of its length as the
+ * measure and could be used to be a scaled representation of a length.  Most
+ * likely, the length of the line will be identical to something that is using.
+ * 
+ * The typical use case is a indicator used to drive a brush on a graph, 
+ * with the handles here being used to size that rectangle.
+ * 
+ * The API is an event 'slideend' which occurs at the end of the drag
+ * event of the handles.
+ * 
+ * the event sends the data associated with each handle to any listener.
+ */
 d3.caliperAPI = {};
 
 d3.caliperAPI.init = function (initConditions)
@@ -195,6 +211,10 @@ d3.caliperAPI.init = function (initConditions)
 
     }
 
+    /**
+     * 
+     *  expose the apis
+     */
     exports.getPercentForPos = function (pixelValue)
     {
         return getPercentForPos(pixelValue);
@@ -206,7 +226,8 @@ d3.caliperAPI.init = function (initConditions)
 
     /**
      * 
-     * @returns {undefined}return the data 
+     * @returns {undefined}
+     * return the data 
      */
     exports.queryData = function ()
     {
@@ -217,10 +238,7 @@ d3.caliperAPI.init = function (initConditions)
 
         return ret;
     }
-    exports.getMarkerDim = function ()
-    {
-        return handleSize;
-    }
+    
     /**
      * 
      * @param {type} data {"left": 35,"right":75}; mark one as null
