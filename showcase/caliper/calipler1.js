@@ -194,6 +194,16 @@ d3.caliperAPI.init = function (initConditions)
     {
 
     }
+
+    exports.getPercentForPos = function (pixelValue)
+    {
+        return getPercentForPos(pixelValue);
+    }
+    exports.getPosForPercent = function (percent)
+    {
+        return getPosForPercent(percent);
+    }
+
     /**
      * 
      * @returns {undefined}return the data 
@@ -207,7 +217,10 @@ d3.caliperAPI.init = function (initConditions)
 
         return ret;
     }
-
+    exports.getMarkerDim = function ()
+    {
+        return handleSize;
+    }
     /**
      * 
      * @param {type} data {"left": 35,"right":75}; mark one as null
@@ -224,9 +237,10 @@ d3.caliperAPI.init = function (initConditions)
             var newPosLeft = getPosForPercent(data.left);
             var dataLeft = handleLeft.data()[0];
             dataLeft.x = newPosLeft;
-            var transformString = 
-            positionBoxForX(dataLeft, handleLeft[0][0]);
-            dataLeft.percent = getPercentForPos(dataLeft.x);;
+            var transformString =
+                    positionBoxForX(dataLeft, handleLeft[0][0]);
+            dataLeft.percent = getPercentForPos(dataLeft.x);
+            ;
             handleLeft.attr("transform", transformString);
         }
         if (data.right !== null)
@@ -234,8 +248,8 @@ d3.caliperAPI.init = function (initConditions)
             var newPosRight = getPosForPercent(data.right);
             var dataRight = handleRight.data()[0];
             dataRight.x = newPosRight;
-            var transformString = 
-            positionBoxForX(dataRight, handleRight[0][0]);
+            var transformString =
+                    positionBoxForX(dataRight, handleRight[0][0]);
             dataRight.percent = getPercentForPos(dataRight.x);
             handleRight.attr("transform", transformString);
         }

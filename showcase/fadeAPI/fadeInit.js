@@ -76,7 +76,7 @@ function rundemo()
     var caliper = d3.caliperAPI.init(sliderInit);
 
     var rectHandler = d3.rectHandler.init(fadeAPI.getBrushRect(), 
-      fadeAPI.getData(),fadeAPI.getXScale());
+      fadeAPI.getData(),fadeAPI.getXScale(),caliper);
 
     /**
      * handle the slideend event
