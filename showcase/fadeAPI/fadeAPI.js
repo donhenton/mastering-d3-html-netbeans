@@ -487,11 +487,7 @@ d3.fadeAPI.init = function (initConditions)
     }
     
     
-    exports.findDateForPixel = function(pixelValue)
-    {
-        return findDateForPixel(pixelValue);
-    }
-    
+   
 
     /**
      * if doHide is true then this will fade the graph out after a delay
