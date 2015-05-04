@@ -262,8 +262,7 @@ d3.fadeAPI.init = function (initConditions)
 
 
         verticalBar.select("rect.verticalBar")
-                .attr('width', 2)
-                .style('fill', '#c0c0c0')
+                .attr('width', 2)     
                 .attr('height', yLength)
                 .attr('x', xBar)
                 .attr('y', yStart)

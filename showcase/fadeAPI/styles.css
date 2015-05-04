@@ -56,3 +56,9 @@ div.graph
      stroke: green;
      stroke-width: 2;
  }
+ 
+ rect.verticalBar
+ {
+     fill: rgb(185,0,0);
+     width: 2;
+ }
