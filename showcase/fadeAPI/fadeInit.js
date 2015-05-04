@@ -75,6 +75,9 @@ function rundemo()
 
     var rectHandler = d3.rectHandler.init(fadeAPI.getBrushRect(), fadeAPI.findDateForPixel);
 
+    /**
+     * handle the slideend event
+     */
     caliper.on("slideend", function (left, right) {
 
        var ret =  rectHandler.positionRect(left, right);
