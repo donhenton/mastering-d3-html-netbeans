@@ -100,7 +100,7 @@ d3.rectHandler.init = function (brushRectVal, dataPoints, xScaleFunction,caliper
         //set the markers to match as well;
         var  data  ={"left":boxLeft ,"right":boxRight};
 
-        caliper.reposition(data);
+        caliperRef.reposition(data);
         return ret;
     }
 
