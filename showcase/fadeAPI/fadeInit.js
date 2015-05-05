@@ -2,12 +2,15 @@
 
 ////////////// Fade API Example usage //////////////////////
 var margin = {top: 5, right: 40, bottom: 50, left: 60};
-var width =750 - margin.left - margin.right;
+var width = 750 - margin.left - margin.right;
 var height = 400 - margin.top - margin.bottom;
+var graphWidth = width-200;
 
-var caliper = null;    
-var rectHandler =null;
-
+var caliper = null;
+var rectHandler = null;
+var brushRect = null;
+var groupNode = null;
+var svg = null;
 
 
 var MAX_POINTS = 20;
@@ -37,15 +40,31 @@ rundemo();
 function rundemo()
 {
 
+
+    var attachmentID = "graph";
+    svg = d3.select("#" + attachmentID)
+            .append("svg").attr("class","svgContainer")
+            .attr("height", height + margin.top + margin.bottom)
+            .attr("width", width + margin.left + margin.right)
+    
+             
+
+    groupNode = svg.append("g")
+            .attr("transform", "translate(" + margin.left + ","
+                    + margin.top+")"  );
+    brushRect = groupNode.append("rect").attr("class", "brushRect");
+    brushRect.attr("height", height);
+
+
     var initConditions =
             {
                 "margin": margin,
-                "width": width,
+                "width": graphWidth,
                 "height": height,
                 "delay": 500,
+                "groupNode": groupNode,
                 "data": getSampleData(MAX_POINTS),
-                "attachmentID": "graph",
-                "createBrushRect": true
+                "attachmentID": attachmentID
 
 
             };
@@ -68,7 +87,7 @@ function rundemo()
         var me = this;
         $("#info").html("Load Action: " + message + " this (" + me.toString() + ")");
     });
-    
+
     addSliders();
 }
 ////////////////   add the sliders ////////////////////////////////////////////
@@ -81,12 +100,12 @@ function addSliders()
             .attr("transform", "translate(-" + sliderInit.handleSize / 2 + ",40)");
     sliderInit.attachmentGPoint = aPoint;
     sliderInit.initialPercents = [40, 60];
-    sliderInit.dim = width + sliderInit.handleSize;
+    sliderInit.dim = graphWidth + sliderInit.handleSize;
 
-    
+
     caliper = d3.caliperAPI.init(sliderInit);
 
-    rectHandler = d3.rectHandler.init(fadeAPI.getBrushRect(),
+    rectHandler = d3.rectHandler.init(brushRect,
             fadeAPI.getData(), fadeAPI.getXScale(), caliper);
 
     /**
@@ -123,8 +142,8 @@ function reLoad()
     {
         //redraw the graph
         fadeAPI.reDraw(newData);
-        rectHandler = d3.rectHandler.init(fadeAPI.getBrushRect(),
-            fadeAPI.getData(), fadeAPI.getXScale(), caliper);
+        rectHandler = d3.rectHandler.init(brushRect,
+                fadeAPI.getData(), fadeAPI.getXScale(), caliper);
         //unhide it
         fadeAPI.hide(false);
 

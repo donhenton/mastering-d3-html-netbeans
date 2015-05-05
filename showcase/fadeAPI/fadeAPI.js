@@ -71,10 +71,9 @@ d3.fadeAPI.init = function (initConditions)
     var width = initConditions.width;
     var height = initConditions.height;
     var delay = initConditions.delay;
-    // if true reserve a brushrect
-    var createBrushRect = initConditions.createBrushRect;
-    var brushRect = null;
-    var svg = null;
+ 
+   
+    var groupNode = initConditions.groupNode;
     var xScale = getXScale();
     var yScale = getYScale();
     var xAxis = null;
@@ -92,26 +91,21 @@ d3.fadeAPI.init = function (initConditions)
 
     /**
      * 
-     * @returns {undefined}set up the svg element and initialize things
+     * initialization
      */
     var initializeSVG = function ()
     {
 
-        svg = d3.select("#" + attachmentID)
-                .append("svg")
-                .attr("height", height + margin.top + margin.bottom)
-                .attr("width", width + margin.left + margin.right)
-
-                .append("g")
-                .attr("transform", "translate(" + margin.left + ","
-                        + margin.top + ")");
+//        groupNode = d3.select("#" + attachmentID)
+//                .append("svg")
+//                .attr("height", height + margin.top + margin.bottom)
+//                .attr("width", width + margin.left + margin.right)
+//
+//                .append("g")
+//                .attr("transform", "translate(" + margin.left + ","
+//                        + margin.top + ")");
                 
-        if (createBrushRect)
-        {
-           brushRect =  svg.append("g").append("rect").attr("class","brushRect");
-           brushRect.attr("height",height);
-        }
-                
+              
 
         loaderIndicator = d3.select("#" + attachmentID).append("div")
                 .attr("class", "indicatorClass")
@@ -299,13 +293,14 @@ d3.fadeAPI.init = function (initConditions)
         yAxis = d3.svg.axis().scale(yScale)
                 .orient("left").ticks(5);
 
-        svg.append("g")
+        groupNode.append("g")
                 .attr("class", "x axis")
+                 
                 .attr("transform", "translate(0," + height + ")")
                 .call(xAxis);
 
         // Add the Y Axis
-        svg.append("g")
+        groupNode.append("g")
                 .attr("class", "y axis")
                 .call(yAxis);
     };
@@ -322,7 +317,7 @@ d3.fadeAPI.init = function (initConditions)
     var doDots = function ()
     {
 
-        var dots = svg.selectAll(".dot").data(data, keyFunction);
+        var dots = groupNode.selectAll(".dot").data(data, keyFunction);
 
         dots.enter().append("circle")
                 .attr("fill", dotColor)
@@ -375,11 +370,11 @@ d3.fadeAPI.init = function (initConditions)
 
 
         //lines
-        svg.select(".line")   // change the line
+        groupNode.select(".line")   // change the line
                 .attr("d", valueline(data));
-        svg.select(".x.axis") // change the x axis
+        groupNode.select(".x.axis") // change the x axis
                 .call(xAxis);
-        svg.select(".y.axis") // change the y axis
+        groupNode.select(".y.axis") // change the y axis
                 .call(yAxis);
 
         //dots        
@@ -399,7 +394,7 @@ d3.fadeAPI.init = function (initConditions)
     {
 
 
-        svg.append("path")
+        groupNode.append("path")
                 .attr("class", "line")
                 .attr("d", valueline(data));
 
@@ -410,14 +405,14 @@ d3.fadeAPI.init = function (initConditions)
     /**
      * define the highlighting circle
      */
-    var focus = svg.append("g").style("display", "none");
+    var focus = groupNode.append("g").style("display", "none");
 
     focus.append("circle")
             .attr("class", "focusCircle")
             .style("fill", "none")
             .style("stroke", "darkRed")
             .attr("r", 14);
-    verticalBar = svg.append("g").style("display", "none");
+    verticalBar = groupNode.append("g").style("display", "none");
     verticalBar.append("rect").attr('class', 'verticalBar');
 
 
@@ -428,7 +423,7 @@ d3.fadeAPI.init = function (initConditions)
     initialDraw();
     // the mouse detection rectangle  positioned here to be on top of the points
 
-    svg.append("rect")
+    groupNode.append("rect")
             .attr("width", width)
             .attr("height", height)
             .attr("class", "mouseRect")
@@ -475,15 +470,7 @@ d3.fadeAPI.init = function (initConditions)
         return xScale;
     };
     
-    /**
-     * the brushrect, which indicates a selection of points is placed here in
-     * reserve if the user sets createBrushRect true on the initConditions
-     * object otherwise the reference is null;
-     */
-    exports.getBrushRect = function()
-    {
-        return brushRect;
-    }
+     
     
     
    
@@ -508,9 +495,9 @@ d3.fadeAPI.init = function (initConditions)
         {
             opacityStr = "0";
             //raise onLoadEvent --Start
-            dispatch.onLoad.apply(svg, [{"type": "Load Start"}]);
+            dispatch.onLoad.apply(groupNode, [{"type": "Load Start"}]);
         }
-        svg.transition().delay(200).each("end", function (d, i)
+        groupNode.transition().delay(200).each("end", function (d, i)
         {
 
 
