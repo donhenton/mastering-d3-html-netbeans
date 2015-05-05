@@ -8,3 +8,5 @@ closed and open
 all done in svg
 
 the above discusses ways to make the graph resize
+
+http://bl.ocks.org/Caged/6476579 tips
