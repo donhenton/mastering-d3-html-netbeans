@@ -8,11 +8,11 @@
 function rundemo()
 {
 
-    var menuItem1 = {"text": "Alpha 1", "message": "alpha1"};
+    var menuItem1 = {"text": "Alpha 1  why dont you get a job", "message": "alpha1"};
     var menuItem2 = {"text": "Alpha 2", "message": "alpha2"};
     var menuItem3 = {"text": "Alpha 3", "message": "alpha3"};
-    var width = 250;
-    var height = 400;
+    var menuWidth = 150;
+    var menuHeight = 400;
 
     var svg = d3.select("#menubar")
             .append("svg")
@@ -28,8 +28,8 @@ function rundemo()
 
     var initConditions = {
         "menuItems": [menuItem1, menuItem2, menuItem3],
-        "width": width,
-        "height": height,
+        "menuWidth": menuWidth,
+        "menuHeight": menuHeight,
         "groupPoint": groupPoint
 
     };

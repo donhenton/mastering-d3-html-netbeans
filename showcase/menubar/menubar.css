@@ -22,3 +22,13 @@ and open the template in the editor.
      stroke: green;
      stroke-width: 2;
  }
+ 
+ rect.graphHolder
+ {
+    
+  
+     fill: #c0c0c0;
+     opacity:.25;
+     stroke: black;
+     stroke-width: 2;
+ }
