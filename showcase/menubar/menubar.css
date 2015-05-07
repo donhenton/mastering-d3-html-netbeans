@@ -17,18 +17,18 @@ and open the template in the editor.
  {
     
   
-     fill: #ffff11;
-     opacity:.25;
-     stroke: green;
+     fill: #ffffde;
+     opacity:1;
+     stroke: blue;
      stroke-width: 2;
  }
  
- rect.graphHolder
+ rect.graphGroupRect
  {
     
   
-     fill: #c0c0c0;
-     opacity:.25;
+     fill: #999999;
+     opacity:1;
      stroke: black;
      stroke-width: 2;
  }

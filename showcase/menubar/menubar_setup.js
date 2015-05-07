@@ -16,10 +16,10 @@ function rundemo()
 
     var svg = d3.select("#menubar")
             .append("svg")
-            .attr("height", 600)
-            .attr("width", 500);
-    var groupPoint = svg.append("g").attr("class", "menuGroup")
-            .attr("transform", "translate( 25,  25)")
+            .attr("height", menuHeight)
+            .attr("width",800);
+    var graphContainer = svg.append("g").attr("class", "graphContainer")
+            //.attr("transform", "translate( 25,  25)")
     
     
     
@@ -30,7 +30,7 @@ function rundemo()
         "menuItems": [menuItem1, menuItem2, menuItem3],
         "menuWidth": menuWidth,
         "menuHeight": menuHeight,
-        "groupPoint": groupPoint
+        "graphContainer": graphContainer
 
     };
 

@@ -10,37 +10,56 @@ d3.menubar = {};
 d3.menubar.init = function (initConditions)
 {
     var dispatch = d3.dispatch("onclickMenuItem");
-    var groupPoint = initConditions.groupPoint;
+    var graphContainer = initConditions.graphContainer;
     var menuWidth = initConditions.menuWidth;
     var menuHeight = initConditions.menuHeight;
     var menuItems = initConditions.menuItems;
+    var d3svg = d3.select(graphContainer[0][0].parentElement);
 
-    groupPoint.append("rect").attr("class", "menuGroupRect")
-            .attr("width", menuWidth)
-            .attr("height", menuHeight);
 
 // https://groups.google.com/forum/#!topic/d3-js/NIamAI9Yy60
 
 
     var createGraphHolder = function ()
     {
+        var graphWidth = parseInt(d3svg.attr("width")) - menuWidth;
+        console.log("graph width " + graphWidth + " " + d3svg.attr("width"));
+        var graphSection = graphContainer.append("g").attr("class", "graphSection");
+        var graphSectionRect =
+                graphSection.append("rect").attr("class", "graphGroupRect")
+                .attr("width", graphWidth - 2)
+                .attr("height", d3svg.attr("height") - 2)
+        // .attr("transform","translate("+(menuWidth)+",1)");
 
     }
 
 
     var createMenu = function ()
     {
-        var menuAttach = groupPoint.append("g").attr("class", "menuContainer");
+        var menuContainerPt = graphContainer.append("g").attr("class", "menuContainer");
         
+        var graphWidth = parseInt(d3svg.attr("width")) - menuWidth;
+        menuContainerPt.attr("transform","translate("+(graphWidth)+",2)");
         
+        console.log(d3svg.attr("width"));
+
+        menuContainerPt.append("rect").attr("class", "menuGroupRect")
+                .attr("width", menuWidth)
+                .attr("height", menuHeight-4 );
+
+        var menuItemsContainerAttachPt =
+                menuContainerPt.append("g").attr("class", "menuItemsContainer");
+
+         menuItemsContainerAttachPt.attr("transform", "translate(20,50)");
+
         var disp = menuHeight / menuItems.length;
-        console.log("disp " + disp)
-        var g = menuAttach.selectAll(".menuNode")
+
+        var g = menuItemsContainerAttachPt.selectAll(".menuNode")
                 .data(menuItems)
                 .enter().append("svg:g")
                 .attr("class", "menuNode");
-        
-        g.attr("transform","translate(0,20)")
+
+
         g.append("svg:circle")
                 .attr("transform", function (d, i)
                 {
@@ -52,7 +71,7 @@ d3.menubar.init = function (initConditions)
                 .attr("y", function (d, i) {
                     return i * disp;
                 })
-                // .attr("x", "50")
+
                 .attr("dy", ".31em")
                 .text(function (d, i) {
                     return  (d.text);
@@ -64,19 +83,6 @@ d3.menubar.init = function (initConditions)
                 })
 
 
-
-
-//        var groupG = g.append("g")         
-//        g.append("svg:circle")
-//                .attr("r", 5);
-//
-//        g.append("svg:text")
-        //    .attr("x", 10)
-        //     .attr("dy", ".31em")
-//                .text(function (d) {
-//                    return d.text;
-//                });
-        menuAttach.attr("transform", "translate(20,25)")
 
     }
 
