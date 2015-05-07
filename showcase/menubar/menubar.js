@@ -15,7 +15,12 @@ d3.menubar.init = function (initConditions)
     var menuHeight = initConditions.menuHeight;
     var menuItems = initConditions.menuItems;
     var d3svg = d3.select(graphContainer[0][0].parentElement);
-
+    var menuContainerPt = null;
+    var menuHidden = false;
+    var buttonSpace = 15;
+    var graphSection;
+    var graphSectionRect;
+    var slideDelay = 250;
 
 // https://groups.google.com/forum/#!topic/d3-js/NIamAI9Yy60
 
@@ -23,34 +28,92 @@ d3.menubar.init = function (initConditions)
     var createGraphHolder = function ()
     {
         var graphWidth = parseInt(d3svg.attr("width")) - menuWidth;
-        console.log("graph width " + graphWidth + " " + d3svg.attr("width"));
-        var graphSection = graphContainer.append("g").attr("class", "graphSection");
-        var graphSectionRect =
-                graphSection.append("rect").attr("class", "graphGroupRect")
-                .attr("width", graphWidth - 2)
+//        console.log("graph width " + graphWidth + " " + d3svg.attr("width"));
+        graphSection = graphContainer.append("g").attr("class", "graphSection")
+        graphSectionRect =
+                graphSection.append("rect").attr("class", "graphSectionRect")
+                //leave room for the slider switch
+                .attr("width", graphWidth - buttonSpace)
                 .attr("height", d3svg.attr("height") - 2)
         // .attr("transform","translate("+(menuWidth)+",1)");
 
     }
 
+    var slide = function ()
+    {
+
+        console.log("click")
+        menuHidden = !menuHidden;
+        menuContainerPt.transition().duration(slideDelay)
+                .attr("transform", positionMenu());
+        var posNew = positionGraph();
+        console.log("posNew " + posNew)
+        graphSectionRect.transition().duration(slideDelay).
+                attr("width", posNew);
+
+    }
+
+    var positionGraph = function ()
+    {
+        var graphWidth = parseInt(d3svg.attr("width"));
+        var t = 0;
+        if (menuHidden)
+        {
+            t = graphWidth - buttonSpace;
+        }
+        else
+        {
+            t = graphWidth - buttonSpace - menuWidth;
+        }
+        return t;
+    }
+
+    var positionMenu = function ( )
+    {
+        var graphWidth = parseInt(d3svg.attr("width")) - menuWidth;
+        var disp = parseInt(d3svg.attr("width")) - 4;
+        if (menuHidden)
+            return "translate(" + (disp) + ",2)";
+
+        else
+            return "translate(" + (graphWidth) + ",2)";
+
+    }
 
     var createMenu = function ()
     {
-        var menuContainerPt = graphContainer.append("g").attr("class", "menuContainer");
-        
-        var graphWidth = parseInt(d3svg.attr("width")) - menuWidth;
-        menuContainerPt.attr("transform","translate("+(graphWidth)+",2)");
-        
-        console.log(d3svg.attr("width"));
+
+
+        menuContainerPt = graphContainer.append("g").attr("class", "menuContainer");
+        menuContainerPt.attr("transform", positionMenu());
+
+
+        d3.selectAll(".menuContainer")
+                .append("circle")
+                .attr("r", 15)
+                .attr("class", "menuSliderButton")
+                .attr("cy", (menuHeight / 2) - 8)
+                .on("mouseover", function (d, i) {
+                    d3.select(this).classed("handCursor", true);
+                    // d3.event.stopPropagation();
+                })
+                .on("mouseout", function (d, i) {
+                    d3.select(this).classed("handCursor", false);
+                    // d3.event.stopPropagation();
+                })
+                .on("click", slide);
+
+
+//        console.log(d3svg.attr("width"));
 
         menuContainerPt.append("rect").attr("class", "menuGroupRect")
                 .attr("width", menuWidth)
-                .attr("height", menuHeight-4 );
+                .attr("height", menuHeight - 4);
 
         var menuItemsContainerAttachPt =
                 menuContainerPt.append("g").attr("class", "menuItemsContainer");
 
-         menuItemsContainerAttachPt.attr("transform", "translate(20,50)");
+        menuItemsContainerAttachPt.attr("transform", "translate(20,50)");
 
         var disp = menuHeight / menuItems.length;
 
@@ -115,11 +178,6 @@ d3.menubar.init = function (initConditions)
         });
     }
 
-    function type(d) {
-        d.value = +d.value;
-        return d;
-    }
-
 
 
     ///// PUBLIC API //////////////////////////////////////////////////////
@@ -127,6 +185,7 @@ d3.menubar.init = function (initConditions)
     {
 
     }
+
 
     d3.rebind(exports, dispatch, "on");
     return exports;

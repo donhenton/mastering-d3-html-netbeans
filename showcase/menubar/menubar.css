@@ -23,12 +23,18 @@ and open the template in the editor.
      stroke-width: 2;
  }
  
- rect.graphGroupRect
+ rect.graphSectionRect
  {
     
   
-     fill: #999999;
+     fill: #ffffff;
      opacity:1;
      stroke: black;
-     stroke-width: 2;
+     stroke-width: 1;
  }
+ 
+ 
+.handCursor
+{
+    cursor: pointer
+}

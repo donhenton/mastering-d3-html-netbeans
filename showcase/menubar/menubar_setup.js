@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-
+ var menubar = null;
 function rundemo()
 {
 
@@ -34,5 +34,5 @@ function rundemo()
 
     };
 
-    var menubar = d3.menubar.init(initConditions);
+    menubar = d3.menubar.init(initConditions);
 }
