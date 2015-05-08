@@ -9,4 +9,6 @@ all done in svg
 
 the above discusses ways to make the graph resize
 
+
+d3.tooltips
 http://bl.ocks.org/Caged/6476579 tips
