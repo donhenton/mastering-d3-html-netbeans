@@ -6,21 +6,24 @@
 /* global d3 */
 
 var caliper = null;
+var isLong = true;
+var svgWidth = 600;
 
 function rundemo()
 {
 
     var margin = {top: 25, right: 40, bottom: 50, left: 5};
-    var width = 430;
+
     var height = 100;
-    var lineWidth = width;
+    var lineWidth = svgWidth;
+
 
     var initConditions = {};
 
     var svg = d3.select("#caliper")
             .append("svg")
             .attr("height", height)
-            .attr("width", width);
+            .attr("width", svgWidth);
 
     initConditions.handleSize = 15;
     initConditions.initialPercents = [40, 60];
@@ -36,7 +39,7 @@ function rundemo()
         var data = {};
         data.left = left;
         data.right = right;
-        
+
         updateText(data);
     });
 
@@ -75,6 +78,24 @@ function doUpdate()
     }
     var sub = {"left": left, "right": right};
     caliper.reposition(sub);
+    var data = caliper.queryData();
+
+    updateText(data);
+}
+
+function doResize()
+{
+
+    if (isLong)
+    {
+        caliper.resize(svgWidth - 200);
+        isLong = false;
+    }
+    else
+    {
+        caliper.resize(svgWidth);
+        isLong = true;
+    }
     var data = caliper.queryData();
 
     updateText(data);

@@ -5,14 +5,14 @@ var margin = {top: 5, right: 40, bottom: 50, left: 60};
 var width = 750 - margin.left - margin.right;
 var height = 400 - margin.top - margin.bottom;
 var menuSize = 200;
-var graphWidth = width -  menuSize;
+var graphWidth = width - menuSize;
 var caliper = null;
 var isLarge = false;
 var rectHandler = null;
 var brushRect = null;
 var groupNode = null;
 var svg = null;
- 
+
 
 
 var MAX_POINTS = 20;
@@ -159,17 +159,23 @@ function reLoad()
 
 function reSize()
 {
-    
-   
+
+
     if (!isLarge)
     {
         fadeAPI.reSizeGraph(width);
         isLarge = true;
+        caliper.resize(width);
+         
     }
     else
     {
         isLarge = false;
-        fadeAPI.reSizeGraph(width-menuSize)
+        fadeAPI.reSizeGraph(width - menuSize);
+        caliper.resize(width - menuSize);
+         
     }
+    var mydata = caliper.queryData();
+    rectHandler.positionRect(mydata.left, mydata.right);
 
 }

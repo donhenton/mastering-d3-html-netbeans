@@ -23,9 +23,9 @@ d3.caliperAPI.init = function (initConditions)
     var initialPercents = initConditions.initialPercents;
     var handleSize = initConditions.handleSize;
     var attachmentGPoint = initConditions.attachmentGPoint;
-    var dim = initConditions.dim;
+    var dim = 0;
     //this is the line for percentages
-    var virtualLineWidth = initConditions.dim - handleSize;
+    var virtualLineWidth = 0;
     var dispatch = d3.dispatch("slideend");
     var formatPercent = d3.format(".2%");
     var caliperLineDraw = d3.svg.line()
@@ -37,10 +37,49 @@ d3.caliperAPI.init = function (initConditions)
             });
 
     //draw the slider line
-    attachmentGPoint.append("path").attr("class", "caliperLine")
-            .attr("d", caliperLineDraw([{"x": handleSize / 2}, {"x": dim - handleSize}]));
 
 
+
+
+
+    /**
+     * resize the the line position sliders according to 
+     * @param {type} newSize
+     * @returns {undefined}resiz
+     */
+    var resize = function (newSize)
+    {
+        dim = newSize;
+        var existingLine = d3.selectAll(".caliperLine");
+        if (existingLine.empty())
+        {
+            existingLine = attachmentGPoint
+                    .append("path").attr("class", "caliperLine")
+        }
+        virtualLineWidth = newSize - handleSize;
+        existingLine.attr("d", caliperLineDraw([{"x": handleSize / 2}, {"x": newSize - handleSize}]));
+        if (handleLeft === undefined)
+        {
+            return;
+        }
+        else
+        {
+            //left
+                        
+            handleLeft.data()[0].x =  getPosForPercent(handleLeft.data()[0].percent);
+            handleLeft.transition().duration(100).attr("transform", "translate(" +  handleLeft.data()[0].x + ",0)")
+            
+            handleRight.data()[0].x =  getPosForPercent(handleRight.data()[0].percent);
+            handleRight.transition().duration(100).attr("transform", "translate(" +  handleRight.data()[0].x + ",0)")
+            
+ 
+
+
+
+        }
+
+    }
+    resize(initConditions.dim);
 
     /** 
      * given a percent return the x position for the handle it centers
@@ -76,13 +115,14 @@ d3.caliperAPI.init = function (initConditions)
     var getPercentForPos = function (pos)
     {
         var t = parseFloat(
-                formatPercent(pos / (virtualLineWidth - (handleSize / 2))));
+                formatPercent((pos+(handleSize / 2)) / (virtualLineWidth - (handleSize / 2))));
         if (t > 100)
             t = 100;
 
         if (t < 0)
             t = 0;
         // console.log("getpercentforpos "+pos+" "+t)
+        t = Math.floor(t)
         return t;
 
     }
@@ -211,6 +251,13 @@ d3.caliperAPI.init = function (initConditions)
 
     }
 
+
+    exports.resize = function (newSize)
+    {
+        resize(newSize);
+    }
+
+
     /**
      * 
      *  expose the apis
@@ -238,7 +285,7 @@ d3.caliperAPI.init = function (initConditions)
 
         return ret;
     }
-    
+
     /**
      * 
      * @param {type} data {"left": 35,"right":75}; mark one as null
