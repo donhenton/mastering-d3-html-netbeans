@@ -71,8 +71,8 @@ d3.fadeAPI.init = function (initConditions)
     var width = initConditions.width;
     var height = initConditions.height;
     var delay = initConditions.delay;
- 
-   
+
+
     var groupNode = initConditions.groupNode;
     var xScale = getXScale();
     var yScale = getYScale();
@@ -87,7 +87,7 @@ d3.fadeAPI.init = function (initConditions)
     var verticalBar = null;
     var data = initConditions.data;
     var dotColor = "blue";
-    
+
 
     /**
      * 
@@ -104,8 +104,8 @@ d3.fadeAPI.init = function (initConditions)
 //                .append("g")
 //                .attr("transform", "translate(" + margin.left + ","
 //                        + margin.top + ")");
-                
-              
+
+
 
         loaderIndicator = d3.select("#" + attachmentID).append("div")
                 .attr("class", "indicatorClass")
@@ -178,16 +178,16 @@ d3.fadeAPI.init = function (initConditions)
      * @returns  {newTarget: the data item , circleIdx: the index in the
      * data set for that item}
      */
-    var findDateForPixel = function(pixelValue)
+    var findDateForPixel = function (pixelValue)
     {
         //given x pos of mouse use xScale to turn that into a bisector
-        
+
         var x0 = xScale.invert(pixelValue);
         var i = bisectDate(data, x0, 1);
         var d0 = data[i - 1];
         var d1 = data[i];
-        var ret = {"newTarget":null,"circleIdx": -1};
-         
+        var ret = {"newTarget": null, "circleIdx": -1};
+
         if (x0 - d0.date > d1.date - x0)
         {
             ret.newTarget = d1;
@@ -198,7 +198,7 @@ d3.fadeAPI.init = function (initConditions)
             ret.newTarget = d0;
             ret.circleIdx = i - 1;
         }
-        
+
         return ret;
     }
 
@@ -216,12 +216,12 @@ d3.fadeAPI.init = function (initConditions)
             return;
         }
         var ret = findDateForPixel(d3.mouse(this)[0]);
-         
-        
+
+
 
         var pointDataArray = d3.selectAll(".dot");
 
-        if (selectedPoint.dataItem === null || 
+        if (selectedPoint.dataItem === null ||
                 (selectedPoint.dataItem.date !== ret.newTarget.date))
         {
             //only raise event if you actually change
@@ -256,7 +256,7 @@ d3.fadeAPI.init = function (initConditions)
 
 
         verticalBar.select("rect.verticalBar")
-                .attr('width', 2)     
+                .attr('width', 2)
                 .attr('height', yLength)
                 .attr('x', xBar)
                 .attr('y', yStart)
@@ -265,6 +265,20 @@ d3.fadeAPI.init = function (initConditions)
 
     };
 
+    var sizeXAxis = function ()
+    {
+        xAxis =
+                d3.svg.axis()
+                .scale(xScale).tickPadding(15)
+                .ticks(8)
+                .tickFormat(function (d) {
+                    //return d3.time.format("%Y-%m-%d")
+                    return  formatTimeFunction(d);
+                })
+                .innerTickSize([4])
+                .outerTickSize([20])
+                .orient("bottom");
+    }
     /**
      * 
      * @returns {undefined}build the axes of the graph
@@ -278,24 +292,16 @@ d3.fadeAPI.init = function (initConditions)
                 return d.data;
             })]);
 
-        xAxis =
-                d3.svg.axis()
-                .scale(xScale).tickPadding(15)
-                .ticks(8)
-                .tickFormat(function (d) {
-                    //return d3.time.format("%Y-%m-%d")
-                    return  formatTimeFunction(d);
-                })
-                .innerTickSize([4])
-                .outerTickSize([20])
-                .orient("bottom");
+
+        sizeXAxis();
+
 
         yAxis = d3.svg.axis().scale(yScale)
                 .orient("left").ticks(5);
 
         groupNode.append("g")
                 .attr("class", "x axis")
-                 
+
                 .attr("transform", "translate(0," + height + ")")
                 .call(xAxis);
 
@@ -443,8 +449,27 @@ d3.fadeAPI.init = function (initConditions)
     function exports()
     {
 
+    };
+
+
+    /**
+     * resize the graph along the xaxis
+     * @param {type} newWidth
+     * @returns {undefined}reoutine to resize the graph
+     */
+    exports.reSizeGraph = function (newWidth)
+    {
+        width = newWidth;
+        xScale = getXScale();
+        xScale.domain(d3.extent(data, function (d) {
+            return d.date;
+        }));
+
+        d3.selectAll(".mouseRect").attr("width",newWidth);
+        sizeXAxis();
+        reBuild();
     }
-    ;
+
 
     /**
      * Routine for redrawing the graph takes new data
@@ -459,21 +484,21 @@ d3.fadeAPI.init = function (initConditions)
         reBuild();
 
     };
-    
-    exports.getData = function()
+
+    exports.getData = function ()
     {
         return data;
     }
-    
+
     exports.getXScale = function ()
     {
         return xScale;
     };
-    
-     
-    
-    
-   
+
+
+
+
+
 
     /**
      * if doHide is true then this will fade the graph out after a delay
