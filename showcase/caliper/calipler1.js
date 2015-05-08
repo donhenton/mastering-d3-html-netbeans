@@ -59,7 +59,7 @@ d3.caliperAPI.init = function (initConditions)
                     .append("path").attr("class", "caliperLine")
         }
         virtualLineWidth = newSize - handleSize;
-        existingLine.attr("d", caliperLineDraw([{"x": handleDisp}, {"x": newSize -  handleSize/2}]));
+        existingLine.attr("d", caliperLineDraw([{"x": handleDisp}, {"x": newSize  }]));
         if (handleLeft === undefined)
         {
             return;
@@ -69,10 +69,10 @@ d3.caliperAPI.init = function (initConditions)
             //left
                         
             handleLeft.data()[0].x =  getPosForPercent(handleLeft.data()[0].percent);
-            handleLeft.transition().duration(100).attr("transform", "translate(" +  (handleLeft.data()[0].x )+ ",0)")
+            handleLeft.attr("transform", "translate(" +  (handleLeft.data()[0].x )+ ",0)")
             
             handleRight.data()[0].x =  getPosForPercent(handleRight.data()[0].percent);
-            handleRight.transition().duration(100).attr("transform", "translate(" +  (handleRight.data()[0].x ) + ",0)")
+            handleRight.attr("transform", "translate(" +  (handleRight.data()[0].x ) + ",0)")
             
  
 
@@ -104,7 +104,7 @@ d3.caliperAPI.init = function (initConditions)
 
 
 
-        // console.log("getPosForPercent " + percent + " " + x)
+          console.log("getPosForPercent " + percent + " " + x)
         return x;
     };
 
@@ -124,7 +124,7 @@ d3.caliperAPI.init = function (initConditions)
         if (t < 0)
             t = 0;
         // console.log("getpercentforpos "+pos+" "+t)
-         t = Math.floor(t)
+          t = Math.floor(t)
         return t;
 
     }

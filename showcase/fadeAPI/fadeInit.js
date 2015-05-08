@@ -103,13 +103,13 @@ function addSliders()
             .attr("transform", "translate(0,40)");
     sliderInit.attachmentGPoint = aPoint;
     sliderInit.initialPercents = [40, 60];
-    sliderInit.dim = graphWidth+  sliderInit.handleSize;
+    sliderInit.dim = graphWidth + sliderInit.handleSize;
 
 
     caliper = d3.caliperAPI.init(sliderInit);
 
     rectHandler = d3.rectHandler.init(brushRect,
-            fadeAPI.getData(), fadeAPI.getXScale(), caliper,graphWidth);
+            fadeAPI.getData(), fadeAPI.getXScale(), caliper, graphWidth);
 
     /**
      * handle the slideend event
@@ -117,7 +117,9 @@ function addSliders()
     caliper.on("slideend", function (left, right) {
 
         var ret = rectHandler.positionRect(left, right);
-        $("#info").html("Dates " + ret.leftDate + " " + ret.rightDate);
+        var data = caliper.queryData();
+        var stuff = " [" + data.left.percent + "," + data.right.percent + "]"
+        $("#info").html("Dates " + ret.leftDate + " " + ret.rightDate + stuff);
     });
 
     var data = caliper.queryData();
@@ -125,7 +127,8 @@ function addSliders()
     {
 
         var ret = rectHandler.positionRect(data.left, data.right);
-        $("#info").html("Dates " + ret.leftDate + " " + ret.rightDate);
+        var stuff = " [" + data.left.percent + "," + data.right.percent + "]"
+        $("#info").html("Dates " + ret.leftDate + " " + ret.rightDate + stuff);
     }
 
 }
@@ -169,7 +172,7 @@ function reSize()
         caliper.resize(width);
         rectHandler = d3.rectHandler.init(brushRect,
                 fadeAPI.getData(), fadeAPI.getXScale(), caliper);
-         
+
     }
     else
     {
@@ -178,9 +181,13 @@ function reSize()
         caliper.resize(width - menuSize);
         rectHandler = d3.rectHandler.init(brushRect,
                 fadeAPI.getData(), fadeAPI.getXScale(), caliper);
-         
+
     }
     var mydata = caliper.queryData();
     rectHandler.positionRect(mydata.left, mydata.right);
+
+    var stuff = " resize[" + mydata.left.percent + "," + mydata.right.percent + "]"
+    $("#info").html(  stuff);
+
 
 }
