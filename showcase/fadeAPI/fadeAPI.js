@@ -449,7 +449,8 @@ d3.fadeAPI.init = function (initConditions)
     function exports()
     {
 
-    };
+    }
+    ;
 
 
     /**
@@ -465,7 +466,7 @@ d3.fadeAPI.init = function (initConditions)
             return d.date;
         }));
 
-        d3.selectAll(".mouseRect").attr("width",newWidth);
+        d3.selectAll(".mouseRect").attr("width", newWidth);
         sizeXAxis();
         reBuild();
     }
@@ -514,6 +515,18 @@ d3.fadeAPI.init = function (initConditions)
     {
 
         var messageDiv = $(".indicatorClass");
+
+
+        messageDiv.css(
+                {
+                    "top": 0 + margin.top + (height / 2) - 35,
+                    "left": 0 + margin.left + (width / 2) - 35,
+                    "position": 'absolute'});
+
+
+
+
+
         isLoading = doHide;
         var opacityStr = "1";
         if (isLoading)
