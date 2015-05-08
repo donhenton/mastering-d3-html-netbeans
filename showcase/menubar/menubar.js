@@ -9,7 +9,7 @@ d3.menubar = {};
 
 d3.menubar.init = function (initConditions)
 {
-    var dispatch = d3.dispatch("onclickMenuItem");
+    var dispatch = d3.dispatch("onSlideEnd","onSlideStart");
     var graphContainer = initConditions.graphContainer;
     var menuWidth = initConditions.menuWidth;
     var menuHeight = initConditions.menuHeight;
@@ -29,7 +29,7 @@ d3.menubar.init = function (initConditions)
     {
         var graphWidth = parseInt(d3svg.attr("width")) - menuWidth;
 //        console.log("graph width " + graphWidth + " " + d3svg.attr("width"));
-        graphSection = graphContainer.append("g").attr("class", "graphSection")
+        graphSection = graphContainer.append("g").attr("class", "graphSection");
         graphSectionRect =
                 graphSection.append("rect").attr("class", "graphSectionRect")
                 //leave room for the slider switch
@@ -42,12 +42,10 @@ d3.menubar.init = function (initConditions)
     var slide = function ()
     {
 
-        console.log("click")
         menuHidden = !menuHidden;
         menuContainerPt.transition().duration(slideDelay)
                 .attr("transform", positionMenu());
         var posNew = positionGraph();
-        console.log("posNew " + posNew)
         graphSectionRect.transition().duration(slideDelay).
                 attr("width", posNew);
 
