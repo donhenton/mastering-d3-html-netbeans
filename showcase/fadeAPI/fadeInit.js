@@ -12,7 +12,7 @@ var rectHandler = null;
 var brushRect = null;
 var groupNode = null;
 var svg = null;
-
+var handleSize = 12;
 
 
 var MAX_POINTS = 20;
@@ -96,14 +96,14 @@ function rundemo()
 function addSliders()
 {
     var sliderInit = {};
-    sliderInit.handleSize = 12;
+    sliderInit.handleSize = handleSize;
     var aPoint = d3.select(".x.axis").append("g")
             .attr("class", "sliderLine")
             //.attr("transform", "translate(-" + sliderInit.handleSize / 2 + ",40)");
             .attr("transform", "translate(0,40)");
     sliderInit.attachmentGPoint = aPoint;
     sliderInit.initialPercents = [40, 60];
-    sliderInit.dim = graphWidth + sliderInit.handleSize;
+    sliderInit.dim = graphWidth + 1 * sliderInit.handleSize;
 
 
     caliper = d3.caliperAPI.init(sliderInit);
@@ -164,30 +164,33 @@ function reLoad()
 function reSize()
 {
 
-
+    var mydata = caliper.queryData();
+     
     if (!isLarge)
     {
         fadeAPI.reSizeGraph(width);
         isLarge = true;
-        caliper.resize(width);
-        rectHandler = d3.rectHandler.init(brushRect,
-                fadeAPI.getData(), fadeAPI.getXScale(), caliper);
+        caliper.resize(width + handleSize);
 
     }
     else
     {
         isLarge = false;
         fadeAPI.reSizeGraph(width - menuSize);
-        caliper.resize(width - menuSize);
-        rectHandler = d3.rectHandler.init(brushRect,
-                fadeAPI.getData(), fadeAPI.getXScale(), caliper);
+        caliper.resize(width - menuSize + handleSize);
+
 
     }
+
+    rectHandler = d3.rectHandler.init(brushRect,
+            fadeAPI.getData(), fadeAPI.getXScale(), caliper);
+
     var mydata = caliper.queryData();
+   
     rectHandler.positionRect(mydata.left, mydata.right);
 
     var stuff = " resize[" + mydata.left.percent + "," + mydata.right.percent + "]"
-    $("#info").html(  stuff);
+    $("#info").html(stuff);
 
 
 }
