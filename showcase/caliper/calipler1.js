@@ -104,7 +104,7 @@ d3.caliperAPI.init = function (initConditions)
 
 
 
-          console.log("getPosForPercent " + percent + " " + x)
+        //  console.log("getPosForPercent " + percent + " " + x)
         return x;
     };
 

@@ -87,6 +87,7 @@ d3.fadeAPI.init = function (initConditions)
     var verticalBar = null;
     var data = initConditions.data;
     var dotColor = "blue";
+    var divT = null; //the tooltip div
 
 
     /**
@@ -105,7 +106,9 @@ d3.fadeAPI.init = function (initConditions)
 //                .attr("transform", "translate(" + margin.left + ","
 //                        + margin.top + ")");
 
-
+        divT = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
 
         loaderIndicator = d3.select("#" + attachmentID).append("div")
                 .attr("class", "indicatorClass")
@@ -215,7 +218,28 @@ d3.fadeAPI.init = function (initConditions)
             //ignore mouse while loading
             return;
         }
-        var ret = findDateForPixel(d3.mouse(this)[0]);
+        var mousePtX = d3.mouse(this)[0];
+        var mousePtY = d3.mouse(this)[1];
+        var ret = findDateForPixel(mousePtX);
+
+        /*
+         .on("mouseover", function (d) {
+         divT.transition()
+         .duration(delay)
+         .style("opacity", .9);
+         divT.html(formatTime(d.date) + "<br/>" + d.data)
+         .style("left", (d3.event.pageX) + "px")
+         .style("top", (d3.event.pageY - 28) + "px");
+         })
+         .on("mouseout", function (d, x, y) {
+         divT.transition()
+         .duration(delay)
+         .style("opacity", 0);                                                   // and go all the way to an opacity of nil
+         console.log(d + " " + x + " " + y)
+         
+         });
+         
+         */
 
 
 
@@ -232,6 +256,7 @@ d3.fadeAPI.init = function (initConditions)
             {
 
                 setDot(selectedPoint.svgItem, false);
+                
             }
             // find the circle
             //d3.select(svgItem) is the same as $(htmlElement) in jQuery
@@ -239,6 +264,16 @@ d3.fadeAPI.init = function (initConditions)
             setDot(selectedPoint.svgItem, true);
             //raise a newSelection event, with the payload
             dispatch.newSelection.apply(this, [ret.newTarget, ret.newTarget.index + 1]);
+
+            //tooltip show
+            divT.transition()
+                    .duration(delay)
+                    .style("opacity", .9);
+            divT.html(dateFormatter(selectedPoint.dataItem.date)
+                    + "<br/>" + selectedPoint.dataItem.data)
+                    .style("left", (mousePtX + margin.left) + "px")
+                    .style("top", (yScale(selectedPoint.dataItem.data) - 15) + "px");
+
 
 
         }
@@ -334,7 +369,7 @@ d3.fadeAPI.init = function (initConditions)
                 })
                 .attr("cy", function (d) {
                     return yScale(d.data);
-                });
+                })
 
 
 
@@ -361,6 +396,8 @@ d3.fadeAPI.init = function (initConditions)
      */
     var reBuild = function () {
 
+        divT.style("opacity", 0);                                                  
+          
         if (selectedPoint.svgItem != null)
         {
 
@@ -438,6 +475,7 @@ d3.fadeAPI.init = function (initConditions)
             .on("mouseover", function () {
                 focus.style("display", null);
                 verticalBar.style("display", null);
+
             })
             .on("mouseout", function () {
                 focus.style("display", "none");
@@ -465,7 +503,7 @@ d3.fadeAPI.init = function (initConditions)
         xScale.domain(d3.extent(data, function (d) {
             return d.date;
         }));
-
+        divT.style("opacity", 0);        
         d3.selectAll(".mouseRect").attr("width", newWidth);
         sizeXAxis();
         reBuild();
@@ -515,7 +553,7 @@ d3.fadeAPI.init = function (initConditions)
     {
 
         var messageDiv = $(".indicatorClass");
-
+        divT.style("opacity", 0);        
 
         messageDiv.css(
                 {
