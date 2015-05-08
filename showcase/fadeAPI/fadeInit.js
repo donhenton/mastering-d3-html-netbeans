@@ -1,7 +1,7 @@
 /* global d3 */
 
 ////////////// Fade API Example usage //////////////////////
-var margin = {top: 5, right: 40, bottom: 50, left: 60};
+var margin = {top: 25, right: 40, bottom: 50, left: 60};
 var width = 750 - margin.left - margin.right;
 var height = 400 - margin.top - margin.bottom;
 var menuSize = 200;
@@ -99,16 +99,17 @@ function addSliders()
     sliderInit.handleSize = 12;
     var aPoint = d3.select(".x.axis").append("g")
             .attr("class", "sliderLine")
-            .attr("transform", "translate(-" + sliderInit.handleSize / 2 + ",40)");
+            //.attr("transform", "translate(-" + sliderInit.handleSize / 2 + ",40)");
+            .attr("transform", "translate(0,40)");
     sliderInit.attachmentGPoint = aPoint;
     sliderInit.initialPercents = [40, 60];
-    sliderInit.dim = graphWidth + sliderInit.handleSize;
+    sliderInit.dim = graphWidth+  sliderInit.handleSize;
 
 
     caliper = d3.caliperAPI.init(sliderInit);
 
     rectHandler = d3.rectHandler.init(brushRect,
-            fadeAPI.getData(), fadeAPI.getXScale(), caliper);
+            fadeAPI.getData(), fadeAPI.getXScale(), caliper,graphWidth);
 
     /**
      * handle the slideend event
@@ -166,6 +167,8 @@ function reSize()
         fadeAPI.reSizeGraph(width);
         isLarge = true;
         caliper.resize(width);
+        rectHandler = d3.rectHandler.init(brushRect,
+                fadeAPI.getData(), fadeAPI.getXScale(), caliper);
          
     }
     else
@@ -173,6 +176,8 @@ function reSize()
         isLarge = false;
         fadeAPI.reSizeGraph(width - menuSize);
         caliper.resize(width - menuSize);
+        rectHandler = d3.rectHandler.init(brushRect,
+                fadeAPI.getData(), fadeAPI.getXScale(), caliper);
          
     }
     var mydata = caliper.queryData();

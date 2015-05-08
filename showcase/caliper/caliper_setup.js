@@ -15,7 +15,7 @@ function rundemo()
     var margin = {top: 25, right: 40, bottom: 50, left: 5};
 
     var height = 100;
-    var lineWidth = svgWidth;
+    var lineWidth = svgWidth-20;
 
 
     var initConditions = {};
@@ -23,7 +23,7 @@ function rundemo()
     var svg = d3.select("#caliper")
             .append("svg")
             .attr("height", height)
-            .attr("width", svgWidth);
+            .attr("width", svgWidth );
 
     initConditions.handleSize = 15;
     initConditions.initialPercents = [40, 60];
