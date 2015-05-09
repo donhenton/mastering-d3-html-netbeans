@@ -59,13 +59,14 @@ function rundemo()
         "menuWidth": menuWidth,
         "menuHeight": height + margin.top + margin.bottom,
         "slideDelay": 200,
-        "graphContainer": menuSystemContainer
+        "attachmentGroup": menuSystemContainer
 
     };
 
     menubar = d3.menubar.init(menuInitConditions);
 
-    brushRect = menubar.getGraphSection().append("rect").attr("class", "brushRect");
+    brushRect = menubar.getGraphSection().append("rect")
+            .attr("class", "brushRect");
     brushRect.attr("height", height);
     var initConditions =
             {
@@ -94,27 +95,31 @@ function rundemo()
     fadeAPI.on("newSelection", function (d, i) {
         var dateFormatter = d3.time.format("%Y-%m-%d");
         var me = this;
-        $("#info").html(i + ": " + dateFormatter(d.date) + " data: " + d.data + " this (" + me.toString() + ")");
+        $("#info").html(i + ": " + dateFormatter(d.date) + " data: "
+                + d.data + " this (" + me.toString() + ")");
     });
 
     //bind code to handle the onLoad event
     fadeAPI.on("onLoad", function (d) {
         var message = d.type;
         var me = this;
-        $("#info").html("Load Action: " + message + " this (" + me.toString() + ")");
+        $("#info").html("Load Action: " + message
+                + " this (" + me.toString() + ")");
     });
 
+    //handle when the menu is closed or open
     menubar.on("onSlideEnd", function (str, finalState)
     {
-        //  console.log("hit " + finalState)
+         
         $("#info").html(str + " --> " + finalState);
         reSize(finalState);
 
     });
-
+    //handle a menu selection
+    
     menubar.on("menuAction", function (menuAction)
     {
-        //console.log("hit " + finalState)
+         
         $("#info").html(" --> " + menuAction);
         if (menuAction === 'reload')
             reLoad();
@@ -134,7 +139,6 @@ function addSliders()
     sliderInit.handleSize = handleSize;
     var aPoint = d3.select(".x.axis").append("g")
             .attr("class", "sliderLine")
-            //.attr("transform", "translate(-" + sliderInit.handleSize / 2 + ",40)");
             .attr("transform", "translate(0,40)");
     sliderInit.attachmentGPoint = aPoint;
     sliderInit.initialPercents = [40, 60];
@@ -168,7 +172,7 @@ function addSliders()
 
 }
 /**
- * 
+ * reloads the graph data
  * @returns {undefined}
  * code for the redraw button
  */
@@ -194,6 +198,11 @@ function reLoad()
 
 }
 
+/**
+ * resizing function called when menu slider is pressed.
+ * @param {type} finalState
+ * @returns {undefined}
+ */
 function reSize(finalState)
 {
     console.log("finalState")
@@ -207,8 +216,10 @@ function reSize(finalState)
 
     if (!isLarge)
     {
-        fadeAPI.reSizeGraph(graphWidth + menuSize - 3 * menubar.getButtonSpace());
-        caliper.resize(graphWidth + menuSize - 3 * menubar.getButtonSpace() + handleSize);
+        fadeAPI.reSizeGraph(graphWidth + menuSize 
+                - 3 * menubar.getButtonSpace());
+        caliper.resize(graphWidth + menuSize 
+                - 3 * menubar.getButtonSpace() + handleSize);
 
     }
     else

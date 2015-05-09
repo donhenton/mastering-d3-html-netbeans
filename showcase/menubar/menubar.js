@@ -1,16 +1,20 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * 
+ * This creates a container with a menu on the right side and a svg group for
+ * stuff on the right.
+ * The menu will slide to the right (opened and closed) and will signal an
+ * event representing that this has occurred.
+ * 
+ * the left hand area (
+ * 
  */
-
-
 d3.menubar = {};
 
 d3.menubar.init = function (initConditions)
 {
     var dispatch = d3.dispatch("onSlideEnd", "onSlideStart", "menuAction");
-    var graphContainer = initConditions.graphContainer;
+    //where this container will be attached
+    var attachmentGroup = initConditions.attachmentGroup;
     var menuWidth = initConditions.menuWidth;
     var menuHeight = initConditions.menuHeight;
     var menuItems = initConditions.menuItems;
@@ -33,7 +37,7 @@ d3.menubar.init = function (initConditions)
     var createGraphHolder = function ()
     {
 
-        graphSection = graphContainer.append("g").attr("class", "graphSection");
+        graphSection = attachmentGroup.append("g").attr("class", "graphSection");
 
     }
 
@@ -91,7 +95,7 @@ d3.menubar.init = function (initConditions)
     {
 
 
-        menuContainerPt = graphContainer.append("g").attr("class", "menuContainer");
+        menuContainerPt = attachmentGroup.append("g").attr("class", "menuContainer");
         menuContainerPt.attr("transform", positionMenu());
 
 

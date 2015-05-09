@@ -33,7 +33,7 @@ function rundemo()
         "menuWidth": menuWidth,
         "menuHeight": menuHeight,
         "slideDelay": 200,
-        "graphContainer": graphContainer
+        "attachmentGroup": graphContainer
 
     };
 
