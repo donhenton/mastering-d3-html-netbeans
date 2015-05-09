@@ -5,7 +5,7 @@ var margin = {top: 25, right: 40, bottom: 50, left: 60};
 var width = 750 - margin.left - margin.right;
 var height = 400 - margin.top - margin.bottom;
 var menuSize = 200;
-var graphWidth = 700 -menuSize;
+var graphWidth = 700 - menuSize;
 var caliper = null;
 var rectHandler = null;
 var brushRect = null;
@@ -49,10 +49,10 @@ function rundemo()
 
     var menuSystemContainer = svg.append("g").attr("class", "menuSystemContainer");
 
-    var menuItem1 = {"text": "Alpha 1  why dont you get \n\
-     a job you bozo of no worth", "message": "alpha1"};
-    var menuItem2 = {"text": "Reload Data", "message": "reload"};
-    var menuItem3 = {"text": "Alpha 3", "message": "alpha3"};
+    var menuItem3 = {"text": "This is an example of long text \n\
+     menu items: Alpha 1", "message": "alpha1"};
+    var menuItem1 = {"text": "Reload Data", "message": "reload"};
+    var menuItem2 = {"text": "Alpha 3", "message": "alpha3"};
 
     var menuInitConditions = {
         "menuItems": [menuItem1, menuItem2, menuItem3],
@@ -65,7 +65,8 @@ function rundemo()
 
     menubar = d3.menubar.init(menuInitConditions);
 
-
+    brushRect = menubar.getGraphSection().append("rect").attr("class", "brushRect");
+    brushRect.attr("height", height);
     var initConditions =
             {
                 "margin": margin,
@@ -83,8 +84,7 @@ function rundemo()
     menubar.getGraphSection()
             .attr("transform", "translate(" + margin.left + ","
                     + margin.top + ")");
-    brushRect = menubar.getGraphSection().append("rect").attr("class", "brushRect");
-    brushRect.attr("height", height);
+
 
 
     // bind code to handle a 'newSelection' event which is whenever
@@ -106,16 +106,16 @@ function rundemo()
 
     menubar.on("onSlideEnd", function (str, finalState)
     {
-      //  console.log("hit " + finalState)
+        //  console.log("hit " + finalState)
         $("#info").html(str + " --> " + finalState);
         reSize(finalState);
 
     });
 
-     menubar.on("menuAction", function (menuAction)
+    menubar.on("menuAction", function (menuAction)
     {
         //console.log("hit " + finalState)
-        $("#info").html( " --> " + menuAction);
+        $("#info").html(" --> " + menuAction);
         if (menuAction === 'reload')
             reLoad();
 
@@ -207,13 +207,13 @@ function reSize(finalState)
 
     if (!isLarge)
     {
-        fadeAPI.reSizeGraph(graphWidth+menuSize -3*menubar.getButtonSpace());
-        caliper.resize(graphWidth+menuSize  -3*menubar.getButtonSpace() + handleSize);
+        fadeAPI.reSizeGraph(graphWidth + menuSize - 3 * menubar.getButtonSpace());
+        caliper.resize(graphWidth + menuSize - 3 * menubar.getButtonSpace() + handleSize);
 
     }
     else
     {
-        fadeAPI.reSizeGraph(graphWidth );
+        fadeAPI.reSizeGraph(graphWidth);
         caliper.resize(graphWidth + handleSize);
     }
 
