@@ -19,23 +19,15 @@ d3.menubar.init = function (initConditions)
     var menuHidden = false;
     var buttonSpace = 15;
     var graphSection;
-    var graphSectionRect;
-    var slideDelay = 250;
+    var slideDelay =  initConditions.slideDelay;
 
 // https://groups.google.com/forum/#!topic/d3-js/NIamAI9Yy60
 
 
     var createGraphHolder = function ()
     {
-        var graphWidth = parseInt(d3svg.attr("width")) - menuWidth;
-//        console.log("graph width " + graphWidth + " " + d3svg.attr("width"));
+
         graphSection = graphContainer.append("g").attr("class", "graphSection");
-        graphSectionRect =
-                graphSection.append("rect").attr("class", "graphSectionRect")
-                //leave room for the slider switch
-                .attr("width", graphWidth - buttonSpace)
-                .attr("height", d3svg.attr("height") - 2)
-        // .attr("transform","translate("+(menuWidth)+",1)");
 
     }
 
@@ -47,16 +39,14 @@ d3.menubar.init = function (initConditions)
         if (!menuHidden)
             stateMessage = "open"
         menuContainerPt.transition().duration(slideDelay)
-                .attr("transform", positionMenu());
+        .attr("transform", positionMenu()).each("end", function (d, i)
+        {
+
+            dispatch.onSlideEnd.apply(this, ["end", stateMessage]);
+
+        });
         var posNew = positionGraph();
-        graphSectionRect.transition().duration(slideDelay)
-                .each("end", function (d, i)
-                {
 
-                    dispatch.onSlideEnd.apply(this, ["end",stateMessage]);
-
-                }).
-                attr("width", posNew);
 
     }
 
@@ -131,7 +121,7 @@ d3.menubar.init = function (initConditions)
 
 
         g.append("svg:circle")
-                .attr("class","menuCircle")
+                .attr("class", "menuCircle")
                 .attr("transform", function (d, i)
                 {
                     d["circle"] = d3.select(this);
@@ -139,7 +129,7 @@ d3.menubar.init = function (initConditions)
                 }).attr("r", 5);
 
         g.append("svg:text")
-                .attr("class","menuText")
+                .attr("class", "menuText")
                 .attr("y", function (d, i) {
                     return i * disp;
                 })
@@ -171,14 +161,14 @@ d3.menubar.init = function (initConditions)
                 .on("mouseover", function (d, i) {
                     d3.select(this).classed("handCursor", true);
                     d.circle.classed("menuHighlight", true);
-                    d.circle.classed("menuCircle",false);
+                    d.circle.classed("menuCircle", false);
                     d.text.classed("menuHighlight", true);
 
                 })
                 .on("mouseout", function (d, i) {
                     d3.select(this).classed("handCursor", false);
                     d.circle.classed("menuHighlight", false);
-                    d.circle.classed("menuCircle",true);
+                    d.circle.classed("menuCircle", true);
                     d.text.classed("menuHighlight", false);
 
                 })
@@ -230,6 +220,18 @@ d3.menubar.init = function (initConditions)
 
     }
 
+    /**
+     * after init, this will be where things are attached
+     */
+    exports.getGraphSection = function ()
+    {
+        return graphSection;
+    }
+
+    exports.getButtonSpace = function ()
+    {
+        return buttonSpace;
+    }
 
     d3.rebind(exports, dispatch, "on");
     return exports;
