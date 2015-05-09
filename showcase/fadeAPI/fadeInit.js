@@ -51,7 +51,7 @@ function rundemo()
 
     var menuItem1 = {"text": "Alpha 1  why dont you get \n\
      a job you bozo of no worth", "message": "alpha1"};
-    var menuItem2 = {"text": "Alpha 2", "message": "alpha2"};
+    var menuItem2 = {"text": "Reload Data", "message": "reload"};
     var menuItem3 = {"text": "Alpha 3", "message": "alpha3"};
 
     var menuInitConditions = {
@@ -106,13 +106,20 @@ function rundemo()
 
     menubar.on("onSlideEnd", function (str, finalState)
     {
-        console.log("hit " + finalState)
+      //  console.log("hit " + finalState)
         $("#info").html(str + " --> " + finalState);
         reSize(finalState);
 
     });
 
+     menubar.on("menuAction", function (menuAction)
+    {
+        //console.log("hit " + finalState)
+        $("#info").html( " --> " + menuAction);
+        if (menuAction === 'reload')
+            reLoad();
 
+    });
 
 
 
