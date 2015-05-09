@@ -5,16 +5,14 @@ var margin = {top: 25, right: 40, bottom: 50, left: 60};
 var width = 750 - margin.left - margin.right;
 var height = 400 - margin.top - margin.bottom;
 var menuSize = 200;
-var graphWidth = width - menuSize;
+var graphWidth = 700 -menuSize;
 var caliper = null;
-var isLarge = false;
 var rectHandler = null;
 var brushRect = null;
-var groupNode = null;
 var svg = null;
 var handleSize = 12;
-
-
+var menuWidth = 150;
+var menubar = null;
 var MAX_POINTS = 20;
 function rand(max) {
     return Math.floor(Math.random() * (max + 1));
@@ -47,15 +45,25 @@ function rundemo()
     svg = d3.select("#" + attachmentID)
             .append("svg").attr("class", "svgContainer")
             .attr("height", height + margin.top + margin.bottom)
-            .attr("width", width + margin.left + margin.right)
+            .attr("width", width + margin.left + margin.right);
 
+    var menuSystemContainer = svg.append("g").attr("class", "menuSystemContainer");
 
+    var menuItem1 = {"text": "Alpha 1  why dont you get \n\
+     a job you bozo of no worth", "message": "alpha1"};
+    var menuItem2 = {"text": "Alpha 2", "message": "alpha2"};
+    var menuItem3 = {"text": "Alpha 3", "message": "alpha3"};
 
-    groupNode = svg.append("g")
-            .attr("transform", "translate(" + margin.left + ","
-                    + margin.top + ")");
-    brushRect = groupNode.append("rect").attr("class", "brushRect");
-    brushRect.attr("height", height);
+    var menuInitConditions = {
+        "menuItems": [menuItem1, menuItem2, menuItem3],
+        "menuWidth": menuWidth,
+        "menuHeight": height + margin.top + margin.bottom,
+        "slideDelay": 200,
+        "graphContainer": menuSystemContainer
+
+    };
+
+    menubar = d3.menubar.init(menuInitConditions);
 
 
     var initConditions =
@@ -64,7 +72,7 @@ function rundemo()
                 "width": graphWidth,
                 "height": height,
                 "delay": 500,
-                "groupNode": groupNode,
+                "groupNode": menubar.getGraphSection(),
                 "data": getSampleData(MAX_POINTS),
                 "attachmentID": attachmentID
 
@@ -72,6 +80,12 @@ function rundemo()
             };
     //create a object that contains the public API        
     fadeAPI = d3.fadeAPI.init(initConditions);
+    menubar.getGraphSection()
+            .attr("transform", "translate(" + margin.left + ","
+                    + margin.top + ")");
+    brushRect = menubar.getGraphSection().append("rect").attr("class", "brushRect");
+    brushRect.attr("height", height);
+
 
     // bind code to handle a 'newSelection' event which is whenever
     // the mouse moves near a new point, the binding sends the data of the
@@ -90,7 +104,21 @@ function rundemo()
         $("#info").html("Load Action: " + message + " this (" + me.toString() + ")");
     });
 
+    menubar.on("onSlideEnd", function (str, finalState)
+    {
+        console.log("hit " + finalState)
+        $("#info").html(str + " --> " + finalState);
+        reSize(finalState);
+
+    });
+
+
+
+
+
+
     addSliders();
+
 }
 ////////////////   add the sliders ////////////////////////////////////////////
 function addSliders()
@@ -159,34 +187,34 @@ function reLoad()
 
 }
 
-
-
-function reSize()
+function reSize(finalState)
 {
+    console.log("finalState")
+    var isLarge = true;
+    if (finalState === 'closed')
+    {
+        isLarge = false;
+    }
 
     var mydata = caliper.queryData();
-     
+
     if (!isLarge)
     {
-        fadeAPI.reSizeGraph(width);
-        isLarge = true;
-        caliper.resize(width + handleSize);
+        fadeAPI.reSizeGraph(graphWidth+menuSize -3*menubar.getButtonSpace());
+        caliper.resize(graphWidth+menuSize  -3*menubar.getButtonSpace() + handleSize);
 
     }
     else
     {
-        isLarge = false;
-        fadeAPI.reSizeGraph(width - menuSize);
-        caliper.resize(width - menuSize + handleSize);
-
-
+        fadeAPI.reSizeGraph(graphWidth );
+        caliper.resize(graphWidth + handleSize);
     }
 
     rectHandler = d3.rectHandler.init(brushRect,
             fadeAPI.getData(), fadeAPI.getXScale(), caliper);
 
     var mydata = caliper.queryData();
-   
+
     rectHandler.positionRect(mydata.left, mydata.right);
 
     var stuff = " resize[" + mydata.left.percent + "," + mydata.right.percent + "]"
@@ -194,3 +222,7 @@ function reSize()
 
 
 }
+;
+
+
+ 

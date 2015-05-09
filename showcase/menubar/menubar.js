@@ -14,16 +14,22 @@ d3.menubar.init = function (initConditions)
     var menuWidth = initConditions.menuWidth;
     var menuHeight = initConditions.menuHeight;
     var menuItems = initConditions.menuItems;
-    var d3svg = d3.select(graphContainer[0][0].parentElement);
+    var d3svg = d3.select("svg");
     var menuContainerPt = null;
     var menuHidden = false;
     var buttonSpace = 15;
+    var svgWidth = null;
     var graphSection;
-    var slideDelay =  initConditions.slideDelay;
-
+    var slideDelay = initConditions.slideDelay;
+    try {
+        var svgWidth = parseInt(d3svg.attr("width"));
+    }
+    catch (e) {
+    }
+   // console.log(svgWidth);
 // https://groups.google.com/forum/#!topic/d3-js/NIamAI9Yy60
 
-
+    var d3svg = d3.select("svg");
     var createGraphHolder = function ()
     {
 
@@ -39,7 +45,7 @@ d3.menubar.init = function (initConditions)
         if (!menuHidden)
             stateMessage = "open"
         menuContainerPt.transition().duration(slideDelay)
-        .attr("transform", positionMenu()).each("end", function (d, i)
+                .attr("transform", positionMenu()).each("end", function (d, i)
         {
 
             dispatch.onSlideEnd.apply(this, ["end", stateMessage]);
@@ -67,8 +73,12 @@ d3.menubar.init = function (initConditions)
 
     var positionMenu = function ( )
     {
-        var graphWidth = parseInt(d3svg.attr("width")) - menuWidth;
-        var disp = parseInt(d3svg.attr("width")) - 4;
+        if (d3svg === null)
+        {
+            d3svg = d3.select("svg");
+        }
+        var graphWidth = svgWidth - menuWidth;
+        var disp = svgWidth - 4;
         if (menuHidden)
             return "translate(" + (disp) + ",2)";
 
