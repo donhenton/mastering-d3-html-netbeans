@@ -187,6 +187,7 @@ d3.menubar.init = function (initConditions)
                     d.circle.classed("menuHighlight", true);
                     d.circle.classed("menuCircle", false);
                     d.text.classed("menuHighlight", true);
+                    d.text.classed("menuText", false);
 
                 })
                 .on("mouseout", function (d, i) {
@@ -194,6 +195,7 @@ d3.menubar.init = function (initConditions)
                     d.circle.classed("menuHighlight", false);
                     d.circle.classed("menuCircle", true);
                     d.text.classed("menuHighlight", false);
+                    d.text.classed("menuText", true);
 
                 })
                 .on("click", function (d, i) {

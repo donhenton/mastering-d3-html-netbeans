@@ -86,7 +86,7 @@ d3.fadeAPI.init = function (initConditions)
     var selectedPoint = {"dataItem": null, "svgItem": null};
     var verticalBar = null;
     var data = initConditions.data;
-    var dotColor = "blue";
+    //var dotColor = "blue";
     var divT = null; //the tooltip div
 
 
@@ -160,19 +160,7 @@ d3.fadeAPI.init = function (initConditions)
                 return  yScale(d.data);
             });
 
-
-    var setDot = function (pt, on)
-    {
-        if (on)
-        {
-            pt.attr("fill", "red");
-        }
-        else
-        {
-            pt.attr("fill", dotColor);
-        }
-
-    };
+ 
 
     /**
      * this function will take a pixel value and translate into a date on
@@ -221,28 +209,6 @@ d3.fadeAPI.init = function (initConditions)
         var mousePtX = d3.mouse(this)[0];
         var mousePtY = d3.mouse(this)[1];
         var ret = findDateForPixel(mousePtX);
-
-        /*
-         .on("mouseover", function (d) {
-         divT.transition()
-         .duration(delay)
-         .style("opacity", .9);
-         divT.html(formatTime(d.date) + "<br/>" + d.data)
-         .style("left", (d3.event.pageX) + "px")
-         .style("top", (d3.event.pageY - 28) + "px");
-         })
-         .on("mouseout", function (d, x, y) {
-         divT.transition()
-         .duration(delay)
-         .style("opacity", 0);                                                   // and go all the way to an opacity of nil
-         console.log(d + " " + x + " " + y)
-         
-         });
-         
-         */
-
-
-
         var pointDataArray = d3.selectAll(".dot");
 
         if (selectedPoint.dataItem === null ||
@@ -250,18 +216,9 @@ d3.fadeAPI.init = function (initConditions)
         {
             //only raise event if you actually change
             selectedPoint.dataItem = ret.newTarget;
-
-            //clean up the old if it exists
-            if (selectedPoint.svgItem !== null)
-            {
-
-                setDot(selectedPoint.svgItem, false);
-                
-            }
             // find the circle
             //d3.select(svgItem) is the same as $(htmlElement) in jQuery
             selectedPoint.svgItem = d3.select(pointDataArray[0][ret.circleIdx]);
-            setDot(selectedPoint.svgItem, true);
             //raise a newSelection event, with the payload
             dispatch.newSelection.apply(this, [ret.newTarget, ret.newTarget.index + 1]);
 
@@ -271,8 +228,8 @@ d3.fadeAPI.init = function (initConditions)
                     .style("opacity", .9);
             divT.html(dateFormatter(selectedPoint.dataItem.date)
                     + "<br/>" + selectedPoint.dataItem.data)
-                    .style("left", (mousePtX + margin.left) + "px")
-                    .style("top", (yScale(selectedPoint.dataItem.data) - 15) + "px");
+                    .style("left", (mousePtX+margin.left+35) + "px")
+                    .style("top", (yScale(selectedPoint.dataItem.data) - 8) + "px");
 
 
 
@@ -361,7 +318,7 @@ d3.fadeAPI.init = function (initConditions)
         var dots = groupNode.selectAll(".dot").data(data, keyFunction);
 
         dots.enter().append("circle")
-                .attr("fill", dotColor)
+               // .attr("fill", dotColor)
                 .attr("r", 5)
                 .attr("class", "dot")
                 .attr("cx", function (d) {
@@ -398,11 +355,6 @@ d3.fadeAPI.init = function (initConditions)
 
         divT.style("opacity", 0);                                                  
           
-        if (selectedPoint.svgItem != null)
-        {
-
-            setDot(selectedPoint.svgItem, false);
-        }
         selectedPoint = {"dataItem": null, "svgItem": null};
         xScale.domain(d3.extent(data, function (d) {
             return d.date;

@@ -14,24 +14,7 @@ and open the template in the editor.
 }
 
 
-rect.menuGroupRect
-{
 
-
-    fill: #ffffde;
-    opacity:1;
-    stroke: goldenrod;
-    stroke-width: 2;
-     
-}
-
-
-rect.menuActionRect
-{
-    stroke:  goldenrod;
-    stroke-width: 1;
-    fill-opacity: 0;
-}
 
 
 rect.graphSectionRect
@@ -39,9 +22,8 @@ rect.graphSectionRect
 
 
     fill: #ffffff;
-    opacity:1;
-    stroke: black;
-    stroke-width: 1;
+    opacity:0;
+   
 }
 
 
@@ -52,16 +34,36 @@ rect.graphSectionRect
 
 circle.menuHighlight
 {
-    fill: darkOrange;
+    fill: #FFBFAC;;
 }
 
-
+text.menuText
+{
+    fill:white;
+}
 text.menuHighlight
 {
-    fill: darkOrange;
+    fill: #FFBFAC;
 }
 circle.menuSliderButton,
 circle.menuCircle
 {
-    fill: goldenrod ;
+    fill: #CD684B;
+}
+
+rect.menuGroupRect
+{
+
+
+    fill: #346782;
+    opacity:1;
+     
+     
+}
+
+
+rect.menuActionRect
+{
+    
+    fill-opacity: 0;
 }

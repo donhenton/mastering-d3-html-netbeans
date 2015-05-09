@@ -57,7 +57,7 @@ function rundemo()
     var menuInitConditions = {
         "menuItems": [menuItem1, menuItem2, menuItem3],
         "menuWidth": menuWidth,
-        "menuHeight": height + margin.top + margin.bottom,
+        "menuHeight": height + margin.top + margin.bottom ,
         "slideDelay": 200,
         "attachmentGroup": menuSystemContainer
 

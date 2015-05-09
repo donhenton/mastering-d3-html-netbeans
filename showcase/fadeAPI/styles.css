@@ -1,19 +1,29 @@
      
 .top-buffer {    margin-top:20px }
-body { font: 12px Arial;}
+
+circle.dot
+{
+    fill: #346782
+}
 
 path { 
-    stroke: steelblue;
-    stroke-width: 2;
+    stroke: #CDA94B;
+    stroke-width: 3;
     fill: none;
+}
+
+circle.focusCircle
+{
+    stroke: #87280D;
+    stroke-width: 2.25;
 }
 
 .axis path,
 path.caliperLine,
 .axis line {
     fill: none;
-    stroke: darkred;
-    stroke-width: 2;
+    stroke: #87280D;
+    stroke-width: 3;
     shape-rendering: crispEdges;
 }
 
@@ -25,7 +35,7 @@ div.tooltip {					/* set the CSS for tooltip divs */
     padding: 2px;	
     vertical-align: central;
     font: 12px sans-serif;		/* set the font type for the tooltips */
-    background: darkslateblue;	/* set the colour of the rectangle */
+    background: #87280D;	/* set the colour of the rectangle */
     border: 0px;					/* turn off the border (0px) */
     border-radius: 8px;	
     color: whitesmoke; 
@@ -34,32 +44,33 @@ div.tooltip {					/* set the CSS for tooltip divs */
 
 div.graph
 {
-     position: relative ; 
-    
+    position: relative ; 
+
 }
 
- 
 
- rect#handleLeft,
- rect#handleRight
- {
-     stroke: darkred;
-     fill: red;
-     opacity:1.0;
-     stroke-width: 2;
- }
- 
- 
- rect.brushRect
- {
-     fill: darkred;
-     opacity:.25;
-     stroke: green;
-     stroke-width: 2;
- }
- 
- rect.verticalBar
- {
-     fill: rgb(185,0,0);
-     width: 2;
- }
+
+rect#handleLeft,
+rect#handleRight
+{
+    stroke: #83A9BD;
+    fill: #0C3C56;
+    opacity:1.0;
+    stroke-width: 2;
+}
+
+
+rect.brushRect
+{
+    fill: #83A9BD;
+    opacity:.65;
+    /*    stroke: green;
+        stroke-width: 2;*/
+}
+
+rect.verticalBar
+{
+    stroke: #87280D;
+    width: 3;
+}
+
