@@ -5,6 +5,16 @@
  * The menu will slide to the right (opened and closed) and will signal an
  * event representing that this has occurred.
  * 
+ * It also provides for menu items which are submitted in the initial conditions
+ * these items are in the form of 
+ * 
+ * var menuItem2 = {"text": "Alpha 2", "message": "alpha2"};
+ * [menuItem1, menuItem2, menuItem3,...]
+ * 
+ * when clicked they will send a menuAction event with the message as the
+ * payload
+ * 
+ * 
  * the left hand area (
  * 
  */
@@ -30,7 +40,7 @@ d3.menubar.init = function (initConditions)
     }
     catch (e) {
     }
-   // console.log(svgWidth);
+    // console.log(svgWidth);
 // https://groups.google.com/forum/#!topic/d3-js/NIamAI9Yy60
 
     var d3svg = d3.select("svg");
@@ -242,6 +252,10 @@ d3.menubar.init = function (initConditions)
         return graphSection;
     }
 
+    /**
+     * 
+     * @returns  the gutter space for the slide button
+     */
     exports.getButtonSpace = function ()
     {
         return buttonSpace;

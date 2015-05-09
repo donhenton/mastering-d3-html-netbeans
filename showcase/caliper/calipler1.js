@@ -2,7 +2,7 @@
 
 /**
  * 
- * @type typeThe code repsonsible for handling the calipers, creating the
+ * code repsonsible for handling the calipers, creating the
  * handles and positioning them. It uses percentages of its length as the
  * measure and could be used to be a scaled representation of a length.  Most
  * likely, the length of the line will be identical to something that is using.
