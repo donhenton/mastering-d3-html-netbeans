@@ -205,7 +205,7 @@ function reLoad()
  */
 function reSize(finalState)
 {
-    console.log("finalState")
+//    console.log("finalState")
     var isLarge = true;
     if (finalState === 'closed')
     {
