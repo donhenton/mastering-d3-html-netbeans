@@ -9,7 +9,7 @@ d3.menubar = {};
 
 d3.menubar.init = function (initConditions)
 {
-    var dispatch = d3.dispatch("onSlideEnd","onSlideStart");
+    var dispatch = d3.dispatch("onSlideEnd", "onSlideStart", "menuAction");
     var graphContainer = initConditions.graphContainer;
     var menuWidth = initConditions.menuWidth;
     var menuHeight = initConditions.menuHeight;
@@ -41,12 +41,21 @@ d3.menubar.init = function (initConditions)
 
     var slide = function ()
     {
-
+        dispatch.onSlideStart.apply(this, ["start"]);
         menuHidden = !menuHidden;
+        var stateMessage = "closed";
+        if (!menuHidden)
+            stateMessage = "open"
         menuContainerPt.transition().duration(slideDelay)
                 .attr("transform", positionMenu());
         var posNew = positionGraph();
-        graphSectionRect.transition().duration(slideDelay).
+        graphSectionRect.transition().duration(slideDelay)
+                .each("end", function (d, i)
+                {
+
+                    dispatch.onSlideEnd.apply(this, ["end",stateMessage]);
+
+                }).
                 attr("width", posNew);
 
     }
@@ -122,13 +131,15 @@ d3.menubar.init = function (initConditions)
 
 
         g.append("svg:circle")
+                .attr("class","menuCircle")
                 .attr("transform", function (d, i)
                 {
-
+                    d["circle"] = d3.select(this);
                     return "translate(0," + i * disp + ")";
                 }).attr("r", 5);
 
         g.append("svg:text")
+                .attr("class","menuText")
                 .attr("y", function (d, i) {
                     return i * disp;
                 })
@@ -139,11 +150,41 @@ d3.menubar.init = function (initConditions)
                 }).call(wrap, 0.85 * menuWidth)
                 .attr("transform", function (d, i)
                 {
-
+                    d["text"] = d3.select(this);
                     return "translate(10,0)";
+                });
+
+        g.append("rect").attr("class", "menuActionRect")
+                .attr("width", 0.9 * menuWidth)
+
+                .attr("height", function (d, i) {
+                    // console.log(d.blockHeight);
+                    return 20 * d.blockHeight;
+                }
+                )
+                .attr("x", function (d, i) {
+                    return   -10;
                 })
+                .attr("y", function (d, i) {
+                    return i * disp - 10;
+                })
+                .on("mouseover", function (d, i) {
+                    d3.select(this).classed("handCursor", true);
+                    d.circle.classed("menuHighlight", true);
+                    d.circle.classed("menuCircle",false);
+                    d.text.classed("menuHighlight", true);
 
+                })
+                .on("mouseout", function (d, i) {
+                    d3.select(this).classed("handCursor", false);
+                    d.circle.classed("menuHighlight", false);
+                    d.circle.classed("menuCircle",true);
+                    d.text.classed("menuHighlight", false);
 
+                })
+                .on("click", function (d, i) {
+                    dispatch.menuAction.apply(this, [d.message]);
+                });
 
     }
 
@@ -154,6 +195,8 @@ d3.menubar.init = function (initConditions)
 
     function wrap(text, width) {
         text.each(function () {
+            var blockHeight = 0;
+            var parentData = d3.select(this).data()[0];
             var text = d3.select(this),
                     words = text.text().split(/\s+/).reverse(),
                     word,
@@ -170,9 +213,12 @@ d3.menubar.init = function (initConditions)
                     line.pop();
                     tspan.text(line.join(" "));
                     line = [word];
-                    tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                    blockHeight = ++lineNumber * lineHeight + dy;
+                    tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", blockHeight + "em").text(word);
                 }
             }
+
+            parentData["blockHeight"] = lineNumber + 1;
         });
     }
 

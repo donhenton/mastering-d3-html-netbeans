@@ -8,7 +8,8 @@
 function rundemo()
 {
 
-    var menuItem1 = {"text": "Alpha 1  why dont you get a job", "message": "alpha1"};
+    var menuItem1 = {"text": "Alpha 1  why dont you get \n\
+     a job you bozo of no worth", "message": "alpha1"};
     var menuItem2 = {"text": "Alpha 2", "message": "alpha2"};
     var menuItem3 = {"text": "Alpha 3", "message": "alpha3"};
     var menuWidth = 150;
@@ -35,4 +36,24 @@ function rundemo()
     };
 
     menubar = d3.menubar.init(initConditions);
+    
+    //d3.dispatch("onSlideEnd", "onSlideStart", "menuAction");
+    
+    menubar.on("onSlideEnd", function (str,finalState)
+    {
+        display(str+" --> "+finalState);
+    });
+    menubar.on("onSlideStart", function (str)
+    {
+        display(str);
+    });
+    menubar.on("menuAction", function (str)
+    {
+        display(str);
+    });
+    
+    function display(str)
+    {
+         $("#info").html(str);
+    }
 }
