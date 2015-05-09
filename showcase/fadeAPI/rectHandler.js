@@ -98,12 +98,8 @@ d3.rectHandler.init = function (brushRectVal, dataPoints, xScaleFunction, calipe
     {
         //console.log(left.percent + " " + left.x);
         var valueForLeft = left.x;
-        var valueForRight = valueForLeft + (right.x - left.x) + left.handleSize / 2;
+        var valueForRight = valueForLeft + (right.x - left.x);
         var handleSize = left.handleSize;
-        // console.log("init left,right "+valueForLeft+","+valueForRight);
-
-        // console.log(transformFunction(250).newTarget.date);
-
         var ret = {"leftDate": null, "rightDate": null};
         var newLeftDate = transformFunction(valueForLeft).newTarget.date;
         var newRightDate = transformFunction(valueForRight).newTarget.date;
@@ -114,14 +110,16 @@ d3.rectHandler.init = function (brushRectVal, dataPoints, xScaleFunction, calipe
         valueForLeft = xScale(newLeftDate);
         valueForRight = xScale(newRightDate);
         var newWidth = valueForRight - valueForLeft;
-
-        // console.log("new left,right "+valueForLeft+","+valueForRight);
+        if (newWidth < 5)
+        {
+            newWidth = 5;
+        }
 
         brushRect
                 .attr("width", newWidth)
                 .attr("transform", "translate(" + valueForLeft + ",0)");
 
-        var boxLeft = caliper.getPercentForPos(valueForLeft + handleSize / 2);
+        var boxLeft = caliper.getPercentForPos(valueForLeft - handleSize / 2);
         var boxRight = caliper.getPercentForPos(valueForRight);
         //set the markers to match as well;
         var data = {"left": boxLeft, "right": boxRight};

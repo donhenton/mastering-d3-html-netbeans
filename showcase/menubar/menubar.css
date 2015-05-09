@@ -1,0 +1,67 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : May 6, 2015, 12:52:51 PM
+    Author     : dhenton
+*/
+
+.top-buffer
+{
+    margin-top: 25px;
+}
+
+
+rect.menuGroupRect
+{
+
+
+    fill: #ffffde;
+    opacity:1;
+    stroke: goldenrod;
+    stroke-width: 2;
+     
+}
+
+
+rect.menuActionRect
+{
+    stroke:  goldenrod;
+    stroke-width: 1;
+    fill-opacity: 0;
+}
+
+
+rect.graphSectionRect
+{
+
+
+    fill: #ffffff;
+    opacity:1;
+    stroke: black;
+    stroke-width: 1;
+}
+
+
+.handCursor
+{
+    cursor: pointer
+}
+
+circle.menuHighlight
+{
+    fill: darkOrange;
+}
+
+
+text.menuHighlight
+{
+    fill: darkOrange;
+}
+circle.menuSliderButton,
+circle.menuCircle
+{
+    fill: goldenrod ;
+}

@@ -71,10 +71,9 @@ d3.fadeAPI.init = function (initConditions)
     var width = initConditions.width;
     var height = initConditions.height;
     var delay = initConditions.delay;
-    // if true reserve a brushrect
-    var createBrushRect = initConditions.createBrushRect;
-    var brushRect = null;
-    var svg = null;
+
+
+    var groupNode = initConditions.groupNode;
     var xScale = getXScale();
     var yScale = getYScale();
     var xAxis = null;
@@ -88,30 +87,28 @@ d3.fadeAPI.init = function (initConditions)
     var verticalBar = null;
     var data = initConditions.data;
     var dotColor = "blue";
-    
+    var divT = null; //the tooltip div
+
 
     /**
      * 
-     * @returns {undefined}set up the svg element and initialize things
+     * initialization
      */
     var initializeSVG = function ()
     {
 
-        svg = d3.select("#" + attachmentID)
-                .append("svg")
-                .attr("height", height + margin.top + margin.bottom)
-                .attr("width", width + margin.left + margin.right)
+//        groupNode = d3.select("#" + attachmentID)
+//                .append("svg")
+//                .attr("height", height + margin.top + margin.bottom)
+//                .attr("width", width + margin.left + margin.right)
+//
+//                .append("g")
+//                .attr("transform", "translate(" + margin.left + ","
+//                        + margin.top + ")");
 
-                .append("g")
-                .attr("transform", "translate(" + margin.left + ","
-                        + margin.top + ")");
-                
-        if (createBrushRect)
-        {
-           brushRect =  svg.append("g").append("rect").attr("class","brushRect");
-           brushRect.attr("height",height);
-        }
-                
+        divT = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
 
         loaderIndicator = d3.select("#" + attachmentID).append("div")
                 .attr("class", "indicatorClass")
@@ -184,16 +181,16 @@ d3.fadeAPI.init = function (initConditions)
      * @returns  {newTarget: the data item , circleIdx: the index in the
      * data set for that item}
      */
-    var findDateForPixel = function(pixelValue)
+    var findDateForPixel = function (pixelValue)
     {
         //given x pos of mouse use xScale to turn that into a bisector
-        
+
         var x0 = xScale.invert(pixelValue);
         var i = bisectDate(data, x0, 1);
         var d0 = data[i - 1];
         var d1 = data[i];
-        var ret = {"newTarget":null,"circleIdx": -1};
-         
+        var ret = {"newTarget": null, "circleIdx": -1};
+
         if (x0 - d0.date > d1.date - x0)
         {
             ret.newTarget = d1;
@@ -204,7 +201,7 @@ d3.fadeAPI.init = function (initConditions)
             ret.newTarget = d0;
             ret.circleIdx = i - 1;
         }
-        
+
         return ret;
     }
 
@@ -221,13 +218,34 @@ d3.fadeAPI.init = function (initConditions)
             //ignore mouse while loading
             return;
         }
-        var ret = findDateForPixel(d3.mouse(this)[0]);
+        var mousePtX = d3.mouse(this)[0];
+        var mousePtY = d3.mouse(this)[1];
+        var ret = findDateForPixel(mousePtX);
+
+        /*
+         .on("mouseover", function (d) {
+         divT.transition()
+         .duration(delay)
+         .style("opacity", .9);
+         divT.html(formatTime(d.date) + "<br/>" + d.data)
+         .style("left", (d3.event.pageX) + "px")
+         .style("top", (d3.event.pageY - 28) + "px");
+         })
+         .on("mouseout", function (d, x, y) {
+         divT.transition()
+         .duration(delay)
+         .style("opacity", 0);                                                   // and go all the way to an opacity of nil
+         console.log(d + " " + x + " " + y)
          
-        
+         });
+         
+         */
+
+
 
         var pointDataArray = d3.selectAll(".dot");
 
-        if (selectedPoint.dataItem === null || 
+        if (selectedPoint.dataItem === null ||
                 (selectedPoint.dataItem.date !== ret.newTarget.date))
         {
             //only raise event if you actually change
@@ -238,6 +256,7 @@ d3.fadeAPI.init = function (initConditions)
             {
 
                 setDot(selectedPoint.svgItem, false);
+                
             }
             // find the circle
             //d3.select(svgItem) is the same as $(htmlElement) in jQuery
@@ -245,6 +264,16 @@ d3.fadeAPI.init = function (initConditions)
             setDot(selectedPoint.svgItem, true);
             //raise a newSelection event, with the payload
             dispatch.newSelection.apply(this, [ret.newTarget, ret.newTarget.index + 1]);
+
+            //tooltip show
+            divT.transition()
+                    .duration(delay)
+                    .style("opacity", .9);
+            divT.html(dateFormatter(selectedPoint.dataItem.date)
+                    + "<br/>" + selectedPoint.dataItem.data)
+                    .style("left", (mousePtX + margin.left) + "px")
+                    .style("top", (yScale(selectedPoint.dataItem.data) - 15) + "px");
+
 
 
         }
@@ -262,7 +291,7 @@ d3.fadeAPI.init = function (initConditions)
 
 
         verticalBar.select("rect.verticalBar")
-                .attr('width', 2)     
+                .attr('width', 2)
                 .attr('height', yLength)
                 .attr('x', xBar)
                 .attr('y', yStart)
@@ -271,6 +300,20 @@ d3.fadeAPI.init = function (initConditions)
 
     };
 
+    var sizeXAxis = function ()
+    {
+        xAxis =
+                d3.svg.axis()
+                .scale(xScale).tickPadding(15)
+                .ticks(8)
+                .tickFormat(function (d) {
+                    //return d3.time.format("%Y-%m-%d")
+                    return  formatTimeFunction(d);
+                })
+                .innerTickSize([4])
+                .outerTickSize([20])
+                .orient("bottom");
+    }
     /**
      * 
      * @returns {undefined}build the axes of the graph
@@ -284,28 +327,21 @@ d3.fadeAPI.init = function (initConditions)
                 return d.data;
             })]);
 
-        xAxis =
-                d3.svg.axis()
-                .scale(xScale).tickPadding(15)
-                .ticks(8)
-                .tickFormat(function (d) {
-                    //return d3.time.format("%Y-%m-%d")
-                    return  formatTimeFunction(d);
-                })
-                .innerTickSize([4])
-                .outerTickSize([20])
-                .orient("bottom");
+
+        sizeXAxis();
+
 
         yAxis = d3.svg.axis().scale(yScale)
                 .orient("left").ticks(5);
 
-        svg.append("g")
+        groupNode.append("g")
                 .attr("class", "x axis")
+
                 .attr("transform", "translate(0," + height + ")")
                 .call(xAxis);
 
         // Add the Y Axis
-        svg.append("g")
+        groupNode.append("g")
                 .attr("class", "y axis")
                 .call(yAxis);
     };
@@ -322,7 +358,7 @@ d3.fadeAPI.init = function (initConditions)
     var doDots = function ()
     {
 
-        var dots = svg.selectAll(".dot").data(data, keyFunction);
+        var dots = groupNode.selectAll(".dot").data(data, keyFunction);
 
         dots.enter().append("circle")
                 .attr("fill", dotColor)
@@ -333,7 +369,7 @@ d3.fadeAPI.init = function (initConditions)
                 })
                 .attr("cy", function (d) {
                     return yScale(d.data);
-                });
+                })
 
 
 
@@ -360,6 +396,8 @@ d3.fadeAPI.init = function (initConditions)
      */
     var reBuild = function () {
 
+        divT.style("opacity", 0);                                                  
+          
         if (selectedPoint.svgItem != null)
         {
 
@@ -375,11 +413,11 @@ d3.fadeAPI.init = function (initConditions)
 
 
         //lines
-        svg.select(".line")   // change the line
+        groupNode.select(".line")   // change the line
                 .attr("d", valueline(data));
-        svg.select(".x.axis") // change the x axis
+        groupNode.select(".x.axis") // change the x axis
                 .call(xAxis);
-        svg.select(".y.axis") // change the y axis
+        groupNode.select(".y.axis") // change the y axis
                 .call(yAxis);
 
         //dots        
@@ -399,7 +437,7 @@ d3.fadeAPI.init = function (initConditions)
     {
 
 
-        svg.append("path")
+        groupNode.append("path")
                 .attr("class", "line")
                 .attr("d", valueline(data));
 
@@ -410,14 +448,14 @@ d3.fadeAPI.init = function (initConditions)
     /**
      * define the highlighting circle
      */
-    var focus = svg.append("g").style("display", "none");
+    var focus = groupNode.append("g").style("display", "none");
 
     focus.append("circle")
             .attr("class", "focusCircle")
             .style("fill", "none")
             .style("stroke", "darkRed")
             .attr("r", 14);
-    verticalBar = svg.append("g").style("display", "none");
+    verticalBar = groupNode.append("g").style("display", "none");
     verticalBar.append("rect").attr('class', 'verticalBar');
 
 
@@ -428,7 +466,7 @@ d3.fadeAPI.init = function (initConditions)
     initialDraw();
     // the mouse detection rectangle  positioned here to be on top of the points
 
-    svg.append("rect")
+    groupNode.append("rect")
             .attr("width", width)
             .attr("height", height)
             .attr("class", "mouseRect")
@@ -437,6 +475,7 @@ d3.fadeAPI.init = function (initConditions)
             .on("mouseover", function () {
                 focus.style("display", null);
                 verticalBar.style("display", null);
+
             })
             .on("mouseout", function () {
                 focus.style("display", "none");
@@ -451,6 +490,26 @@ d3.fadeAPI.init = function (initConditions)
     }
     ;
 
+
+    /**
+     * resize the graph along the xaxis
+     * @param {type} newWidth
+     * @returns {undefined}reoutine to resize the graph
+     */
+    exports.reSizeGraph = function (newWidth)
+    {
+        width = newWidth;
+        xScale = getXScale();
+        xScale.domain(d3.extent(data, function (d) {
+            return d.date;
+        }));
+        divT.style("opacity", 0);        
+        d3.selectAll(".mouseRect").attr("width", newWidth);
+        sizeXAxis();
+        reBuild();
+    }
+
+
     /**
      * Routine for redrawing the graph takes new data
      * 
@@ -464,29 +523,21 @@ d3.fadeAPI.init = function (initConditions)
         reBuild();
 
     };
-    
-    exports.getData = function()
+
+    exports.getData = function ()
     {
         return data;
     }
-    
+
     exports.getXScale = function ()
     {
         return xScale;
     };
-    
-    /**
-     * the brushrect, which indicates a selection of points is placed here in
-     * reserve if the user sets createBrushRect true on the initConditions
-     * object otherwise the reference is null;
-     */
-    exports.getBrushRect = function()
-    {
-        return brushRect;
-    }
-    
-    
-   
+
+
+
+
+
 
     /**
      * if doHide is true then this will fade the graph out after a delay
@@ -502,15 +553,27 @@ d3.fadeAPI.init = function (initConditions)
     {
 
         var messageDiv = $(".indicatorClass");
+        divT.style("opacity", 0);        
+
+        messageDiv.css(
+                {
+                    "top": 0 + margin.top + (height / 2) - 35,
+                    "left": 0 + margin.left + (width / 2) - 35,
+                    "position": 'absolute'});
+
+
+
+
+
         isLoading = doHide;
         var opacityStr = "1";
         if (isLoading)
         {
             opacityStr = "0";
             //raise onLoadEvent --Start
-            dispatch.onLoad.apply(svg, [{"type": "Load Start"}]);
+            dispatch.onLoad.apply(groupNode, [{"type": "Load Start"}]);
         }
-        svg.transition().delay(200).each("end", function (d, i)
+        groupNode.transition().delay(200).each("end", function (d, i)
         {
 
 

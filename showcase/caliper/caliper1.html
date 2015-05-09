@@ -29,21 +29,23 @@ and open the template in the editor.
 
     </head>
     <body>
-        <div class="container top-buffer col-lg-12">
+        <div class="container top-buffer">
 
-
-
-            <div id="info" class="row top-buffer well col-lg-3 col-lg-offset-3">
-                hello
+            <h4>Demo for updating positions of handles programmatically</h4>
+            <div class="row  top-buffer">
+                <div id="info" class=" well col-lg-3"></div>
             </div>
             <div class="row top-buffer">
 
-<h4>Demo for updating positions of handles programmatically</h4>
-                <div class="col-sm-10">
-                    
-                    <div id="resetForm" class="top-buffer">
-                        <div class="top-buffer form">
-                        <select id="percentReset"  name="percentReset">
+                <button style="margin-left: 20px" onclick="doResize()" class="btn btn-primary">Resize</button> 
+            </div>
+            <div class="row top-buffer">
+
+
+                <div id="resetForm" class="top-buffer">
+                    <div class="top-buffer form">
+                        <label>Percent Position</label>
+                        <select style="margin-left: 5px" id="percentReset"  name="percentReset">
                             <option selected="">10</option>
                             <option>20</option>
                             <option>30</option>
@@ -51,16 +53,13 @@ and open the template in the editor.
                         </select>
 
 
-                        <label class="radio-inline"><input id="handleLeft" checked="checked" value="left" type="radio" name="handleType">Left</label>
-                        <label class="radio-inline"><input id="handleRight"  type="radio" value="right" name="handleType">Right</label>
-                        <button onclick="doUpdate()" class="btn btn-primary">Change</button> 
-                        </div>
+                        <label style="margin-left: 20px" class="radio-inline"><input id="handleLeft" checked="checked" value="left" type="radio" name="handleType">Left</label>
+                        <label style="margin-left: 20px" class="radio-inline"><input id="handleRight"  type="radio" value="right" name="handleType">Right</label>
+                        <button style="margin-left: 20px" onclick="doUpdate()" class="btn btn-primary">Change Slider Positions</button> 
                     </div>
-
                 </div>
-                <div class="col-sm-3">
 
-                </div>
+
 
             </div>
 
