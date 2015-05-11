@@ -106,7 +106,7 @@ d3.fadeAPI.init = function (initConditions)
 //                .attr("transform", "translate(" + margin.left + ","
 //                        + margin.top + ")");
 
-        divT = d3.select("body").append("div")
+        divT = d3.select("#" + attachmentID).append("div")
                 .attr("class", "tooltip")
                 .style("opacity", 0);
 
@@ -228,8 +228,8 @@ d3.fadeAPI.init = function (initConditions)
                     .style("opacity", .9);
             divT.html(dateFormatter(selectedPoint.dataItem.date)
                     + "<br/>" + selectedPoint.dataItem.data)
-                    .style("left", (mousePtX+margin.left+35) + "px")
-                    .style("top", (yScale(selectedPoint.dataItem.data) - 8) + "px");
+                    .style("left", (mousePtX+35) + "px")
+                    .style("top", (yScale(selectedPoint.dataItem.data) - 35) + "px");
 
 
 
