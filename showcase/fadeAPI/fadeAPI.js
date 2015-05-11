@@ -353,7 +353,7 @@ d3.fadeAPI.init = function (initConditions)
      */
     var reBuild = function () {
 
-        divT.style("opacity", 0);                                                  
+         divT.style("display", "none");                                                 
           
         selectedPoint = {"dataItem": null, "svgItem": null};
         xScale.domain(d3.extent(data, function (d) {
@@ -427,11 +427,13 @@ d3.fadeAPI.init = function (initConditions)
             .on("mouseover", function () {
                 focus.style("display", null);
                 verticalBar.style("display", null);
+                 divT.style("display", "block"); 
 
             })
             .on("mouseout", function () {
                 focus.style("display", "none");
                 verticalBar.style("display", "none");
+                divT.style("display", "none"); 
             })
             .on("mousemove", mouseMove);
 
@@ -455,7 +457,7 @@ d3.fadeAPI.init = function (initConditions)
         xScale.domain(d3.extent(data, function (d) {
             return d.date;
         }));
-        divT.style("opacity", 0);        
+         divT.style("display", "none");        
         d3.selectAll(".mouseRect").attr("width", newWidth);
         sizeXAxis();
         reBuild();
@@ -505,7 +507,7 @@ d3.fadeAPI.init = function (initConditions)
     {
 
         var messageDiv = $(".indicatorClass");
-        divT.style("opacity", 0);        
+        divT.style("display", "none");     
 
         messageDiv.css(
                 {
