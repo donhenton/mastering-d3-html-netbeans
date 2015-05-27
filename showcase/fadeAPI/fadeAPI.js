@@ -82,12 +82,12 @@ d3.fadeAPI.init = function (initConditions)
     var isLoading = false;
     //define an onLoad event, multiple events are comma delimited list
     var dispatch = d3.dispatch("onLoad", "newSelection");
-    var loaderIndicator = null;
     var selectedPoint = {"dataItem": null, "svgItem": null};
     var verticalBar = null;
     var data = initConditions.data;
     //var dotColor = "blue";
     var divT = null; //the tooltip div
+    var indicator = null;
 
 
     /**
@@ -97,33 +97,22 @@ d3.fadeAPI.init = function (initConditions)
     var initializeSVG = function ()
     {
 
-//        groupNode = d3.select("#" + attachmentID)
-//                .append("svg")
-//                .attr("height", height + margin.top + margin.bottom)
-//                .attr("width", width + margin.left + margin.right)
-//
-//                .append("g")
-//                .attr("transform", "translate(" + margin.left + ","
-//                        + margin.top + ")");
 
         divT = d3.select("#" + attachmentID).append("div")
                 .attr("class", "tooltip")
                 .style("opacity", 0);
 
-        loaderIndicator = d3.select("#" + attachmentID).append("div")
-                .attr("class", "indicatorClass")
-                .attr("style", "display: none")
+        var svg = d3.select("svg");
+        var attachPoint = svg.append('g').attr("class", "indicatorAttachPoint");
 
-        loaderIndicator.append("img")
-                .attr("src", "../../assets/img/ajax-loader.gif")
-                .attr("class", "imageIndicator");
+       
+        indicator = d3.indicator.init({"attachmentGroup": attachPoint});
+        
 
+        attachPoint.attr("transform", "translate(" +
+                (width +margin.left+margin.right - indicator.getSizeAttributes().width) / 2 + ","
+                + (height +margin.top +margin.bottom - indicator.getSizeAttributes().height) / 2 + ")");
 
-        $(".indicatorClass").css(
-                {
-                    "top": 0 + margin.top + (height / 2) - 35,
-                    "left": 0 + margin.left + (width / 2) - 35,
-                    "position": 'absolute'});
 
 
 
@@ -160,7 +149,7 @@ d3.fadeAPI.init = function (initConditions)
                 return  yScale(d.data);
             });
 
- 
+
 
     /**
      * this function will take a pixel value and translate into a date on
@@ -228,7 +217,7 @@ d3.fadeAPI.init = function (initConditions)
                     .style("opacity", .9);
             divT.html(dateFormatter(selectedPoint.dataItem.date)
                     + "<br/>" + selectedPoint.dataItem.data)
-                    .style("left", (mousePtX+35) + "px")
+                    .style("left", (mousePtX + 35) + "px")
                     .style("top", (yScale(selectedPoint.dataItem.data) - 35) + "px");
 
 
@@ -318,7 +307,7 @@ d3.fadeAPI.init = function (initConditions)
         var dots = groupNode.selectAll(".dot").data(data, keyFunction);
 
         dots.enter().append("circle")
-               // .attr("fill", dotColor)
+                // .attr("fill", dotColor)
                 .attr("r", 5)
                 .attr("class", "dot")
                 .attr("cx", function (d) {
@@ -353,8 +342,8 @@ d3.fadeAPI.init = function (initConditions)
      */
     var reBuild = function () {
 
-         divT.style("display", "none");                                                 
-          
+        divT.style("display", "none");
+
         selectedPoint = {"dataItem": null, "svgItem": null};
         xScale.domain(d3.extent(data, function (d) {
             return d.date;
@@ -427,13 +416,13 @@ d3.fadeAPI.init = function (initConditions)
             .on("mouseover", function () {
                 focus.style("display", null);
                 verticalBar.style("display", null);
-                 divT.style("display", "block"); 
+                divT.style("display", "block");
 
             })
             .on("mouseout", function () {
                 focus.style("display", "none");
                 verticalBar.style("display", "none");
-                divT.style("display", "none"); 
+                divT.style("display", "none");
             })
             .on("mousemove", mouseMove);
 
@@ -457,7 +446,7 @@ d3.fadeAPI.init = function (initConditions)
         xScale.domain(d3.extent(data, function (d) {
             return d.date;
         }));
-         divT.style("display", "none");        
+        divT.style("display", "none");
         d3.selectAll(".mouseRect").attr("width", newWidth);
         sizeXAxis();
         reBuild();
@@ -506,20 +495,12 @@ d3.fadeAPI.init = function (initConditions)
     exports.hide = function (doHide)
     {
 
-        var messageDiv = $(".indicatorClass");
-        divT.style("display", "none");     
+       
+        divT.style("display", "none");
 
-        messageDiv.css(
-                {
-                    "top": 0 + margin.top + (height / 2) - 35,
-                    "left": 0 + margin.left + (width / 2) - 35,
-                    "position": 'absolute'});
-
-
-
-
-
+       
         isLoading = doHide;
+        indicator.show(isLoading);
         var opacityStr = "1";
         if (isLoading)
         {
@@ -529,21 +510,15 @@ d3.fadeAPI.init = function (initConditions)
         }
         groupNode.transition().delay(200).each("end", function (d, i)
         {
-
+           
 
             if (isLoading)
             {
-                messageDiv.css("display", "");
-                messageDiv.css("display", "block");
-
-
+                
             }
             else
             {
-                messageDiv.css("display", "");
-                messageDiv.css("display", "none")
-                //raise onLoad Event End
-                dispatch.onLoad.apply(this, [{"type": "Load End"}]);
+                  dispatch.onLoad.apply(this, [{"type": "Load End"}]);
 
             }
         }).style("opacity", opacityStr);
