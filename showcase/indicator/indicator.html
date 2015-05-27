@@ -9,13 +9,40 @@ and open the template in the editor.
         <title>Indicator class</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="indicator.css" rel="stylesheet" type="text/css"/>
+         
          <script src="../../bower_components/jquery/dist/jquery.js" type="text/javascript"></script>
+         
+          <link href="../../bower_components/bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+        <link href="../../bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <script src="../../bower_components/bootstrap/dist/js/bootstrap.js" type="text/javascript"></script>
+         
          <script src="../../bower_components/d3/d3.js" type="text/javascript"></script>
          <script src="indicator.js" type="text/javascript"></script>
          <script src="indicator_setup.js" type="text/javascript"></script>
     </head>
-    <body>
-        <div id="indicator"></div>
+    <body style="margin:20px">
+        
+        
+        <div class="container">
+            
+            <div class="row">
+                <div class="col-lg-3">
+                    <button onclick="toggleIndicator()" class="btn  btn-large btn-primary">Switch</button>
+                    
+                </div>
+                
+                <div class="col-lg-5">
+                    
+                    <div id="indicator"></div>
+                </div>
+                 
+                
+                
+            </div>
+           
+            
+        </div>
+        
+        
     </body>
 </html>
