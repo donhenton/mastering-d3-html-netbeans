@@ -1,0 +1,7 @@
+http://codepen.io/notno/pen/ukvng/
+http://4waisenkinder.de/blog/2014/05/11/d3-dot-js-tween-in-detail/
+http://codepen.io/stefanjudis/pen/dafDm
+https://gist.github.com/mbostock/3750941
+
+http://www.jasondavies.com/animated-bezier/
+https://libraries.io/bower/d3-progress-indicator
