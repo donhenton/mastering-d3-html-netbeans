@@ -1,10 +1,13 @@
  
 
 #imageCollection{
-    position:absolute; 
+    position:relative; 
    // overflow:hidden;
     height: 400px;
     width: 400px;
+    border: thin solid red;
+    top:0;
+    left:0;
 
 
 }
