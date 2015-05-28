@@ -3,8 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-var totalImages = 6;
-var currentImageIdx = 0;
+ 
+ 
 var inAnimation = true;
 var timerVar = null;
 var imageList = null;
@@ -13,35 +13,33 @@ var baseZIndex = 100;
 var midZIndex = 500;
 var topZIndex = 1000;
 var fadeLength = 1000;
-var tau = 2 * Math.PI;
 
+var tau = 2 * Math.PI;
 var radians = 0.0174532925;
 var clockRadius = 100;
 var margin = 50;
 var width = (clockRadius + margin) * 2;
 var height = (clockRadius + margin) * 2;
-var hourHandLength = 2 * clockRadius / 3;
-var minuteHandLength = clockRadius;
-var secondHandLength = clockRadius - 12;
-var secondHandBalance = 30;
 var secondTickStart = clockRadius;
 var secondTickLength = -15;
-var hourTickStart = clockRadius;
-var hourTickLength = -18;
 var secondLabelRadius = clockRadius + 16;
-var secondLabelYOffset = 5;
-var hourLabelRadius = clockRadius - 40;
-var hourLabelYOffset = 7;
-
+var timerArc;
+var warnArray = ['green', 'greenyellow', 'gold', 'yellow', 'orangered', 'red'];
 var svg;
+
+
+
+var radianScale = d3.scale.linear()
+        .range([0, 2 * Math.PI])
+        .domain([0, 60]);
 
 
 var arc = d3.svg.arc()
         .innerRadius(0)
-        .outerRadius(clockRadius*.75)
+        .outerRadius(clockRadius * .75)
         .startAngle(0)
-       //  .attr('transform', 'translate(' + (clockRadius/2) + ',' + (clockRadius/2) + ')');
-               
+//  .attr('transform', 'translate(' + (clockRadius/2) + ',' + (clockRadius/2) + ')');
+
 
 function init()
 {
@@ -49,7 +47,7 @@ function init()
     $(imageList[0]).fadeIn(10)
     $(imageList[0]).css("z-index", topZIndex);
     drawClock();
-    drawArc();
+
 
 }
 
@@ -59,21 +57,11 @@ function drawClock() {
 
 
 
-
-
-
-    var hourScale = d3.scale.linear()
-            .range([0, 330])
-            .domain([0, 11]);
-
     var minuteScale = d3.scale.linear()
             .range([0, 354])
             .domain([0, 59]);
 
     var secondScale = minuteScale;
-
-
-
 
     svg = d3.select("#clockTimer").append("svg")
             .attr("width", width)
@@ -112,18 +100,66 @@ function drawClock() {
                 return d;
             });
 
-
-}
-
-
-function drawArc()
-{
-    var background = svg.append("path")
-            .datum({endAngle: tau/5})
+    timerArc = svg.append("path")
+            .datum({endAngle: (tau / 360)})
             .style("fill", "#ddd")
             .attr("d", arc)
-            .attr("transform","translate("+width/2+","+height/2+")")
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+
 }
+var secCounter = 0;
+var timeValue = 60;
+
+function doTimer()
+{
+    if (secCounter === 0)
+    {
+        d3.timer(doSecTick(), 0, 1000);
+    }
+
+
+
+}
+
+function doSecTick()
+{
+    return function (  ) {
+
+        if (secCounter > timeValue)
+        {
+            secCounter = 0;
+            //broadcast the end of the timer run
+            return true;
+        }
+
+        timerArc.transition().call(arcTween, radianScale(secCounter));
+        secCounter = secCounter + 1;
+        d3.timer(doSecTick(), 1000);
+
+
+        return true;
+    }
+}
+
+function arcTween(transition, newAngle) {
+
+
+    transition.attrTween("d", function (d) {
+        var interpolate = d3.interpolate(d.endAngle, newAngle);
+        return function (t) {
+            d.endAngle = interpolate(t);
+            return arc(d);
+        };
+    }).each("end", function ()
+    {
+        var idx = Math.floor((secCounter * (warnArray.length-1))/ timeValue);
+        console.log(idx)
+        timerArc.transition().style("fill", warnArray[idx]);
+
+    });
+}
+
+
 function doFade()
 {
     inAnimation = true;
@@ -139,24 +175,21 @@ function doFade()
         {
             nextIdx = 0;
         }
-        console.log("top " + currentIdx + " next " + nextIdx)
+         
         var nextImage = $(imageList[nextIdx]);
         nextImage.css('z-index', midZIndex);
         topImage.fadeOut(fadeLength, function () {
             topImage.css('z-index', baseZIndex).hide();
             nextImage.css('z-index', topZIndex);
-            console.log("top done");
-
+             
         });
         nextImage.fadeIn(fadeLength, function ()
         {
-            console.log("next done");
+           // console.log("next done");
         });
-
     }
 
     currentIdx = (currentIdx + 1) % imageList.length;
-
 }
 ;
 
