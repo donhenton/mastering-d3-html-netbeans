@@ -27,6 +27,7 @@ d3.artTimer.clock.init = function (initConditions)
     var timeLengthIdx = 0;
     var timeMultiplier = [1, 2, 5];
     var timeValue = [60 * 1, 60 * 2, 60 * 5];
+    var interrupt = false;
 
     var svg;
     var attachmentId = initConditions.attachmentId;
@@ -117,6 +118,11 @@ d3.artTimer.clock.init = function (initConditions)
             if (secCounter > timeValue[timeLengthIdx])
             {
                 secCounter = 0;
+                 
+                console.log("broadcasting and sending interrupt of "+interrupt);
+                    
+                
+                interrupt = false;
                 //broadcast the end of the timer run
                 timerArc.transition().call(arcTween,
                         radianScale(secCounter / timeMultiplier[timeLengthIdx]));
@@ -172,11 +178,12 @@ d3.artTimer.clock.init = function (initConditions)
     }
     ;
 
-    exports.shutdown = function ()
+    exports.stopTimer = function ()
     {
         secCounter = secCounter + timeValue[timeLengthIdx];
+        interrupt = true;
     }
-    exports.doTimer = function ()
+    exports.startTimer = function ()
     {
         doTimer();
     };

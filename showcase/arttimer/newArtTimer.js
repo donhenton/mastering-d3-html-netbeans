@@ -40,12 +40,12 @@ function toggleTimer(button)
 {
     if (timerRunning)
     {
-       timer.shutdown();
+       timer.stopTimer();
        $(button).text("Start Timer");
     }
     else
     {
-        timer.doTimer();
+        timer.startTimer();
         
         $(button).text("Stop Timer");
     }
