@@ -94,7 +94,7 @@ d3.artTimer.clock.init = function (initConditions)
                 .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
     };
-    var doTimer = function ()
+    var startTimer = function ()
     {
         if (isTimerStopped())
         {
@@ -185,7 +185,7 @@ d3.artTimer.clock.init = function (initConditions)
     }
     exports.startTimer = function ()
     {
-        doTimer();
+        startTimer();
     };
 
 
