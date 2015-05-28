@@ -1,0 +1,19 @@
+ 
+
+#imageCollection{
+    position:absolute; 
+   // overflow:hidden;
+    height: 400px;
+    width: 400px;
+
+
+}
+#imageCollection img {
+    position: absolute;
+    top:0;
+    left:0;
+    z-index: 100;
+    opacity: 1;
+    display:none
+
+} 
