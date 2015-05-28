@@ -15,12 +15,13 @@ and open the template in the editor.
         <link href="../../bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css"/>
         <script src="../../bower_components/bootstrap/dist/js/bootstrap.js" type="text/javascript"></script>
         <link href="../../bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
-
+        <script src="timer.js" type="text/javascript"></script>
         <script src="newArtTimer.js" type="text/javascript"></script>
 
         <script>
             $(document).ready(function () {
                 init();
+                
 
             });
         </script>
@@ -43,7 +44,8 @@ and open the template in the editor.
                     </div>
                 </div>
                 <div class="col-lg-5">
-                     <p style="color: "><button class="btn btn-primary" onclick="doTimer()">Start Timer</button></p>
+                     <p  ><button class="btn btn-primary" onclick="toggleTimer(this)">Start Timer</button></p>
+                      <button class="btn btn-primary" onclick="changeTimer()">Change Timer</button> 
                      <div id="clockTimer"></div>
                     
                 </div>
