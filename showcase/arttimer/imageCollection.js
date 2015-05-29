@@ -20,7 +20,7 @@ d3.imageCollection.init = function (initConditions)
 
     function init()
     {
-        imageList = $(initConditions.attachmentId+' img');
+        imageList = $(initConditions.attachmentId + ' img');
         $(imageList[0]).fadeIn(10);
         $(imageList[0]).css("z-index", topZIndex);
 
@@ -29,7 +29,7 @@ d3.imageCollection.init = function (initConditions)
     }
     init();
 
-    var doFade = function ()
+    var advanceToNextImage = function ()
     {
         inAnimation = true;
         // fElement.find('img:gt(0)').hide();
@@ -62,7 +62,39 @@ d3.imageCollection.init = function (initConditions)
     }
     ;
 
+    var goToImage = function (imageIndex)
+    {
+        console.log("goto " + imageIndex);
+        if (imageIndex === currentIdx)
+        {
+            return;
+        }
 
+        var topImage = $(imageList[currentIdx]);
+        var nextIdx = imageIndex;
+        if (nextIdx === imageList.length)
+        {
+            throw "Image not found "+imageIndex;
+        }
+
+        var nextImage = $(imageList[nextIdx]);
+        nextImage.css('z-index', midZIndex);
+        topImage.fadeOut(fadeLength, function () {
+            topImage.css('z-index', baseZIndex).hide();
+            nextImage.css('z-index', topZIndex);
+
+        });
+        nextImage.fadeIn(fadeLength, function ()
+        {
+            // console.log("next done");
+        });
+
+        currentIdx = imageIndex;
+
+
+
+
+    }
 
 
 
@@ -71,9 +103,47 @@ d3.imageCollection.init = function (initConditions)
     function exports()
     {
 
-    };
-    
-    exports.doFade  = function(){ doFade();}
+    }
+    ;
+
+    exports.advanceToNextImage = function () {
+        advanceToNextImage();
+    }
+    /**
+     * this will load a selector list with the url of the img src
+     * so if its a full url,it will look ungainly
+     * 
+     * @param {type} dropDowncssSelector the css selector to the 
+     * select box
+     * @returns {undefined}
+     */
+    exports.loadSelector = function (dropDowncssSelector)
+    {
+        $(dropDowncssSelector)
+        var optionHtml = "";
+        imageList.each(function (i, d)
+        {
+            var imgName = $(d).attr("src");
+            var t = "<option value=\"" + i + "\">" + imgName + "</option>"
+            $(dropDowncssSelector).append(t);
+
+        });
+    }
+    /**
+     * go to a given image number and set the state be positioned on that
+     * image
+     * @param {type} selectorHtmlRef
+     * @returns {undefined}
+     * 
+     */
+    exports.goToImage = function (imageIndex)
+    {
+         
+         goToImage(imageIndex);
+
+
+
+    }
 
     return exports;
 }

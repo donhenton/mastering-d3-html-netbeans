@@ -16,9 +16,16 @@
     left:0;
     z-index: 100;
     opacity: 1;
-    display:none
+    display:none;
+    margin-top: 20px
 
 } 
+
+label
+{
+    margin-left:20px;
+    margin-right: 20px
+}
 
 svg{
     stroke: #000;
@@ -68,3 +75,4 @@ svg{
 .hour-label{
     font-size: 24px;
 }
+

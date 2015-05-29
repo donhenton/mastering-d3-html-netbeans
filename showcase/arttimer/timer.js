@@ -28,6 +28,7 @@ d3.artTimer.clock.init = function (initConditions)
     var timeMultiplier = [1, 2, 5];
     var timeValue = [60 * 1, 60 * 2, 60 * 5];
     var interrupt = false;
+    var dispatch = d3.dispatch("onStartTimer","onStopTimer");
 
     var svg;
     var attachmentId = initConditions.attachmentId;
@@ -98,6 +99,8 @@ d3.artTimer.clock.init = function (initConditions)
     {
         if (isTimerStopped())
         {
+            console.log("broadcast start of timer")
+            dispatch.onStartTimer.apply(this,["start"]);
             d3.timer(doSecTick(), 0, 1000);
         }
 
@@ -120,10 +123,8 @@ d3.artTimer.clock.init = function (initConditions)
                 secCounter = 0;
                  
                 console.log("broadcasting and sending interrupt of "+interrupt);
-                    
-                
-                interrupt = false;
-                //broadcast the end of the timer run
+                dispatch.onStopTimer.apply(this,[interrupt]);     
+                interrupt = false;               
                 timerArc.transition().call(arcTween,
                         radianScale(secCounter / timeMultiplier[timeLengthIdx]));
                 return true;
@@ -200,6 +201,6 @@ d3.artTimer.clock.init = function (initConditions)
         redrawClock();
     }
 
-
+    d3.rebind(exports, dispatch, "on");
     return exports;
 };
