@@ -99,7 +99,7 @@ d3.artTimer.clock.init = function (initConditions)
     {
         if (isTimerStopped())
         {
-            console.log("broadcast start of timer")
+            // console.log("broadcast start of timer")
             dispatch.onStartTimer.apply(this,["start"]);
             d3.timer(doSecTick(), 0, 1000);
         }
@@ -122,7 +122,7 @@ d3.artTimer.clock.init = function (initConditions)
             {
                 secCounter = 0;
                  
-                console.log("broadcasting and sending interrupt of "+interrupt);
+                // console.log("broadcasting and sending interrupt of "+interrupt);
                 dispatch.onStopTimer.apply(this,[interrupt]);     
                 interrupt = false;               
                 timerArc.transition().call(arcTween,
@@ -153,7 +153,7 @@ d3.artTimer.clock.init = function (initConditions)
         {    //* timeMultiplier[timeLengthIdx]
             var idx = Math.floor((secCounter * (warnArray.length - 1)) / timeValue[timeLengthIdx]);
 
-            console.log("floor " + idx + " sec " + secCounter);
+            // console.log("floor " + idx + " sec " + secCounter);
             timerArc.transition().style("fill", warnArray[idx]);
 
         });

@@ -35,7 +35,7 @@ d3.imageCollection.init = function (initConditions)
 
     var goToImage = function (imageIndex)
     {
-        console.log("goto " + imageIndex);
+       // console.log("goto " + imageIndex);
         if (imageIndex === currentIdx)
         {
             return;
