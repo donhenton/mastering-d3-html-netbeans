@@ -40,7 +40,7 @@ function init()
         else
         {
             timerRunning = true;
-            imageCollection.advanceToNextImage();
+            advanceToNextImage();
             timer.startTimer();
         }
 
