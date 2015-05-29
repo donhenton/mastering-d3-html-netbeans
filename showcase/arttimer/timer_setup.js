@@ -91,7 +91,17 @@ function goToImage(selector)
 {
     imageCollection.goToImage(parseInt($(selector).val()));
 }
-
-
+/**
+ * called by advance image button
+ * 
+ * @returns {undefined}
+ */
+function advanceToNextImage()
+{
+   
+    imageCollection.advanceToNextImage();
+    var currentIdx = imageCollection.getCurrentIndex();
+     $('#imageSelector').val(currentIdx);
+}
 
   

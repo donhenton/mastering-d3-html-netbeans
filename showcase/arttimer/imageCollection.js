@@ -9,7 +9,7 @@ d3.imageCollection = {};
 
 d3.imageCollection.init = function (initConditions)
 {
-    var inAnimation = true;
+    // var inAnimation = true;
     var imageList = null;
     var currentIdx = 0;
     var baseZIndex = 100;
@@ -24,43 +24,14 @@ d3.imageCollection.init = function (initConditions)
         $(imageList[0]).fadeIn(10);
         $(imageList[0]).css("z-index", topZIndex);
 
-
-
     }
     init();
 
     var advanceToNextImage = function ()
     {
-        inAnimation = true;
-        // fElement.find('img:gt(0)').hide();
-
-        if (inAnimation)
-        {
-
-
-            var topImage = $(imageList[currentIdx]);
-            var nextIdx = currentIdx + 1;
-            if (nextIdx === imageList.length)
-            {
-                nextIdx = 0;
-            }
-
-            var nextImage = $(imageList[nextIdx]);
-            nextImage.css('z-index', midZIndex);
-            topImage.fadeOut(fadeLength, function () {
-                topImage.css('z-index', baseZIndex).hide();
-                nextImage.css('z-index', topZIndex);
-
-            });
-            nextImage.fadeIn(fadeLength, function ()
-            {
-                // console.log("next done");
-            });
-        }
-
-        currentIdx = (currentIdx + 1) % imageList.length;
-    }
-    ;
+        var nextIdx = (currentIdx + 1) % imageList.length;
+        goToImage(nextIdx);
+    };
 
     var goToImage = function (imageIndex)
     {
@@ -74,7 +45,7 @@ d3.imageCollection.init = function (initConditions)
         var nextIdx = imageIndex;
         if (nextIdx === imageList.length)
         {
-            throw "Image not found "+imageIndex;
+            throw "Image not found " + imageIndex;
         }
 
         var nextImage = $(imageList[nextIdx]);
@@ -96,9 +67,6 @@ d3.imageCollection.init = function (initConditions)
 
     }
 
-
-
-
     /////////// PUBLIC API//////////////////////////////////////////////
     function exports()
     {
@@ -106,6 +74,11 @@ d3.imageCollection.init = function (initConditions)
     }
     ;
 
+
+    exports.getCurrentIndex = function ()
+    {
+        return currentIdx;
+    }
     exports.advanceToNextImage = function () {
         advanceToNextImage();
     }
@@ -119,8 +92,7 @@ d3.imageCollection.init = function (initConditions)
      */
     exports.loadSelector = function (dropDowncssSelector)
     {
-        $(dropDowncssSelector)
-        var optionHtml = "";
+
         imageList.each(function (i, d)
         {
             var imgName = $(d).attr("src");
@@ -138,8 +110,8 @@ d3.imageCollection.init = function (initConditions)
      */
     exports.goToImage = function (imageIndex)
     {
-         
-         goToImage(imageIndex);
+
+        goToImage(imageIndex);
 
 
 
