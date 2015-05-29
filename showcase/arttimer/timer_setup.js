@@ -55,10 +55,22 @@ function init()
  * 
  * @returns {undefined}
  */
+
 function changeTimer()
 {
     timerType = (timerType + 1) % 3;
     timer.setTimerLength(timerType);
+}
+
+/**
+ * called by a drop down with set values of 0,1,2
+ * @param {type} selectorRef
+ * @returns {undefined}
+ */
+function goToTime(selectorRef)
+{
+    var t = parseInt($(selectorRef).val());
+    timer.setTimerLength(t);
 }
 
 /**

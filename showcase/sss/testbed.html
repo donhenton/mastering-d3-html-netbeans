@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Testbed for Image Timer</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+        <link rel="stylesheet" href="http://donhenton-springmvc3.herokuapp.com/css/bootstrap.min.css" media="screen">
+        <link rel="stylesheet" href="http://donhenton-springmvc3.herokuapp.com/css/bootstrap-responsive.min.css" media="screen">
+        <script src="../../bower_components/jquery/dist/jquery.js" type="text/javascript"></script>
+        <script src="../../bower_components/d3/d3.js" type="text/javascript"></script>
+
+
+
+        <link href="../arttimer/arttimer.css" rel="stylesheet" type="text/css"/>
+        <script src="../arttimer/imageCollection.js" type="text/javascript"></script>
+        <script src="../arttimer/timer.js" type="text/javascript"></script>
+        <script src="../arttimer/timer_setup.js" type="text/javascript"></script>
+
+        <script>
+            $(document).ready(function () {
+                init();
+                // http://bl.ocks.org/tomgp/6475678<br>
+                // http://bl.ocks.org/mbostock/1098617
+
+
+            });
+        </script>
+    </head>
+    <body>
+
+
+
+
+
+        <div class="row span12">
+
+            
+            <div  class="form-inline">
+
+
+
+
+                <label for="imageSelect">Image</label> 
+                <select class="input-medium" onchange="goToImage(this)" id="imageSelector">
+
+                </select>
+
+
+
+                <label for="maxTimeSelect">Delay</label> <select  class="input-small"  
+                    onchange="goToTime(this)" id="maxTimeSelect">
+                    <option value="0">1 min</option>
+                    <option value="1">2 min</option>
+                    <option value="2">5 min</option>
+
+
+                </select> 
+
+                <label >&nbsp;</label>
+                <button id="timerButton" class="btn btn-primary" 
+                        onclick="toggleTimer(this)">Start Timer</button> 
+
+            </div>
+        </div>
+        <!--  end control row -->
+
+        <div class="row span12">
+            <div class="row span4">
+                <div id="imageCollection">
+                    <img src="simages/a1.jpg" alt=""/>
+                    <img src="simages/a2.jpg" alt=""/>
+                    <img src="simages/a3.jpg" alt=""/>
+                    <img src="simages/a4.jpg" alt=""/>
+                    <img src="simages/a5.jpg" alt=""/>
+                    <img src="simages/a6.jpg" alt=""/>
+                </div>
+            </div>
+            <div class="row span5">
+
+
+
+                <div id="clockTimer"></div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+    </body>
+</html>

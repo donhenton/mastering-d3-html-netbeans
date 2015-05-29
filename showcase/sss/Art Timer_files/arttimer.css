@@ -1,0 +1,38 @@
+DIV.imageContainerDiv {
+	 width:400px; height:425px;
+}
+#countDownText {
+	 TEXT-ALIGN: center; FONT-SIZE: 90px;  v-align: center
+}
+DIV.fileAnnouncement
+{
+	padding-bottom: 10px;
+}
+
+
+/*
+#controlContainerDiv {
+	POSITION: relative; TOP: 80%; LEFT: 0%
+}
+IMG.displayImagePositionBottom {
+	POSITION: absolute; TOP: 150px; LEFT: 150px
+}
+
+select
+{
+  width: 150px;
+}
+*/
+IMG.displayImagePosition {
+	POSITION: absolute; TOP: 225px
+}
+
+ 	
+	
+IMG.onTop {
+	Z-INDEX: 100
+}
+IMG.onBottom {
+	Z-INDEX: -100
+}
+
